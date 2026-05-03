@@ -56,7 +56,7 @@
 				</thead>
 				<tbody>
 					{#each quizzes as quiz (quiz.id)}
-						<tr>
+						<tr class="border-b transition-colors duration-200 hover:bg-secondary">
 							<td class="py-2 pl-4">{quiz.title}</td>
 							<td class="py-2">
 								{#if quiz.tags.length > 0}

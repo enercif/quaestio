@@ -3,7 +3,7 @@ import { questionsSchema } from './question.schema';
 
 const quizBaseSchema = z.object({
 	title: z.string().min(1),
-	last_run: z.date().nullable(),
+	last_run: z.string().optional(),
 	tags: z.array(z.string()),
 	questions: questionsSchema
 });

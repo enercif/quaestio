@@ -33,7 +33,6 @@ function returnInsertQuiz(): {
 } {
 	const quizInsert: QuizInsert = {
 		title: '',
-		last_run: null,
 		tags: [],
 		questions: []
 	};
