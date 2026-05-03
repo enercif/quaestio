@@ -1,7 +1,9 @@
-import { pgTable, serial, integer, text } from 'drizzle-orm/pg-core';
+import { jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-export const task = pgTable('task', {
-	id: serial('id').primaryKey(),
+export const quizTable = pgTable('quiz', {
+	id: uuid('id').defaultRandom().primaryKey(),
 	title: text('title').notNull(),
-	priority: integer('priority').notNull().default(1)
+	last_run: timestamp('last_run'),
+	tags: text('tags').array().notNull(),
+	questions: jsonb('questions').notNull()
 });
