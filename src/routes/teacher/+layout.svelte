@@ -1,19 +1,13 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
-
-	import { ModeWatcher } from 'mode-watcher';
 
 	import { toggleMode } from 'mode-watcher';
 
 	let { children } = $props();
 </script>
-
-<ModeWatcher />
-<Toaster richColors position="top-center" />
 
 <nav class="flex w-full items-center justify-center border-b py-4">
 	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-14">
