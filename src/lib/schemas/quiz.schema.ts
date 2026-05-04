@@ -2,7 +2,7 @@ import * as z from 'zod';
 import { questionsSchema } from './question.schema';
 
 const quizBaseSchema = z.object({
-	title: z.string().min(1),
+	title: z.string().min(1, 'Der Titel darf nicht leer sein.'),
 	last_run: z.string().optional(),
 	tags: z.array(z.string()),
 	questions: questionsSchema

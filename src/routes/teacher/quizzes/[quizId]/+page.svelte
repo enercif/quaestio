@@ -9,7 +9,6 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
@@ -31,8 +30,10 @@
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SaveIcon from '@lucide/svelte/icons/save';
 	import TrashIcon from '@lucide/svelte/icons/trash';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { toast } from 'svelte-sonner';
+	import type { ZodError } from 'zod';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -40,6 +41,8 @@
 	// svelte-ignore state_referenced_locally
 	let quiz = $state(data.quiz);
 	let quizId = $derived(data.id);
+
+	let zodErrors: ZodError | undefined = $state(undefined);
 
 	const estTime = $derived(
 		getTimeAsString(quiz.questions.reduce((acc, q) => acc + q.timelimit, 0))
@@ -190,10 +193,13 @@
 		try {
 			quizInsertSchema.parse(quiz);
 		} catch (e) {
-			console.error(e);
+			zodErrors = e as ZodError;
+			console.error(zodErrors.issues);
 			toast.warning('Bitte überprüfe deine Eingaben. Einige Felder sind ungültig oder fehlen.');
 			return;
 		}
+
+		zodErrors = undefined;
 
 		if (quizId) {
 			const update: QuizUpdate = {
@@ -247,6 +253,52 @@
 		const answers = placeholders[hash % placeholders.length].answers;
 		return answers[Math.floor(Math.random() * answers.length)];
 	}
+
+	function getQuizError(path: string) {
+		if (!zodErrors) return;
+		const issue = zodErrors.issues.filter((issue) => issue.path.join('.') === path);
+		return issue.length > 0 ? issue.map((i) => i.message) : undefined;
+	}
+
+	function getQuizErrorFuzzy(path: string) {
+		if (!zodErrors) return;
+		const issue = zodErrors.issues.filter((issue) => issue.path.join('.').includes(path));
+		return issue.length > 0 ? issue.map((i) => i.message) : undefined;
+	}
+
+	function getSelectedQuestionError(path: string) {
+		if (!zodErrors || !selectedQuestion) return;
+
+		const index = getSelectedQuestionIndex();
+
+		const question = zodErrors.issues.find(
+			(issue) => issue.path.join('.') === `questions.${index}`
+		);
+		if (!question) return;
+
+		let questionTypeIndex: number;
+		switch (selectedQuestion.type) {
+			case 'multiple':
+				questionTypeIndex = 0;
+				break;
+			case 'single':
+				questionTypeIndex = 1;
+				break;
+			case 'open':
+				questionTypeIndex = 2;
+				break;
+		}
+
+		//@ts-expect-error: der Array errors existiert im Objekt aber nicht in der Typdefinition daher der ignore
+		const errors = question.errors[questionTypeIndex] as (typeof question)[];
+		const issue = errors.filter((issue) => issue.path.join('.') === path);
+
+		return issue.length > 0 ? issue.map((i) => i.message) : undefined;
+	}
+
+	function getSelectedQuestionIndex() {
+		return quiz.questions.findIndex((q) => q.id === selectedQuestion?.id);
+	}
 </script>
 
 <div class="flex w-full items-center justify-center border-b py-2">
@@ -273,7 +325,11 @@
 				Übersicht
 			</Button>
 
-			<Button variant="secondary" onclick={save}>
+			<Button
+				variant="secondary"
+				onclick={save}
+				disabled={JSON.stringify(data.quiz) === JSON.stringify(quiz)}
+			>
 				<SaveIcon />
 
 				Speichern
@@ -290,17 +346,18 @@
 <div class="mx-5 mt-8 flex w-full max-w-7xl flex-col gap-10">
 	<Field.Set>
 		<Field.Group>
-			<Field.Field>
+			<Field.Field aria-invalid={!!getQuizError('title')}>
 				<Field.Label for="title">Titel</Field.Label>
 				<Input
 					type="text"
 					bind:value={quiz.title}
 					placeholder="Titel des Quiz"
 					class="w-100! font-semibold"
+					aria-invalid={!!getQuizError('title')}
 				/>
-				<!--
-					<Field.Error>Der Titel darf nicht leer sein.</Field.Error>
-				-->
+				{#each getQuizError('title') as error, i (i)}
+					<Field.Error>{error}</Field.Error>
+				{/each}
 			</Field.Field>
 		</Field.Group>
 
@@ -311,8 +368,13 @@
 					<p>{quiz.questions.length}</p>
 				</div>
 
+				{#each getQuizError('questions') as error, i (i)}
+					<Field.Error>{error}</Field.Error>
+				{/each}
+
 				<div class="my-2 flex flex-col gap-2">
 					{#each quiz.questions as question, index (index)}
+						{@const hasError = !!getQuizErrorFuzzy(`questions.${index}`)}
 						<button
 							class="flex cursor-pointer flex-col gap-2 rounded-md border px-3 py-2.5 text-start transition-all duration-150 {selectedQuestion?.id ===
 							question.id
@@ -323,6 +385,10 @@
 							<div class="flex flex-row items-center gap-1.5 font-bold">
 								<p class="text-muted-foreground">Q{index + 1}</p>
 								<Badge variant="outline">{typeToBadge(question.type)}</Badge>
+
+								{#if hasError}
+									<TriangleAlert class="ml-auto size-4 text-destructive" />
+								{/if}
 							</div>
 
 							{#if question.prompt === ''}
@@ -335,10 +401,6 @@
 						</button>
 					{/each}
 				</div>
-
-				<!--
-					<Field.Error>Mindestens eine Frage ist erforderlich.</Field.Error>
-				-->
 
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger>
@@ -377,103 +439,26 @@
 										</Button>
 									</div>
 
-									<Field.Field>
-										<Field.Label for="prompt">Fragenstellung</Field.Label>
-										<Textarea
-											id="prompt"
-											bind:value={selectedQuestion.prompt}
-											placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
-										/>
-										<!--
-											<Field.Error>Die Fragenstellung darf nicht leer sein.</Field.Error>
-										-->
-									</Field.Field>
-
-									{#if selectedQuestion.type === 'multiple'}
-										<div class=" flex flex-col gap-3">
-											<Label>Antworten</Label>
-
-											{#each (selectedQuestion as MultipleChoiceQuestion).answers as answer, index (answer.id)}
-												<div class="flex flex-row items-start gap-2">
-													<Toggle
-														bind:pressed={answer.is_correct}
-														variant="outline"
-														class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
-														>{indexToSequence(
-															index,
-															(selectedQuestion as MultipleChoiceQuestion).sequence_type
-														)}</Toggle
-													>
-
-													<Field.Field>
-														<Input
-															type="text"
-															placeholder={UUIDToAnswerPlaceholder(selectedQuestion.id)}
-															bind:value={answer.text}
-														/>
-														<!--
-															<Field.Error>Die Fragenstellung darf nicht leer sein.</Field.Error>
-														-->
-													</Field.Field>
-
-													<Button
-														variant="ghost"
-														onclick={() =>
-															removeAnswer(selectedQuestion as MultipleChoiceQuestion, answer.id)}
-													>
-														<XIcon class="text-destructive" />
-													</Button>
-												</div>
+									{#if selectedQuestion.type === 'open'}
+										{@const promptError = getQuizError(
+											`questions.${getSelectedQuestionIndex()}.prompt`
+										)}
+										{@const keywordsError = getQuizError(
+											`questions.${getSelectedQuestionIndex()}.keywords`
+										)}
+										<Field.Field aria-invalid={!!promptError}>
+											<Field.Label for="prompt">Fragenstellung</Field.Label>
+											<Textarea
+												id="prompt"
+												bind:value={selectedQuestion.prompt}
+												placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
+												aria-invalid={!!promptError}
+											/>
+											{#each promptError as error, i (i)}
+												<Field.Error>{error}</Field.Error>
 											{/each}
-											<!--
-												<Field.Error>Mindestens eine Antwort muss korrekt sein.</Field.Error>
-											-->
-											<Button variant="ghost" class="w-fit" onclick={addAnswerToSelectedQuestion}>
-												<PlusIcon class="text-primary" />
-												Antwort hinzufügen
-											</Button>
-										</div>
-									{:else if selectedQuestion.type === 'single'}
-										<div class=" flex flex-col gap-3">
-											<Label>Antworten</Label>
+										</Field.Field>
 
-											{#each (selectedQuestion as SingleChoiceQuestion).answers as answer, index (answer.id)}
-												<div class="flex flex-row items-center gap-2">
-													<Toggle
-														onPressedChange={() =>
-															(selectedQuestion as SingleChoiceQuestion).answers.forEach(
-																(a) => (a.is_correct = a.id === answer.id)
-															)}
-														bind:pressed={answer.is_correct}
-														variant="outline"
-														class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
-														>{indexToSequence(
-															index,
-															(selectedQuestion as SingleChoiceQuestion).sequence_type
-														)}</Toggle
-													>
-
-													<Input
-														type="text"
-														placeholder={UUIDToAnswerPlaceholder(selectedQuestion.id)}
-														bind:value={answer.text}
-													/>
-													<Button
-														variant="ghost"
-														onclick={() =>
-															removeAnswer(selectedQuestion as SingleChoiceQuestion, answer.id)}
-													>
-														<XIcon class="text-destructive" />
-													</Button>
-												</div>
-											{/each}
-
-											<Button variant="ghost" class="w-fit" onclick={addAnswerToSelectedQuestion}>
-												<PlusIcon class="text-primary" />
-												Antwort hinzufügen
-											</Button>
-										</div>
-									{:else if selectedQuestion.type === 'open'}
 										<div class=" flex flex-col gap-3">
 											<Label for="keywords">Keywords</Label>
 
@@ -484,6 +469,7 @@
 												onkeydown={(event) =>
 													onkeydown(event, selectedQuestion as OpenTextQuestion)}
 												bind:value={keywordInputValue}
+												aria-invalid={!!keywordsError}
 											/>
 
 											<div class="flex flex-row items-center gap-2">
@@ -497,6 +483,116 @@
 													</Badge>
 												{/each}
 											</div>
+
+											{#each keywordsError as error, i (i)}
+												<Field.Error>{error}</Field.Error>
+											{/each}
+										</div>
+									{:else}
+										{@const promptError = getSelectedQuestionError('prompt')}
+										{@const answersError = getSelectedQuestionError('answers')}
+										<Field.Field aria-invalid={!!promptError}>
+											<Field.Label for="prompt">Fragenstellung</Field.Label>
+											<Textarea
+												id="prompt"
+												bind:value={selectedQuestion.prompt}
+												placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
+												aria-invalid={!!promptError}
+											/>
+											{#each promptError as error, i (i)}
+												<Field.Error>{error}</Field.Error>
+											{/each}
+										</Field.Field>
+
+										<div class=" flex flex-col gap-3">
+											<Label>Antworten</Label>
+
+											{#each answersError as error, i (i)}
+												<Field.Error>{error}</Field.Error>
+											{/each}
+
+											{#if selectedQuestion.type === 'multiple'}
+												{#each (selectedQuestion as MultipleChoiceQuestion).answers as answer, index (answer.id)}
+													{@const answerErrors = getSelectedQuestionError(`answers.${index}.text`)}
+													<div class="flex flex-row items-start gap-2">
+														<Toggle
+															bind:pressed={answer.is_correct}
+															variant="outline"
+															class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
+															>{indexToSequence(
+																index,
+																(selectedQuestion as MultipleChoiceQuestion).sequence_type
+															)}</Toggle
+														>
+
+														<Field.Field aria-invalid={!!answerErrors}>
+															<Input
+																type="text"
+																placeholder={UUIDToAnswerPlaceholder(selectedQuestion.id)}
+																bind:value={answer.text}
+																aria-invalid={!!answerErrors}
+															/>
+															{#each answerErrors as error, i (i)}
+																<Field.Error>{error}</Field.Error>
+															{/each}
+														</Field.Field>
+
+														<Button
+															variant="ghost"
+															onclick={() =>
+																removeAnswer(selectedQuestion as MultipleChoiceQuestion, answer.id)}
+														>
+															<XIcon class="text-destructive" />
+														</Button>
+													</div>
+												{/each}
+											{:else if selectedQuestion.type === 'single'}
+												{#each (selectedQuestion as SingleChoiceQuestion).answers as answer, index (answer.id)}
+													{@const answerErrors = getSelectedQuestionError(`answers.${index}.text`)}
+
+													<div class="flex flex-row items-start gap-2">
+														<Toggle
+															onPressedChange={() =>
+																(selectedQuestion as SingleChoiceQuestion).answers.forEach(
+																	(a) => (a.is_correct = a.id === answer.id)
+																)}
+															bind:pressed={answer.is_correct}
+															variant="outline"
+															class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
+															>{indexToSequence(
+																index,
+																(selectedQuestion as SingleChoiceQuestion).sequence_type
+															)}</Toggle
+														>
+
+														<Field.Field aria-invalid={!!answerErrors}>
+															<Input
+																type="text"
+																placeholder={UUIDToAnswerPlaceholder(selectedQuestion.id)}
+																bind:value={answer.text}
+																aria-invalid={!!answerErrors}
+															/>
+
+															{#each answerErrors as error, i (i)}
+																<Field.Error>{error}</Field.Error>
+															{/each}
+														</Field.Field>
+
+														<Button
+															variant="ghost"
+															onclick={() =>
+																removeAnswer(selectedQuestion as SingleChoiceQuestion, answer.id)}
+														>
+															<XIcon class="text-destructive" />
+														</Button>
+													</div>
+												{/each}
+											{/if}
+
+											<Button variant="ghost" class="w-fit" onclick={addAnswerToSelectedQuestion}>
+												<PlusIcon class="text-primary" />
+												Antwort hinzufügen
+											</Button>
 										</div>
 									{/if}
 								</div>
@@ -508,72 +604,91 @@
 				<div class="flex flex-col gap-4">
 					<Card.Root>
 						<Card.Content>
-							<div class="flex flex-col gap-5">
-								<p class="text-muted-foreground">
-									Einstellungen | {typeToBadge(selectedQuestion.type)}
-								</p>
+							<Field.Group>
+								<div class="flex flex-col gap-5">
+									<p class="text-muted-foreground">
+										Einstellungen | {typeToBadge(selectedQuestion.type)}
+									</p>
 
-								<div class="flex flex-col gap-3">
-									<Label for="prompt">Zeit</Label>
-									<div class="flex flex-row items-center gap-10">
-										<Slider
-											id="zeit"
-											min={0}
-											max={300}
-											step={1}
-											type="single"
-											bind:value={selectedQuestion.timelimit}
-										/>
-										{getTimeAsString(selectedQuestion.timelimit)}
-									</div>
-								</div>
+									<Field.Field>
+										<Field.Label for="zeit">Zeit</Field.Label>
+										<div class="flex flex-row items-center gap-10">
+											<Slider
+												id="zeit"
+												min={0}
+												max={300}
+												step={1}
+												type="single"
+												bind:value={selectedQuestion.timelimit}
+											/>
+											{getTimeAsString(selectedQuestion.timelimit)}
+										</div>
+									</Field.Field>
 
-								{#if selectedQuestion.type !== 'open'}
-									<Separator />
+									{#if selectedQuestion.type !== 'open'}
+										<Field.Separator />
 
-									<div class="flex flex-col gap-3">
-										<Label for="points">Sequenzierung</Label>
-										<Select.Root
-											type="single"
-											bind:value={
-												(selectedQuestion as MultipleChoiceQuestion | SingleChoiceQuestion)
-													.sequence_type
-											}
-										>
-											<Select.Trigger class="w-full"
-												>{sequenceTypeToString(
+										<Field.Field>
+											<Field.Label for="points">Sequenzierung</Field.Label>
+											<Select.Root
+												type="single"
+												bind:value={
 													(selectedQuestion as MultipleChoiceQuestion | SingleChoiceQuestion)
 														.sequence_type
-												)}</Select.Trigger
+												}
 											>
-											<Select.Content>
-												<Select.Item value="numeric">Numerisch</Select.Item>
-												<Select.Item value="roman">Römisch</Select.Item>
-												<Select.Item value="alphabetic">Alphabetisch</Select.Item>
-											</Select.Content>
-										</Select.Root>
-									</div>
-								{/if}
+												<Select.Trigger class="w-full"
+													>{sequenceTypeToString(
+														(selectedQuestion as MultipleChoiceQuestion | SingleChoiceQuestion)
+															.sequence_type
+													)}</Select.Trigger
+												>
+												<Select.Content>
+													<Select.Item value="numeric">Numerisch</Select.Item>
+													<Select.Item value="roman">Römisch</Select.Item>
+													<Select.Item value="alphabetic">Alphabetisch</Select.Item>
+												</Select.Content>
+											</Select.Root>
+										</Field.Field>
+									{/if}
 
-								<Separator />
+									<Field.Separator />
 
-								<div class="flex flex-col gap-3">
-									<Label for="points">Punkte</Label>
-									<Input id="points" type="number" min={0} bind:value={selectedQuestion.points} />
+									<Field.Field>
+										{@const pointErrors1 = getSelectedQuestionError('points')}
+										{@const pointErrors2 = getQuizError(
+											`questions.${getSelectedQuestionIndex()}.points`
+										)}
+
+										<Field.Label for="points">Punkte</Field.Label>
+										<Input
+											id="points"
+											type="number"
+											min={0}
+											bind:value={selectedQuestion.points}
+											aria-invalid={!!pointErrors1 || !!pointErrors2}
+										/>
+										{#each pointErrors1 as error, i (i)}
+											<Field.Error>{error}</Field.Error>
+										{/each}
+										{#each pointErrors2 as error, i (i)}
+											<Field.Error>{error}</Field.Error>
+										{/each}
+									</Field.Field>
+
+									<Field.Separator />
+
+									<Field.Field>
+										<Field.Label for="result-selection">Resultat nach Abgabe anzeigen</Field.Label>
+										<Tabs.Root value="no" class="w-full" id="result-selection">
+											<Tabs.List class="w-full">
+												<Tabs.Trigger value="no">Nein</Tabs.Trigger>
+												<Tabs.Trigger value="yes">Ja</Tabs.Trigger>
+											</Tabs.List>
+										</Tabs.Root>
+									</Field.Field>
 								</div>
-
-								<Separator />
-
-								<div class="flex flex-col gap-3">
-									<Label for="points">Resultat nach Abgabe anzeigen</Label>
-									<Tabs.Root value="no" class="w-full">
-										<Tabs.List class="w-full">
-											<Tabs.Trigger value="no">Nein</Tabs.Trigger>
-											<Tabs.Trigger value="yes">Ja</Tabs.Trigger>
-										</Tabs.List>
-									</Tabs.Root>
-								</div>
-							</div>
+							</Field.Group>
 						</Card.Content>
 					</Card.Root>
 
