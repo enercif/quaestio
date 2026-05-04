@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { Badge } from '$lib/components/ui/badge/index.js';
+	import * as ButtonGroup from '$lib/components/ui/button-group/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import PlayIcon from '@lucide/svelte/icons/play';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SquarePenIcon from '@lucide/svelte/icons/square-pen';
@@ -16,10 +19,29 @@
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
 	<div class="flex flex-row items-center justify-between">
 		<h1 class="text-2xl font-semibold">Deine Quizze</h1>
-		<Button href={resolve('/teacher/quizzes/new')}>
-			<PlusIcon />
-			Neues Quiz
-		</Button>
+
+		<ButtonGroup.Root>
+			<Button href={resolve('/teacher/quizzes/new')}>
+				<PlusIcon />
+				Neues Quiz
+			</Button>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					{#snippet child({ props })}
+						<Button {...props}>
+							<ChevronDown />
+						</Button>
+					{/snippet}
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content side="bottom" align="end" class="w-full">
+					<DropdownMenu.Group>
+						<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
+						<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		</ButtonGroup.Root>
 	</div>
 
 	<div class="rounded-lg border">
@@ -38,10 +60,29 @@
 
 			<div class="my-6 flex w-full flex-col items-center justify-center gap-4">
 				<p class="text-xl font-semibold">Du hast noch keine Quizze erstellt</p>
-				<Button href={resolve('/teacher/quizzes/new')}>
-					<PlusIcon />
-					Erstelle dein erstes Quiz
-				</Button>
+
+				<ButtonGroup.Root>
+					<Button href={resolve('/teacher/quizzes/new')}>
+						<PlusIcon />
+						Erstelle dein erstes Quiz
+					</Button>
+
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger>
+							{#snippet child({ props })}
+								<Button {...props}>
+									<ChevronDown />
+								</Button>
+							{/snippet}
+						</DropdownMenu.Trigger>
+						<DropdownMenu.Content side="bottom" align="end" class="w-full">
+							<DropdownMenu.Group>
+								<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
+								<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+							</DropdownMenu.Group>
+						</DropdownMenu.Content>
+					</DropdownMenu.Root>
+				</ButtonGroup.Root>
 			</div>
 		{:else}
 			<table class="size-full">
