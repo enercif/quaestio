@@ -18,6 +18,7 @@
 
 		<div class="flex flex-row items-center gap-2">
 			<Button variant="ghost" class="font-semibold text-primary hover:text-primary">Quizzes</Button>
+			<Button variant="ghost">Live</Button>
 			<Button variant="ghost">Analyse</Button>
 		</div>
 
