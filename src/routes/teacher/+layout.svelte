@@ -4,8 +4,9 @@
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
 
+	import { resolve } from '$app/paths';
+	import { roomsStore } from '$lib/stores/rooms.store.svelte';
 	import { toggleMode } from 'mode-watcher';
-
 	let { children } = $props();
 </script>
 
@@ -17,8 +18,22 @@
 		</div>
 
 		<div class="flex flex-row items-center gap-2">
-			<Button variant="ghost" class="font-semibold text-primary hover:text-primary">Quizzes</Button>
-			<Button variant="ghost">Live</Button>
+			<Button
+				variant="ghost"
+				class="font-semibold text-primary hover:text-primary"
+				href={resolve('/teacher/quizzes')}>Quizzes</Button
+			>
+			<Button variant="ghost" href={resolve('/teacher/live')}>
+				{#if roomsStore.length > 0}
+					<span class="relative flex size-2">
+						<span
+							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"
+						></span>
+						<span class="relative inline-flex size-2 rounded-full bg-destructive"></span>
+					</span>
+				{/if}
+				Live
+			</Button>
 			<Button variant="ghost">Analyse</Button>
 		</div>
 

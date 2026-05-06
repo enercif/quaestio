@@ -1,19 +1,29 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import LaunchDialog from '$lib/components/quiz/launch-dialog.svelte';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as ButtonGroup from '$lib/components/ui/button-group/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import PlayIcon from '@lucide/svelte/icons/play';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SquarePenIcon from '@lucide/svelte/icons/square-pen';
+	//import { io } from 'socket.io-client';
 	import type { PageProps } from './$types';
-
 	let { data }: PageProps = $props();
 
 	const quizzes = $derived(data.quizzes);
+
+	/*
+	const socket = io();
+
+	socket.on('eventFromServer', (message) => {
+		console.log(message);
+	});
+
+	socket.emit('eventFromClient', 'Hello from the client!');
+	*/
 </script>
 
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
@@ -132,10 +142,7 @@
 									</Tooltip.Content>
 								</Tooltip.Root>
 
-								<Button>
-									<PlayIcon />
-									Starten
-								</Button>
+								<LaunchDialog {quiz} label="Starten" />
 							</td>
 						</tr>
 					{/each}

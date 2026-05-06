@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import LaunchDialog from '$lib/components/quiz/launch-dialog.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -26,7 +27,6 @@
 	import { quizInsertSchema, type QuizUpdate } from '$lib/schemas/quiz.schema';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import EyeIcon from '@lucide/svelte/icons/eye';
-	import PlayIcon from '@lucide/svelte/icons/play';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SaveIcon from '@lucide/svelte/icons/save';
 	import TrashIcon from '@lucide/svelte/icons/trash';
@@ -299,6 +299,10 @@
 	function getSelectedQuestionIndex() {
 		return quiz.questions.findIndex((q) => q.id === selectedQuestion?.id);
 	}
+
+	function preOpenCallback() {
+		return true;
+	}
 </script>
 
 <div class="flex w-full items-center justify-center border-b py-2">
@@ -334,11 +338,7 @@
 
 				Speichern
 			</Button>
-
-			<Button>
-				<PlayIcon />
-				Starte Quiz
-			</Button>
+			<LaunchDialog quiz={{ ...quiz, id: quizId! }} label="Starte Quiz" {preOpenCallback} />
 		</div>
 	</div>
 </div>
