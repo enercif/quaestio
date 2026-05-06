@@ -16,7 +16,7 @@
 	interface Props {
 		quiz: Quiz;
 		label: string;
-		preOpenCallback?: () => boolean;
+		preOpenCallback?: () => Promise<boolean>;
 	}
 
 	let { quiz, label, preOpenCallback }: Props = $props();
@@ -42,9 +42,9 @@
 		roomsStore.push(room);
 		goto(resolve('/teacher/live'));
 	}
-	function onClickOpen() {
+	async function onClickOpen() {
 		if (preOpenCallback) {
-			open = preOpenCallback();
+			open = await preOpenCallback();
 		} else {
 			open = true;
 		}

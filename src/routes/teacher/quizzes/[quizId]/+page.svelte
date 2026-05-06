@@ -300,8 +300,29 @@
 		return quiz.questions.findIndex((q) => q.id === selectedQuestion?.id);
 	}
 
-	function preOpenCallback() {
-		return true;
+	async function preOpenCallback() {
+		try {
+			quizInsertSchema.parse(quiz);
+		} catch (e) {
+			zodErrors = e as ZodError;
+			console.error(zodErrors.issues);
+			toast.warning('Bitte überprüfe deine Eingaben. Einige Felder sind ungültig oder fehlen.');
+			return false;
+		}
+
+		zodErrors = undefined;
+
+		if (quizId) {
+			const update: QuizUpdate = {
+				id: quizId,
+				...quiz
+			};
+			const result = await updateQuiz(update);
+			return result.success;
+		} else {
+			const result = await insertQuiz(quiz);
+			return result.success;
+		}
 	}
 </script>
 
