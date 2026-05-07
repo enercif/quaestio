@@ -5,8 +5,10 @@
 	import * as ButtonGroup from '$lib/components/ui/button-group/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as Empty from '$lib/components/ui/empty/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import CircleOffIcon from '@lucide/svelte/icons/circle-off';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SquarePenIcon from '@lucide/svelte/icons/square-pen';
 	//import { io } from 'socket.io-client';
@@ -68,32 +70,42 @@
 				</thead>
 			</table>
 
-			<div class="my-6 flex w-full flex-col items-center justify-center gap-4">
-				<p class="text-xl font-semibold">Du hast noch keine Quizze erstellt</p>
+			<Empty.Root>
+				<Empty.Header>
+					<Empty.Media variant="icon">
+						<CircleOffIcon />
+					</Empty.Media>
+					<Empty.Title>Noch keine Quizze</Empty.Title>
+					<Empty.Description>
+						Es sind aktuell keine Quizze vorhanden. Erstelle dein erstes Quiz, um loszulegen.
+					</Empty.Description>
+				</Empty.Header>
+				<Empty.Content>
+					<div class="flex gap-2">
+						<Button href={resolve('/teacher/quizzes/new')}>
+							<PlusIcon />
+							Quiz erstellen
+						</Button>
+						<DropdownMenu.Root>
+							<DropdownMenu.Trigger>
+								{#snippet child({ props })}
+									<Button {...props} variant="outline">
+										<ChevronDown />
 
-				<ButtonGroup.Root>
-					<Button href={resolve('/teacher/quizzes/new')}>
-						<PlusIcon />
-						Erstelle dein erstes Quiz
-					</Button>
-
-					<DropdownMenu.Root>
-						<DropdownMenu.Trigger>
-							{#snippet child({ props })}
-								<Button {...props}>
-									<ChevronDown />
-								</Button>
-							{/snippet}
-						</DropdownMenu.Trigger>
-						<DropdownMenu.Content side="bottom" align="end" class="w-full">
-							<DropdownMenu.Group>
-								<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
-								<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
-							</DropdownMenu.Group>
-						</DropdownMenu.Content>
-					</DropdownMenu.Root>
-				</ButtonGroup.Root>
-			</div>
+										Quiz importieren
+									</Button>
+								{/snippet}
+							</DropdownMenu.Trigger>
+							<DropdownMenu.Content side="bottom" align="end" class="w-full">
+								<DropdownMenu.Group>
+									<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
+									<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+								</DropdownMenu.Group>
+							</DropdownMenu.Content>
+						</DropdownMenu.Root>
+					</div>
+				</Empty.Content>
+			</Empty.Root>
 		{:else}
 			<table class="size-full">
 				<thead>

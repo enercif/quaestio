@@ -1,4 +1,5 @@
-import { jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const quizTable = pgTable('quiz', {
 	id: uuid('id').defaultRandom().primaryKey(),
@@ -7,3 +8,15 @@ export const quizTable = pgTable('quiz', {
 	tags: text('tags').array().notNull(),
 	questions: jsonb('questions').notNull()
 });
+
+export const roomTable = pgTable('room', {
+	id: text('id').primaryKey(),
+	limit: integer('limit'),
+	quiz: uuid('quiz_id')
+		.references(() => quizTable.id)
+		.notNull()
+});
+
+export const roomRelations = relations(roomTable, ({ one }) => ({
+	quiz: one(quizTable, { fields: [roomTable.quiz], references: [quizTable.id] })
+}));

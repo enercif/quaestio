@@ -6,7 +6,9 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as Empty from '$lib/components/ui/empty/index.js';
 	import * as Field from '$lib/components/ui/field/index.js';
+
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
@@ -26,6 +28,7 @@
 	} from '$lib/schemas/question.schema';
 	import { quizInsertSchema, type QuizUpdate } from '$lib/schemas/quiz.schema';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
+	import CircleQuestionMarkIcon from '@lucide/svelte/icons/circle-question-mark';
 	import EyeIcon from '@lucide/svelte/icons/eye';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SaveIcon from '@lucide/svelte/icons/save';
@@ -364,7 +367,7 @@
 	</div>
 </div>
 
-<div class="mx-5 mt-8 flex w-full max-w-7xl flex-col gap-10">
+<div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10">
 	<Field.Set>
 		<Field.Group>
 			<Field.Field aria-invalid={!!getQuizError('title')}>
@@ -742,33 +745,40 @@
 				<div class="col-span-3">
 					<Card.Root>
 						<Card.Content>
-							<div class="flex flex-col items-center gap-2">
-								<p class="text-xl font-semibold">Noch keine Fragen hinzugefügt</p>
-								<p class="mb-2 text-muted-foreground">
-									Füge eine neue Frage hinzu, um zu beginnen.
-								</p>
-								<DropdownMenu.Root>
-									<DropdownMenu.Trigger>
-										{#snippet child({ props })}
-											<Button variant="default" {...props}>
-												<PlusIcon />
-												Frage hinzufügen
-											</Button>
-										{/snippet}
-									</DropdownMenu.Trigger>
-									<DropdownMenu.Content>
-										<DropdownMenu.Group>
-											<DropdownMenu.Item onclick={addMultipleChoiceQuestion}
-												>Multiple Choice</DropdownMenu.Item
-											>
-											<DropdownMenu.Item onclick={addSingleChoiceQuestion}>
-												Single Choice
-											</DropdownMenu.Item>
-											<DropdownMenu.Item onclick={addOpenTextQuestion}>Open Text</DropdownMenu.Item>
-										</DropdownMenu.Group>
-									</DropdownMenu.Content>
-								</DropdownMenu.Root>
-							</div>
+							<Empty.Root>
+								<Empty.Header>
+									<Empty.Media variant="icon">
+										<CircleQuestionMarkIcon />
+									</Empty.Media>
+									<Empty.Title>Noch keine Fragen hinzugefügt</Empty.Title>
+									<Empty.Description>Füge eine neue Frage hinzu, um zu beginnen.</Empty.Description>
+								</Empty.Header>
+								<Empty.Content>
+									<DropdownMenu.Root>
+										<DropdownMenu.Trigger>
+											{#snippet child({ props })}
+												<Button variant="default" {...props}>
+													<PlusIcon />
+													Frage hinzufügen
+												</Button>
+											{/snippet}
+										</DropdownMenu.Trigger>
+										<DropdownMenu.Content>
+											<DropdownMenu.Group>
+												<DropdownMenu.Item onclick={addMultipleChoiceQuestion}
+													>Multiple Choice</DropdownMenu.Item
+												>
+												<DropdownMenu.Item onclick={addSingleChoiceQuestion}>
+													Single Choice
+												</DropdownMenu.Item>
+												<DropdownMenu.Item onclick={addOpenTextQuestion}
+													>Open Text</DropdownMenu.Item
+												>
+											</DropdownMenu.Group>
+										</DropdownMenu.Content>
+									</DropdownMenu.Root>
+								</Empty.Content>
+							</Empty.Root>
 						</Card.Content>
 					</Card.Root>
 				</div>

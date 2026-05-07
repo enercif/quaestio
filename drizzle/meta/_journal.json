@@ -8,6 +8,13 @@
       "when": 1777414436561,
       "tag": "0000_narrow_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778196431286,
+      "tag": "0001_loose_madripoor",
+      "breakpoints": true
     }
   ]
 }

@@ -1,15 +1,16 @@
 import { findQuizById } from '$lib/remote/quiz.remote';
 import type { Quiz, QuizInsert } from '$lib/schemas/quiz.schema';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const { quizId } = params;
+	const { id } = params;
 
-	if (quizId === 'new') {
+	if (id === 'new') {
 		return returnInsertQuiz();
 	} else {
 		try {
-			const quiz: Quiz | undefined = await findQuizById(quizId);
+			const quiz: Quiz | undefined = await findQuizById(id);
 
 			if (!quiz) {
 				return returnInsertQuiz();
@@ -21,8 +22,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			}
 		} catch (error) {
 			console.error('Fehler beim Laden des Quiz:', error);
-
-			return returnInsertQuiz();
+			redirect(303, '/teacher/quizzes/new');
 		}
 	}
 };

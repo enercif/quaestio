@@ -1,30 +1,42 @@
 <script lang="ts">
+	import src from '$lib/assets/favicon.svg';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
 
 	import { resolve } from '$app/paths';
-	import { roomsStore } from '$lib/stores/rooms.store.svelte';
+	import { page } from '$app/state';
+	import { roomsStore } from '$lib/stores/rooms.store.svelte.js';
 	import { toggleMode } from 'mode-watcher';
-	let { children } = $props();
+	import { onMount } from 'svelte';
+	let { children, data } = $props();
+
+	onMount(() => {
+		roomsStore.push(...data.rooms);
+	});
 </script>
 
 <nav class="flex w-full items-center justify-center border-b py-4">
 	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-14">
 		<div class="flex flex-row items-center gap-2">
-			<GraduationCapIcon class="size-6 text-primary" />
+			<img class="size-6" {src} alt="Icon" />
 			<span class="text-lg font-semibold">Quaestio</span>
 		</div>
 
 		<div class="flex flex-row items-center gap-2">
 			<Button
+				data-active={page.route.id?.includes('/teacher/quizzes')}
+				class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
 				variant="ghost"
-				class="font-semibold text-primary hover:text-primary"
 				href={resolve('/teacher/quizzes')}>Quizzes</Button
 			>
-			<Button variant="ghost" href={resolve('/teacher/live')}>
-				{#if roomsStore.length > 0}
+			<Button
+				data-active={page.route.id?.includes('/teacher/live')}
+				class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
+				variant="ghost"
+				href={resolve('/teacher/live')}
+			>
+				{#if data.rooms.length > 0}
 					<span class="relative flex size-2">
 						<span
 							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"
@@ -34,7 +46,11 @@
 				{/if}
 				Live
 			</Button>
-			<Button variant="ghost">Analyse</Button>
+			<Button
+				data-active={page.route.id?.includes('/teacher/analytics')}
+				class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
+				variant="ghost">Analyse</Button
+			>
 		</div>
 
 		<div class="ml-auto flex flex-row items-center gap-1">
