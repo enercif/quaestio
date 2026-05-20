@@ -4,6 +4,8 @@ import { roomInsertSchema, roomSelectSchema, type Room } from '$lib/schemas/room
 import { db } from '$lib/server/db';
 import { roomTable } from '$lib/server/db/schema';
 import { removeNull } from '$lib/utils';
+import { eq } from 'drizzle-orm/sql/expressions/conditions';
+import z from 'zod';
 
 export const findAllRooms = query(async () => {
 	const rooms = await db.query.roomTable.findMany({
@@ -38,6 +40,20 @@ export const insertRoom = command(roomInsertSchema, async (room) => {
 		return {
 			success: false,
 			room: undefined
+		};
+	}
+});
+
+export const deleteRoomById = command(z.string(), async (id) => {
+	try {
+		await db.delete(roomTable).where(eq(roomTable.id, id));
+		return {
+			success: true
+		};
+	} catch (error) {
+		console.error('Fehler beim Löschen des Raums:', error);
+		return {
+			success: false
 		};
 	}
 });

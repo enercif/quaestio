@@ -6,9 +6,11 @@
 
 	import { resolve } from '$app/paths';
 	import LaunchDialog from '$lib/components/quiz/launch-dialog.svelte';
+	import { deleteRoomById } from '$lib/remote/room.remote';
 	import type { Quiz } from '$lib/schemas/quiz.schema';
 	import { roomsStore } from '$lib/stores/rooms.store.svelte';
 	import CircleOffIcon from '@lucide/svelte/icons/circle-off';
+	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -16,6 +18,20 @@
 	const quizzes = $derived(data.quizzes);
 	let selectedQuiz: Quiz = $state((() => quizzes)()[0]);
 	let open = $state(false);
+
+	async function onCloseClick(id: string) {
+		const result = await deleteRoomById(id);
+		if (result.success) {
+			roomsStore.splice(
+				roomsStore.findIndex((r) => r.id === id),
+				1
+			);
+
+			console.log(roomsStore);
+		} else {
+			toast.error('Fehler beim Schließen des Raums');
+		}
+	}
 </script>
 
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
@@ -71,16 +87,7 @@
 						<Card.Description>{room.quiz.title}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
-						<Button
-							class="grow"
-							variant="secondary"
-							onclick={() => {
-								roomsStore.splice(
-									roomsStore.findIndex((r) => r.id === room.id),
-									1
-								);
-							}}
-						>
+						<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
 							Schließen
 						</Button>
 						<Button class="grow" href={resolve(`/teacher/live/${room.id}`)}>Beitreten</Button>

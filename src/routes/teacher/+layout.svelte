@@ -36,7 +36,7 @@
 				variant="ghost"
 				href={resolve('/teacher/live')}
 			>
-				{#if data.rooms.length > 0}
+				{#if roomsStore.length > 0}
 					<span class="relative flex size-2">
 						<span
 							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"
