@@ -18,9 +18,11 @@
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"auth:schema": "better-auth generate --config src/lib/server/auth.ts --output src/lib/server/db/auth.schema.ts --yes"
 	},
 	"devDependencies": {
+		"@better-auth/cli": "~1.4.21",
 		"@eslint/compat": "latest",
 		"@eslint/js": "latest",
 		"@fontsource-variable/inter": "^5.2.8",
@@ -32,6 +34,7 @@
 		"@tailwindcss/vite": "^4.2.4",
 		"@types/node": "^25.6.0",
 		"@vitest/browser-playwright": "^4.1.5",
+		"better-auth": "~1.4.21",
 		"bits-ui": "^2.18.1",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.31.10",

@@ -7,3 +7,5 @@ export const quizTable = pgTable('quiz', {
 	tags: text('tags').array().notNull(),
 	questions: jsonb('questions').notNull()
 });
+
+export * from './auth.schema';
