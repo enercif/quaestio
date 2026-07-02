@@ -35,3 +35,7 @@ export const removeNull = <T>(obj: T): RemoveNull<T> => {
 
 	return obj as RemoveNull<T>;
 };
+
+export function getRecordLength(record: Record<never, never>): number {
+	return Object.keys(record).length;
+}

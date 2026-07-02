@@ -15,6 +15,20 @@
       "when": 1778196431286,
       "tag": "0001_loose_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782938501245,
+      "tag": "0002_omniscient_penance",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782946575800,
+      "tag": "0003_melted_midnight",
+      "breakpoints": true
     }
   ]
 }

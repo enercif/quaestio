@@ -1,10 +1,22 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
+
+	let value = $state('');
+
+	function onclick() {
+		goto(
+			resolve('/r/[id]', {
+				id: value
+			})
+		);
+	}
 </script>
 
 <div class="flex size-full flex-col items-center justify-center gap-8">
@@ -26,11 +38,12 @@
 				autofocus
 				placeholder="XXXXXX"
 				maxlength={6}
+				bind:value
 				class="h-15 text-center text-3xl! font-semibold tracking-[0.5rem] uppercase placeholder:text-center"
 			/>
 		</Card.Content>
 		<Card.Footer>
-			<Button class="w-full" size="lg">
+			<Button class="w-full" size="lg" {onclick}>
 				Continue
 				<ArrowRightIcon />
 			</Button>

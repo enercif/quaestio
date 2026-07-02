@@ -4,11 +4,12 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Empty from '$lib/components/ui/empty/index.js';
 
+	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import LaunchDialog from '$lib/components/quiz/launch-dialog.svelte';
-	import { deleteRoomById } from '$lib/remote/room.remote';
+	import { deleteRoomById, selectRooms } from '$lib/remote/room.remote';
 	import type { Quiz } from '$lib/schemas/quiz.schema';
-	import { roomsStore } from '$lib/stores/rooms.store.svelte';
+	import { getRecordLength } from '$lib/utils';
 	import CircleOffIcon from '@lucide/svelte/icons/circle-off';
 	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
@@ -19,25 +20,24 @@
 	let selectedQuiz: Quiz = $state((() => quizzes)()[0]);
 	let open = $state(false);
 
+	const rooms = $derived(await selectRooms());
+
 	async function onCloseClick(id: string) {
 		const result = await deleteRoomById(id);
-		if (result.success) {
-			roomsStore.splice(
-				roomsStore.findIndex((r) => r.id === id),
-				1
-			);
-
-			console.log(roomsStore);
-		} else {
+		if (!result) {
 			toast.error('Fehler beim Schließen des Raums');
 		}
+	}
+
+	function onJoinClick(id: string) {
+		goto(resolve(`/teacher/live/${id}`));
 	}
 </script>
 
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
 	<h1 class="text-2xl font-semibold">Live Räume</h1>
 
-	{#if roomsStore.length === 0}
+	{#if rooms.length === 0}
 		<div class="flex flex-row items-center justify-center">
 			<Card.Root>
 				<Card.Content>
@@ -80,17 +80,22 @@
 		</div>
 	{:else}
 		<div class="grid grid-cols-3 gap-4">
-			{#each roomsStore as room (room.id)}
+			{#each rooms as room (room.id)}
 				<Card.Root>
 					<Card.Header>
 						<Card.Title>Raum {room.id}</Card.Title>
 						<Card.Description>{room.quiz.title}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
-						<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
+						<Button
+							class="grow"
+							variant="secondary"
+							onclick={() => onCloseClick(room.id)}
+							disabled={getRecordLength(room.teachers) > 0}
+						>
 							Schließen
 						</Button>
-						<Button class="grow" href={resolve(`/teacher/live/${room.id}`)}>Beitreten</Button>
+						<Button class="grow" onclick={() => onJoinClick(room.id)}>Beitreten</Button>
 					</Card.Footer>
 				</Card.Root>
 			{/each}

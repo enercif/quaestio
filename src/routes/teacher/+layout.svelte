@@ -6,14 +6,11 @@
 
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { roomsStore } from '$lib/stores/rooms.store.svelte.js';
+	import { selectRoomsCount } from '$lib/remote/room.remote';
 	import { toggleMode } from 'mode-watcher';
-	import { onMount } from 'svelte';
-	let { children, data } = $props();
+	let { children } = $props();
 
-	onMount(() => {
-		roomsStore.push(...data.rooms);
-	});
+	const roomsCount = $derived(await selectRoomsCount());
 </script>
 
 <nav class="flex w-full items-center justify-center border-b py-4">
@@ -36,7 +33,7 @@
 				variant="ghost"
 				href={resolve('/teacher/live')}
 			>
-				{#if roomsStore.length > 0}
+				{#if roomsCount > 0}
 					<span class="relative flex size-2">
 						<span
 							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"

@@ -2,15 +2,15 @@ import * as z from 'zod';
 import { quizSelectSchema } from './quiz.schema';
 
 const roomBaseSchema = z.object({
-	id: z
-		.string()
-		.min(1, 'Die Raum-ID darf nicht leer sein.')
-		.max(6, 'Die Raum-ID darf maximal 6 Zeichen lang sein.'),
-	limit: z.number().optional()
+	id: z.string().length(6, 'Die Raum-ID muss genau 6 Zeichen lang sein.'),
+	limit: z.number().nullish()
 });
 
 export const roomSelectSchema = roomBaseSchema.extend({
-	quiz: quizSelectSchema
+	teachers: z.record(z.string(), z.string()),
+	quiz: quizSelectSchema.pick({
+		title: true
+	})
 });
 
 export const roomInsertSchema = roomBaseSchema.extend({

@@ -10,7 +10,6 @@
 	import { insertRoom } from '$lib/remote/room.remote';
 	import type { Quiz } from '$lib/schemas/quiz.schema';
 	import type { RoomInsert } from '$lib/schemas/room.schema';
-	import { roomsStore } from '$lib/stores/rooms.store.svelte';
 	import PlayIcon from '@lucide/svelte/icons/play';
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
@@ -47,8 +46,7 @@
 
 		const result = await insertRoom(roomInsert);
 
-		if (result.success) {
-			roomsStore.push(result.room!);
+		if (result) {
 			open = false;
 			goto(resolve('/teacher/live/[id]', { id: roomId }));
 		} else {
