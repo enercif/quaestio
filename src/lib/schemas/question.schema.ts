@@ -1,6 +1,6 @@
 import z from 'zod';
 
-const typeEnum = z.enum(['multiple', 'single', 'open']);
+const typeEnum = z.enum(['multiple', 'single', 'open', 'programming']);
 const sequenceTypeEnum = z.enum(['numeric', 'roman', 'alphabetic']);
 const baseQuestionSettingsSchema = z.object({
 	timelimit: z.number(),
@@ -42,9 +42,27 @@ export const singleChoiceQuestionSchema = choiceQuestionSettingsSchema.extend({
 export const openTextQuestionSchema = baseQuestionSettingsSchema.extend({
 	keywords: z.array(z.string()).min(1, 'Keywords dürfen nicht leer sein.')
 });
+
+export const programmingQuestionSchema = baseQuestionSettingsSchema.extend({
+	code_snippet: z.string().min(1, 'Der Code darf nicht leer sein.'),
+	language: z.string().default('python'),
+	correct_lines: z.array(z.number())
+		.min(1, 'Es muss mindestens eine Zeile als Lösung markiert sein.'),
+	reasons: z.record(z.number(), z.string()),
+	hint: z.string().optional()
+}).refine((data) => {
+	return data.correct_lines.every(lineNumber => {
+		const reason = data.reasons[lineNumber];
+		return reason !== undefined && reason.trim() !== '';
+	});
+}, {
+	message: 'Für jede markierte Fehler-Zeile muss eine Begründung (reason) angegeben werden.',
+	path: ['reasons']
+});
+
 export const questionsSchema = z
 	.array(
-		z.union([multipleChoiceQuestionSchema, singleChoiceQuestionSchema, openTextQuestionSchema])
+		z.union([multipleChoiceQuestionSchema, singleChoiceQuestionSchema, openTextQuestionSchema, programmingQuestionSchema])
 	)
 	.min(1, 'Es muss mindestens eine Frage vorhanden sein.')
 	.default([]);
@@ -55,3 +73,4 @@ export type QuestionAnswer = z.infer<typeof questionAnswerSchema>;
 export type MultipleChoiceQuestion = z.infer<typeof multipleChoiceQuestionSchema>;
 export type SingleChoiceQuestion = z.infer<typeof singleChoiceQuestionSchema>;
 export type OpenTextQuestion = z.infer<typeof openTextQuestionSchema>;
+export type ProgrammingQuestion = z.infer<typeof programmingQuestionSchema>;
