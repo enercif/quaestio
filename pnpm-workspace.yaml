@@ -1,2 +1,5 @@
 allowBuilds:
   esbuild: true
+blockExoticSubdeps: false
+patchedDependencies:
+  svelte-realtime: patches/svelte-realtime.patch

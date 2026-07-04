@@ -14,7 +14,8 @@ export const roomTable = pgTable('room', {
 	limit: integer('limit'),
 	quiz: uuid('quiz_id')
 		.references(() => quizTable.id)
-		.notNull()
+		.notNull(),
+	state: text('state').default('waiting').notNull()
 });
 
 export const roomRelations = relations(roomTable, ({ one }) => ({

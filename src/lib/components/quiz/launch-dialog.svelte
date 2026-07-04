@@ -7,9 +7,9 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Switch } from '$lib/components/ui/switch/index.js';
-	import { insertRoom } from '$lib/remote/room.remote';
 	import type { Quiz } from '$lib/schemas/quiz.schema';
 	import type { RoomInsert } from '$lib/schemas/room.schema';
+	import { insertRoom } from '$live/rooms';
 	import PlayIcon from '@lucide/svelte/icons/play';
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
@@ -41,7 +41,8 @@
 		const roomInsert: RoomInsert = {
 			id: roomId,
 			limit: isLimited ? parseInt(limit) : undefined,
-			quiz: quiz.id
+			quiz: quiz.id,
+			state: 'waiting'
 		};
 
 		const result = await insertRoom(roomInsert);

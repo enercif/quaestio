@@ -6,11 +6,11 @@
 
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { selectRoomsCount } from '$lib/remote/room.remote';
+	import { rooms } from '$live/rooms';
 	import { toggleMode } from 'mode-watcher';
 	let { children } = $props();
 
-	const roomsCount = $derived(await selectRoomsCount());
+	const roomsCount = $derived($rooms ? $rooms.length : 0);
 </script>
 
 <nav class="flex w-full items-center justify-center border-b py-4">

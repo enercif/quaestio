@@ -7,20 +7,25 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Progress } from '$lib/components/ui/progress/index.js';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { leaveRoomTeacher, selectRoomById } from '$lib/remote/room.remote';
+	import type { Room } from '$lib/schemas/room.schema.js';
+	import type { Presence } from '$lib/types/presence.type.js';
+	import { room } from '$live/rooms';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import Play from '@lucide/svelte/icons/play';
 	import QR from '@svelte-put/qr/svg/QR.svelte';
 
 	let { data } = $props();
 
-	const room = $derived(await selectRoomById(data.id));
+	const _roomData = $derived(room.data(data.id));
+	const _roomPresence = $derived(room.presence!(data.id));
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const students: any = [];
+	const roomData: Room | undefined = $derived($_roomData ? $_roomData : undefined);
+	const roomPresence: Presence[] = $derived($_roomPresence ?? []);
+	const studentPresence: Presence[] = $derived(
+		roomPresence.filter((p) => p.data.type === 'student') ?? []
+	);
 
 	async function onLeaveClick() {
-		await leaveRoomTeacher(data.id);
 		goto(resolve('/teacher/live'));
 	}
 </script>
@@ -33,9 +38,9 @@
 		</Button>
 
 		<div class="flex h-4 flex-row items-center gap-3">
-			<h1 class="text-center leading-none font-semibold">{room?.quiz.title}</h1>
+			<h1 class="text-center leading-none font-semibold">{roomData?.quiz.title}</h1>
 			<Separator orientation="vertical" />
-			<h1 class="text-center leading-none font-semibold">{room?.id}</h1>
+			<h1 class="text-center leading-none font-semibold">{roomData?.id}</h1>
 		</div>
 
 		<div class="ml-auto flex flex-row items-center gap-2 font-semibold">
@@ -57,14 +62,14 @@
 				<div class="flex grow flex-col items-center justify-center gap-4">
 					<p class="text-xl font-semibold text-muted-foreground">Raum Code</p>
 
-					<h1 class="text-6xl font-bold tracking-widest">{room?.id}</h1>
+					<h1 class="text-6xl font-bold tracking-widest">{roomData?.id}</h1>
 				</div>
 
 				<Separator orientation="vertical" />
 
 				<div class="size-64">
 					<QR
-						data={`${PUBLIC_BASE_URL}/r/${room?.id}`}
+						data={`${PUBLIC_BASE_URL}/student/r/${roomData?.id}`}
 						logo={icon}
 						logoRatio={107 / 128}
 						shape="circle"
@@ -82,18 +87,14 @@
 		</Card.Content>
 	</Card.Root>
 
-	{#each Object.entries(room.teachers) as [key, teacher] (key)}
-		<p>{teacher}</p>
-	{/each}
-
 	<Card.Root>
 		<Card.Content>
 			<div class="flex h-full flex-col gap-4.5">
 				<div class="flex flex-row items-center justify-between gap-10">
-					{#if room?.limit}
-						<p class="font-semibold">{students.length} von {room.limit} beigetreten</p>
+					{#if roomData?.limit}
+						<p class="font-semibold">{studentPresence.length} von {roomData.limit} beigetreten</p>
 					{:else}
-						<p class="font-semibold">{students.length} beigetreten</p>
+						<p class="font-semibold">{studentPresence.length} beigetreten</p>
 					{/if}
 					<Button>
 						<Play />
@@ -101,16 +102,15 @@
 					</Button>
 				</div>
 
-				{#if room?.limit}
-					<Progress value={students.length} max={room.limit} />
+				{#if roomData?.limit}
+					<Progress value={studentPresence.length} max={roomData.limit} />
 				{/if}
 
 				<div class="flex flex-row flex-wrap gap-3">
-					{#each students as student (student.id)}
+					{#each studentPresence as presence (presence.key)}
+						{@const student = presence.data}
 						<div
 							class="flex flex-row items-center gap-1 rounded-3xl border bg-secondary px-3 py-1 transition-opacity"
-							class:opacity-40={!student.connected}
-							title={student.connected ? student.name : `${student.name} (getrennt)`}
 						>
 							<div class="p-1 text-xs font-semibold">{student.name.slice(0, 2).toUpperCase()}</div>
 							<span class="text-xs">{student.name}</span>

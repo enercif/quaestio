@@ -12,7 +12,7 @@
 
 	function onclick() {
 		goto(
-			resolve('/r/[id]', {
+			resolve('/student/r/[id]', {
 				id: value
 			})
 		);

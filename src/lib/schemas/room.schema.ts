@@ -3,11 +3,11 @@ import { quizSelectSchema } from './quiz.schema';
 
 const roomBaseSchema = z.object({
 	id: z.string().length(6, 'Die Raum-ID muss genau 6 Zeichen lang sein.'),
-	limit: z.number().nullish()
+	limit: z.number().nullish(),
+	state: z.string()
 });
 
 export const roomSelectSchema = roomBaseSchema.extend({
-	teachers: z.record(z.string(), z.string()),
 	quiz: quizSelectSchema.pick({
 		title: true
 	})
