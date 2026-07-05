@@ -127,6 +127,10 @@
 					</Card.Footer>
 				</Card.Root>
 			{:else}
+				{@const isFull =
+					roomCodeForm.result &&
+					!roomCodeForm.result.success &&
+					roomCodeForm.result.reason === 'full'}
 				<Card.Root>
 					<Card.Header class="text-center">
 						<div
@@ -136,7 +140,14 @@
 							<p>{roomIdUpperCase}</p>
 						</div>
 
-						<Card.Title class="text-2xl font-bold">Raum nicht gefunden</Card.Title>
+						<Card.Title class="text-2xl font-bold">
+							{isFull ? 'Der Raum ist voll' : 'Raum nicht gefunden'}
+						</Card.Title>
+						{#if isFull}
+							<Card.Description
+								>Die maximale Teilnehmerzahl wurde bereits erreicht.</Card.Description
+							>
+						{/if}
 					</Card.Header>
 
 					<Card.Footer class="flex flex-col gap-4">

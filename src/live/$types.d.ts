@@ -8,7 +8,7 @@ declare module '$live/rooms' {
   export const deleteRoom: (roomId: string) => Promise<any>;
   export const startRoom: (roomId: string) => Promise<any>;
   export const insertRoom: (roomInsert: RoomInsert) => Promise<any>;
-  export type ErrorCode = 'DB' | 'NOT_FOUND' | 'UNAUTHORIZED';
+  export type ErrorCode = 'DB' | 'NOT_FOUND' | 'ROOM_FULL' | 'UNAUTHORIZED';
   export const rooms: StreamStore<any | undefined | { error: RpcError }> & { load(platform: any, options?: { args?: any[]; user?: any }): Promise<any> };
   export const room: { data: (...args: any[]) => StreamStore<any>, presence?: (...args: any[]) => StreamStore<any>, cursors?: (...args: any[]) => StreamStore<any>, [action: string]: (...args: any[]) => Promise<any> | ((...args: any[]) => StreamStore<any>) };
   export const empty: Readable<undefined>;

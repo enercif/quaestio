@@ -6,13 +6,14 @@ import {
 } from '$lib/schemas/room.schema';
 import { db } from '$lib/server/db';
 import { roomTable } from '$lib/server/db/schema';
+import { addStudent, hasStudent, removeStudent, studentCount } from '$lib/server/occupancy';
 import { TOPICS } from '$lib/server/topics';
 import type { PresenceUser } from '$lib/types/presence.type';
 import type { User } from '$lib/types/user.type';
 import { eq } from 'drizzle-orm/sql/expressions/conditions';
 import { live, LiveError, type LiveContext } from 'svelte-realtime';
 
-async function getRooms(): Promise<Room[]> {
+export async function getRooms(): Promise<Room[]> {
 	const rooms = await db.query.roomTable.findMany({
 		with: {
 			quiz: {
@@ -25,7 +26,7 @@ async function getRooms(): Promise<Room[]> {
 	return roomSelectSchema.array().parse(rooms);
 }
 
-async function getRoomById(roomId: string): Promise<Room | undefined> {
+export async function getRoomById(roomId: string): Promise<Room | undefined> {
 	const room = await db.query.roomTable.findFirst({
 		with: {
 			quiz: {
@@ -117,6 +118,23 @@ export const startRoom = live(async (ctx: LiveContext<User>, roomId: string) => 
 export const room = live.room({
 	topic: (_, roomId: string) => TOPICS.room(roomId),
 	merge: 'set',
+	guard: async (ctx: LiveContext<User>, roomId: string) => {
+		if (ctx.user?.type !== 'student') return;
+
+		const topic = TOPICS.room(roomId);
+		if (hasStudent(topic, ctx.user.id)) return;
+
+		const room = await getRoomById(roomId);
+		if (room?.limit && studentCount(topic) >= room.limit) {
+			throw new LiveError('ROOM_FULL', 'Room has reached its student limit');
+		}
+	},
+	onJoin: (ctx: LiveContext<User>, roomId: string) => {
+		if (ctx.user?.type === 'student') addStudent(TOPICS.room(roomId), ctx.user.id);
+	},
+	onLeave: (ctx: LiveContext<User>, topic: string) => {
+		if (ctx.user?.type === 'student') removeStudent(topic, ctx.user.id);
+	},
 	init: async (_, roomId: string) => {
 		const room = await getRoomById(roomId);
 		return room ?? { state: 'ended' };

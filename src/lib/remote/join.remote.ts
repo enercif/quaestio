@@ -1,5 +1,7 @@
 import { form, getRequestEvent } from '$app/server';
 import { db } from '$lib/server/db';
+import { hasStudent, studentCount } from '$lib/server/occupancy';
+import { TOPICS } from '$lib/server/topics';
 import { redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import z from 'zod';
@@ -16,12 +18,19 @@ export const roomCodeForm = form(roomCodeSchema, async ({ roomId }) => {
 	});
 
 	if (!room) {
-		return { success: false };
+		return { success: false, reason: 'not_found' } as const;
+	}
+
+	const topic = TOPICS.room(room.id);
+	const userId = event.cookies.get('id');
+	const alreadyJoined = !!userId && hasStudent(topic, userId);
+	if (room.limit && !alreadyJoined && studentCount(topic) >= room.limit) {
+		return { success: false, reason: 'full' } as const;
 	}
 
 	const name = event.cookies.get('name');
 
-	return { success: true, name };
+	return { success: true, name } as const;
 });
 
 const roomNameSchema = z.object({
