@@ -11,21 +11,10 @@
 	import CircleOffIcon from '@lucide/svelte/icons/circle-off';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SquarePenIcon from '@lucide/svelte/icons/square-pen';
-	//import { io } from 'socket.io-client';
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 
 	const quizzes = $derived(data.quizzes);
-
-	/*
-	const socket = io();
-
-	socket.on('eventFromServer', (message) => {
-		console.log(message);
-	});
-
-	socket.emit('eventFromClient', 'Hello from the client!');
-	*/
 </script>
 
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
