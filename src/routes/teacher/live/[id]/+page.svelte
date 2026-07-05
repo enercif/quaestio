@@ -9,7 +9,7 @@
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import type { Room } from '$lib/schemas/room.schema.js';
 	import type { Presence } from '$lib/types/presence.type.js';
-	import { room } from '$live/rooms';
+	import { room, startRoom } from '$live/rooms';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import Play from '@lucide/svelte/icons/play';
 	import QR from '@svelte-put/qr/svg/QR.svelte';
@@ -96,7 +96,7 @@
 					{:else}
 						<p class="font-semibold">{studentPresence.length} beigetreten</p>
 					{/if}
-					<Button>
+					<Button onclick={() => startRoom(data.id)}>
 						<Play />
 						Quiz starten
 					</Button>

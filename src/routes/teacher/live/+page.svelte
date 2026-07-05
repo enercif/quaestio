@@ -8,6 +8,7 @@
 	import { resolve } from '$app/paths';
 	import LaunchDialog from '$lib/components/quiz/launch-dialog.svelte';
 	import type { Quiz } from '$lib/schemas/quiz.schema';
+	import type { Room } from '$lib/schemas/room.schema';
 	import { deleteRoom, rooms } from '$live/rooms';
 	import CircleOffIcon from '@lucide/svelte/icons/circle-off';
 	import { toast } from 'svelte-sonner';
@@ -18,6 +19,8 @@
 	const quizzes = $derived(data.quizzes);
 	let selectedQuiz: Quiz = $state((() => quizzes)()[0]);
 	let open = $state(false);
+
+	const _rooms: Room[] = $derived($rooms);
 
 	async function onCloseClick(id: string) {
 		const result = await deleteRoom(id);
@@ -34,7 +37,7 @@
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
 	<h1 class="text-2xl font-semibold">Live Räume</h1>
 
-	{#if $rooms !== undefined && $rooms.length === 0}
+	{#if _rooms !== undefined && _rooms.length === 0}
 		<div class="flex flex-row items-center justify-center">
 			<Card.Root>
 				<Card.Content>
@@ -77,11 +80,11 @@
 		</div>
 	{:else}
 		<div class="grid grid-cols-3 gap-4">
-			{#each $rooms as room (room.id)}
+			{#each _rooms as room (room.id)}
 				<Card.Root>
 					<Card.Header>
 						<Card.Title>Raum {room.id}</Card.Title>
-						<Card.Description>{room.quiz.title}</Card.Description>
+						<Card.Description>{room.quiz.title} | {room.state}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
 						<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
