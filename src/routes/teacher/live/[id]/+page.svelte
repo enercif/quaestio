@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { PUBLIC_BASE_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import icon from '$lib/assets/favicon.svg';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -69,7 +69,7 @@
 
 				<div class="size-64">
 					<QR
-						data={`${PUBLIC_BASE_URL}/student/r/${roomData?.id}`}
+						data={`${env.PUBLIC_BASE_URL}/student/r/${roomData?.id}`}
 						logo={icon}
 						logoRatio={107 / 128}
 						shape="circle"
