@@ -9,7 +9,15 @@ const config = {
 		}
 	},
 	kit: {
-		adapter: adapter({ websocket: true }),
+		adapter: adapter({
+			websocket: {
+				allowedOrigins: [
+					'https://dev.quaestio.enercif.de',
+					'http://localhost:5173',
+					'http://localhost:3000'
+				]
+			}
+		}),
 		typescript: {
 			config: (config) => ({
 				...config,
