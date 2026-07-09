@@ -37,5 +37,5 @@
 		</Card.Footer>
 	</Card.Root>
 
-	<Button href="/teacher/quizzes" variant="link">Zur Lehrer Ansicht</Button>
+	<Button href="/login" variant="link">Login</Button>
 </div>
