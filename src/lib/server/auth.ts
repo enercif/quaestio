@@ -11,6 +11,15 @@ export const auth = betterAuth({
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: 'pg' }),
 	emailAndPassword: { enabled: true },
+	user: {
+		additionalFields: {
+			role: {
+				type: ['user', 'admin'],
+				defaultValue: 'user',
+				input: false
+			}
+		}
+	},
 	plugins: [
 		admin(),
 		sveltekitCookies(getRequestEvent) // make sure this is the last plugin in the array
