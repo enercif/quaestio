@@ -3,10 +3,23 @@
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import { authClient } from '$lib/auth-client';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	import { toggleMode } from 'mode-watcher';
+	import { getInitials } from '$lib/utils.js';
 
-	let { children } = $props();
+	let { data, children } = $props();
+
+	const initials = $derived(getInitials(data.user?.name));
+
+	async function logout() {
+		await authClient.signOut();
+		goto(resolve('/'));
+	}
 </script>
 
 <nav class="flex w-full items-center justify-center border-b py-4">
@@ -33,7 +46,29 @@
 				<span class="sr-only">Toggle theme</span>
 			</Button>
 
-			<span class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs"> EC </span>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					{#snippet child({ props })}
+						<Button {...props} class="bg-transparent text-xs text-black hover:bg-secondary">
+							<span
+								class="flex size-8 items-center justify-center rounded-full border border-black/25 bg-secondary text-xs leading-none dark:bg-gray-400"
+								>{initials}</span
+							>
+							<ChevronDown class="hover:text-red" />
+						</Button>
+					{/snippet}
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content side="bottom" align="end" class="w-full">
+					<DropdownMenu.Group>
+						<DropdownMenu.Item>
+							{#snippet child({ props })}
+								<a {...props} href={resolve('/teacher/settings/password')}>Passwort ändern</a>
+							{/snippet}
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={logout}>Logout</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		</div>
 	</div>
 </nav>
