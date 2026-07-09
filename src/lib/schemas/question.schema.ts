@@ -44,8 +44,9 @@ export const openTextQuestionSchema = baseQuestionSettingsSchema.extend({
 });
 
 export const programmingQuestionSchema = baseQuestionSettingsSchema.extend({
+	description: z.string().min(1, 'Die Beschreibung darf nicht leer sein.'),
 	code_snippet: z.string().min(1, 'Der Code darf nicht leer sein.'),
-	language: z.string().default('python'),
+	language: z.string(),
 	correct_lines: z.array(z.number())
 		.min(1, 'Es muss mindestens eine Zeile als Lösung markiert sein.'),
 	reasons: z.record(z.number(), z.string()),
