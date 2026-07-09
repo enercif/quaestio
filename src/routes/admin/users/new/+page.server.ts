@@ -2,13 +2,14 @@ import { auth } from '$lib/server/auth';
 import type { Actions } from './$types';
 import { APIError } from 'better-auth';
 import { fail } from '@sveltejs/kit';
+import { generate } from 'short-uuid';
 
 export const actions: Actions = {
 	create: async ({ request }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
 		const name = formData.get('name') as string;
-		const tempPassword = crypto.randomUUID();
+		const tempPassword = generate();
 
 		try {
 			await auth.api.createUser({
