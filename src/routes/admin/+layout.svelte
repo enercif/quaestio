@@ -59,7 +59,6 @@
 		</div>
 	</div>
 </nav>
-<div class="my-4 flex w-full"></div>
-<div>
+<div class="my-8">
 	{@render children()}
 </div>
