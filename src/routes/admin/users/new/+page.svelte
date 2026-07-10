@@ -15,7 +15,9 @@
 </script>
 
 <div class="flex size-full flex-col items-center justify-center gap-4 px-3">
-	<form method="post" action="?/create" class="flex w-lg flex-col gap-6">
+	<h1 class="w-full max-w-lg text-2xl font-semibold">Nutzer erstellen</h1>
+
+	<form method="post" action="?/create" class="flex w-full max-w-lg flex-col gap-6">
 		<div>
 			<Label for="name" class="mb-2 text-sm font-medium">Name</Label>
 			<Input id="name" type="text" name="name" required placeholder="Name"></Input>
