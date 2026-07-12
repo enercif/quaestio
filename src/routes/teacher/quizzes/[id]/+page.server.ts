@@ -34,7 +34,8 @@ function returnInsertQuiz(): {
 	const quizInsert: QuizInsert = {
 		title: '',
 		tags: [],
-		questions: []
+		questions: [],
+		questions_length: 0
 	};
 
 	return {
