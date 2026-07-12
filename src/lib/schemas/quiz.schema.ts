@@ -5,7 +5,8 @@ const quizBaseSchema = z.object({
 	title: z.string().min(1, 'Der Titel darf nicht leer sein.'),
 	last_run: z.string().nullish(),
 	tags: z.array(z.string()),
-	questions: questionsSchema
+	questions: questionsSchema,
+	questions_length: z.number().positive('Die Anzahl der Fragen muss größer als 0 sein.')
 });
 
 export const quizSelectSchema = quizBaseSchema.extend({

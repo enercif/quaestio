@@ -63,8 +63,9 @@
 			type: 'multiple',
 			timelimit: 30,
 			points: 1,
-			prompt: '',
+			question: '',
 			answers: [],
+			correct: [],
 			sequence_type: 'numeric',
 			position: quiz.questions.length
 		};
@@ -78,8 +79,9 @@
 			type: 'single',
 			timelimit: 30,
 			points: 1,
-			prompt: '',
+			question: '',
 			answers: [],
+			correct: [],
 			sequence_type: 'numeric',
 			position: quiz.questions.length
 		};
@@ -93,8 +95,8 @@
 			type: 'open',
 			timelimit: 30,
 			points: 1,
-			prompt: '',
-			keywords: [],
+			question: '',
+			correct: [],
 			position: quiz.questions.length
 		};
 		quiz.questions.push(newOTQuestion);
@@ -106,10 +108,26 @@
 		const newAnswer: QuestionAnswer = {
 			id: crypto.randomUUID(),
 			text: '',
-			is_correct: false,
 			position: (selectedQuestion as MultipleChoiceQuestion | SingleChoiceQuestion).answers.length
 		};
 		(selectedQuestion as MultipleChoiceQuestion | SingleChoiceQuestion).answers.push(newAnswer);
+	}
+
+	function isCorrectAnswer(
+		question: MultipleChoiceQuestion | SingleChoiceQuestion,
+		answerId: string
+	) {
+		return question.correct.includes(answerId);
+	}
+
+	function toggleMultipleCorrectAnswer(question: MultipleChoiceQuestion, answerId: string) {
+		question.correct = question.correct.includes(answerId)
+			? question.correct.filter((id) => id !== answerId)
+			: [...question.correct, answerId];
+	}
+
+	function setSingleCorrectAnswer(question: SingleChoiceQuestion, answerId: string) {
+		question.correct = [answerId];
 	}
 
 	function typeToBadge(type: QuestionType) {
@@ -172,7 +190,7 @@
 		if (event.key === 'Enter') {
 			const trimmed = keywordInputValue.trim();
 			if (trimmed) {
-				selectedQuestion.keywords = [...selectedQuestion.keywords, trimmed];
+				selectedQuestion.correct = [...selectedQuestion.correct, trimmed];
 				keywordInputValue = '';
 			}
 		}
@@ -180,6 +198,7 @@
 
 	function removeAnswer(question: MultipleChoiceQuestion | SingleChoiceQuestion, answerId: string) {
 		question.answers = question.answers.filter((a) => a.id !== answerId);
+		question.correct = question.correct.filter((id) => id !== answerId);
 	}
 
 	function removeQuestion(questionId: string) {
@@ -194,6 +213,7 @@
 
 	async function save() {
 		try {
+			quiz.questions_length = quiz.questions.length;
 			quizInsertSchema.parse(quiz);
 		} catch (e) {
 			zodErrors = e as ZodError;
@@ -415,11 +435,11 @@
 								{/if}
 							</div>
 
-							{#if question.prompt === ''}
+							{#if question.question === ''}
 								<p class="text-sm font-semibold text-muted-foreground">Keine Frage eingetragen</p>
 							{:else}
 								<p class="text-sm font-semibold">
-									{question.prompt}
+									{question.question}
 								</p>
 							{/if}
 						</button>
@@ -465,16 +485,16 @@
 
 									{#if selectedQuestion.type === 'open'}
 										{@const promptError = getQuizError(
-											`questions.${getSelectedQuestionIndex()}.prompt`
+											`questions.${getSelectedQuestionIndex()}.question`
 										)}
 										{@const keywordsError = getQuizError(
-											`questions.${getSelectedQuestionIndex()}.keywords`
+											`questions.${getSelectedQuestionIndex()}.correct`
 										)}
 										<Field.Field aria-invalid={!!promptError}>
 											<Field.Label for="prompt">Fragenstellung</Field.Label>
 											<Textarea
 												id="prompt"
-												bind:value={selectedQuestion.prompt}
+												bind:value={selectedQuestion.question}
 												placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
 												aria-invalid={!!promptError}
 											/>
@@ -497,11 +517,11 @@
 											/>
 
 											<div class="flex flex-row items-center gap-2">
-												{#each (selectedQuestion as OpenTextQuestion).keywords as keyword, index (index)}
+												{#each (selectedQuestion as OpenTextQuestion).correct as keyword, index (index)}
 													<Badge
 														class="cursor-pointer"
 														onclick={() =>
-															(selectedQuestion as OpenTextQuestion).keywords.splice(index, 1)}
+															(selectedQuestion as OpenTextQuestion).correct.splice(index, 1)}
 													>
 														{keyword}
 													</Badge>
@@ -513,13 +533,13 @@
 											{/each}
 										</div>
 									{:else}
-										{@const promptError = getSelectedQuestionError('prompt')}
+										{@const promptError = getSelectedQuestionError('question')}
 										{@const answersError = getSelectedQuestionError('answers')}
 										<Field.Field aria-invalid={!!promptError}>
 											<Field.Label for="prompt">Fragenstellung</Field.Label>
 											<Textarea
 												id="prompt"
-												bind:value={selectedQuestion.prompt}
+												bind:value={selectedQuestion.question}
 												placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
 												aria-invalid={!!promptError}
 											/>
@@ -540,7 +560,15 @@
 													{@const answerErrors = getSelectedQuestionError(`answers.${index}.text`)}
 													<div class="flex flex-row items-start gap-2">
 														<Toggle
-															bind:pressed={answer.is_correct}
+															pressed={isCorrectAnswer(
+																selectedQuestion as MultipleChoiceQuestion,
+																answer.id
+															)}
+															onPressedChange={() =>
+																toggleMultipleCorrectAnswer(
+																	selectedQuestion as MultipleChoiceQuestion,
+																	answer.id
+																)}
 															variant="outline"
 															class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
 															>{indexToSequence(
@@ -576,11 +604,15 @@
 
 													<div class="flex flex-row items-start gap-2">
 														<Toggle
+															pressed={isCorrectAnswer(
+																selectedQuestion as SingleChoiceQuestion,
+																answer.id
+															)}
 															onPressedChange={() =>
-																(selectedQuestion as SingleChoiceQuestion).answers.forEach(
-																	(a) => (a.is_correct = a.id === answer.id)
+																setSingleCorrectAnswer(
+																	selectedQuestion as SingleChoiceQuestion,
+																	answer.id
 																)}
-															bind:pressed={answer.is_correct}
 															variant="outline"
 															class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
 															>{indexToSequence(

@@ -9,7 +9,8 @@ const roomBaseSchema = z.object({
 
 export const roomSelectSchema = roomBaseSchema.extend({
 	quiz: quizSelectSchema.pick({
-		title: true
+		title: true,
+		questions_length: true
 	})
 });
 

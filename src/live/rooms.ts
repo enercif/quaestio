@@ -18,7 +18,8 @@ export async function getRooms(): Promise<Room[]> {
 		with: {
 			quiz: {
 				columns: {
-					title: true
+					title: true,
+					questions_length: true
 				}
 			}
 		}
@@ -31,7 +32,8 @@ export async function getRoomById(roomId: string): Promise<Room | undefined> {
 		with: {
 			quiz: {
 				columns: {
-					title: true
+					title: true,
+					questions_length: true
 				}
 			}
 		},

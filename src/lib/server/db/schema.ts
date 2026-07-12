@@ -6,7 +6,8 @@ export const quizTable = pgTable('quiz', {
 	title: text('title').notNull(),
 	last_run: timestamp('last_run', { mode: 'string' }),
 	tags: text('tags').array().notNull(),
-	questions: jsonb('questions').notNull()
+	questions: jsonb('questions').notNull(),
+	questions_length: integer('questions_length').notNull()
 });
 
 export const roomTable = pgTable('room', {
