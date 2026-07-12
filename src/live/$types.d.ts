@@ -6,7 +6,7 @@ declare module '$live/rooms' {
   import type { Readable } from 'svelte/store';
 
   export const deleteRoom: (roomId: string) => Promise<any>;
-  export const startRoom: (roomId: string) => Promise<any>;
+  export const nextQuestion: (roomId: string) => Promise<any>;
   export const insertRoom: (roomInsert: RoomInsert) => Promise<any>;
   export type ErrorCode = 'DB' | 'NOT_FOUND' | 'ROOM_FULL' | 'UNAUTHORIZED';
   export const rooms: StreamStore<any | undefined | { error: RpcError }> & { load(platform: any, options?: { args?: any[]; user?: any }): Promise<any> };

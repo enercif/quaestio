@@ -16,7 +16,9 @@ export const roomTable = pgTable('room', {
 	quiz: uuid('quiz_id')
 		.references(() => quizTable.id)
 		.notNull(),
-	state: text('state').default('waiting').notNull()
+	state: text('state').default('waiting').notNull(),
+	current_question: jsonb('current_question'),
+	current_answers: text('current_answers').array()
 });
 
 export const roomRelations = relations(roomTable, ({ one }) => ({

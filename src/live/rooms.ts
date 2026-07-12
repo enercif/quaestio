@@ -1,6 +1,8 @@
+import { liveQuestionSchema } from '$lib/schemas/question.schema';
 import {
 	roomInsertSchema,
 	roomSelectSchema,
+	RoomState,
 	type Room,
 	type RoomInsert
 } from '$lib/schemas/room.schema';
@@ -19,7 +21,8 @@ export async function getRooms(): Promise<Room[]> {
 			quiz: {
 				columns: {
 					title: true,
-					questions_length: true
+					questions_length: true,
+					id: true
 				}
 			}
 		}
@@ -33,7 +36,8 @@ export async function getRoomById(roomId: string): Promise<Room | undefined> {
 			quiz: {
 				columns: {
 					title: true,
-					questions_length: true
+					questions_length: true,
+					id: true
 				}
 			}
 		},
@@ -81,7 +85,7 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) =>
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
-		room.state = 'ended';
+		room.state = RoomState.Finished;
 
 		await db.delete(roomTable).where(eq(roomTable.id, roomId)).returning();
 		ctx.publish(TOPICS.rooms, 'deleted', { id: roomId });
@@ -94,7 +98,7 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) =>
 	}
 });
 
-export const startRoom = live(async (ctx: LiveContext<User>, roomId: string) => {
+export const nextQuestion = live(async (ctx: LiveContext<User>, roomId: string) => {
 	if (!ctx.user) throw new LiveError('UNAUTHORIZED', 'User not authenticated');
 
 	try {
@@ -102,13 +106,32 @@ export const startRoom = live(async (ctx: LiveContext<User>, roomId: string) => 
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
-		room.state = 'started';
+
+		const nextIndex = room.current_question ? room.current_question.position + 1 : 0;
+
+		const quizQuestions = await db.query.quizTable.findFirst({
+			where: (quiz, { eq }) => eq(quiz.id, room.quiz.id),
+			columns: {
+				questions: true
+			}
+		});
+
+		if (!quizQuestions) {
+			throw new LiveError('NOT_FOUND', 'Quiz questions not found');
+		}
+
+		const parsedQuestions = liveQuestionSchema.array().parse(quizQuestions.questions);
+		const nextQuestion = parsedQuestions[nextIndex];
+
+		room.state = RoomState.Question;
+		room.current_question = nextQuestion;
 
 		await db
 			.update(roomTable)
-			.set({ state: 'started' })
+			.set({ state: RoomState.Question, current_question: nextQuestion })
 			.where(eq(roomTable.id, roomId))
 			.returning();
+
 		ctx.publish(TOPICS.room(roomId), 'set', room);
 		ctx.publish(TOPICS.rooms, 'updated', room);
 	} catch (error) {
