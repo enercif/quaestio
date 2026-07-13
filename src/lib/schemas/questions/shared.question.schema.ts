@@ -5,7 +5,7 @@ export const sequenceTypeEnum = z.enum(['numeric', 'roman', 'alphabetic']);
 export const baseQuestionShape = z.object({
 	id: z.uuid(),
 	position: z.number(),
-	timelimit: z.number().positive('Das Zeitlimit muss größer als 0 sein.'),
+	timelimit: z.number().min(0, 'Das Zeitlimit muss größer gleich 0 sein.'),
 	points: z
 		.number('Punkte dürfen nicht leer sein.')
 		.min(0, 'Punkte müssen größer oder gleich 0 sein.'),

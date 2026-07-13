@@ -39,11 +39,11 @@ export class LiveStudentState {
 	}
 }
 
-interface McAnswersState {
+interface StudentAnswersState {
 	questionId: string;
 	selected: string[];
 }
-export const mcAnswersPersistedState = new PersistedState<McAnswersState>(
+export const studentAnswersPersistedState = new PersistedState<StudentAnswersState>(
 	'selected-mc-answers',
 	{
 		questionId: '',

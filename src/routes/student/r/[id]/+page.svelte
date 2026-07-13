@@ -35,7 +35,7 @@
 		</div>
 	{:else if live.roomData.state === 'waiting'}
 		<LiveStudentWaitingRoom />
-	{:else if live.roomData.state === 'question'}
+	{:else if live.roomData.state === 'question' || live.roomData.state === 'answer'}
 		<LiveStudentQuestion />
 	{/if}
 </div>

@@ -1,4 +1,6 @@
-import type { SequenceType } from '$lib/schemas/question.schema';
+import type { QuestionType, SequenceType } from '$lib/schemas/question.schema';
+import type { Room } from '$lib/schemas/room.schema';
+import { createSubscriber } from 'svelte/reactivity';
 
 export function indexToSequence(index: number, type: SequenceType) {
 	switch (type) {
@@ -25,4 +27,56 @@ export function indexToSequence(index: number, type: SequenceType) {
 		}
 		return result;
 	}
+}
+
+let now = Date.now();
+const subscribeNow = createSubscriber((update) => {
+	const interval = setInterval(() => {
+		now = Date.now();
+		update();
+	}, 250);
+	return () => clearInterval(interval);
+});
+
+/** Reaktive aktuelle Zeit — tickt nur, solange sie in einem Effect/Template gelesen wird. */
+export function liveNow() {
+	subscribeNow();
+	return now;
+}
+
+/** Restzeit der aktuellen Frage in ms; eingefroren bei Pause, null ohne Timer. */
+export function remainingMs(room: Room): number | null {
+	// paused_remaining -1 = pausiert ohne Timelimit
+	if (room.paused_remaining != null)
+		return room.paused_remaining >= 0 ? room.paused_remaining : null;
+	if (room.question_ends_at != null) return Math.max(0, room.question_ends_at - liveNow());
+	return null;
+}
+
+export function formatRemaining(ms: number) {
+	const s = Math.ceil(ms / 1000);
+	return s >= 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : `${s}s`;
+}
+
+export type AnswerResult = 'correct' | 'partial' | 'wrong';
+
+export const resultClass: Record<AnswerResult, string> = {
+	correct: 'border-green-500 bg-green-500/10',
+	partial: 'border-yellow-500 bg-yellow-500/10',
+	wrong: 'border-destructive bg-destructive/10'
+};
+
+export function evaluateAnswer(
+	type: QuestionType,
+	correct: string[],
+	selected: string[]
+): AnswerResult {
+	if (type === 'open') {
+		const given = (selected[0] ?? '').trim().toLowerCase();
+		return correct.some((c) => c.trim().toLowerCase() === given) ? 'correct' : 'wrong';
+	}
+	const hits = selected.filter((id) => correct.includes(id)).length;
+	if (hits === correct.length && selected.length === correct.length) return 'correct';
+	if (hits === 0) return 'wrong';
+	return 'partial';
 }

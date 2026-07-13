@@ -7,9 +7,14 @@ declare module '$live/rooms' {
 
   export const deleteRoom: (roomId: string) => Promise<any>;
   export const nextQuestion: (roomId: string) => Promise<any>;
+  export const pauseTimer: (roomId: string) => Promise<any>;
+  export const resumeTimer: (roomId: string) => Promise<any>;
+  export const showResults: (roomId: string) => Promise<any>;
+  export const submitAnswer: (roomId: string, selected: string[]) => Promise<any>;
   export const insertRoom: (roomInsert: RoomInsert) => Promise<any>;
-  export type ErrorCode = 'DB' | 'NOT_FOUND' | 'ROOM_FULL' | 'UNAUTHORIZED';
+  export type ErrorCode = 'CLOSED' | 'DB' | 'NOT_FOUND' | 'PAUSED' | 'ROOM_FULL' | 'TIME_UP' | 'UNAUTHORIZED' | 'VALIDATION';
   export const rooms: StreamStore<any | undefined | { error: RpcError }> & { load(platform: any, options?: { args?: any[]; user?: any }): Promise<any> };
+  export const roomAnswers: ((roomId: string) => StreamStore<any | undefined | { error: RpcError }>) & { load(platform: any, options?: { args?: any[]; user?: any }): Promise<any> };
   export const room: { data: (...args: any[]) => StreamStore<any>, presence?: (...args: any[]) => StreamStore<any>, cursors?: (...args: any[]) => StreamStore<any>, [action: string]: (...args: any[]) => Promise<any> | ((...args: any[]) => StreamStore<any>) };
   export const empty: Readable<undefined>;
 }
