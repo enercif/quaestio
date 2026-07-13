@@ -18,12 +18,12 @@ export const actions: Actions = {
 			});
 		} catch (err) {
 			if (err instanceof APIError) {
-				return fail(400, { message: err.body?.message ?? 'Could not create account.' });
+				return fail(400, { message: err.body?.message ?? 'Nutzer konnte nicht erstellt werden.' });
 			}
 
-			return fail(400, { message: 'Could not create account.' });
+			return fail(400, { message: 'Nutzer konnte nicht erstellt werden.' });
 		}
 
-		return { success: true, tempPassword };
+		return { success: true, tempPassword, message: 'Nutzer wurde erstellt.' };
 	}
 };

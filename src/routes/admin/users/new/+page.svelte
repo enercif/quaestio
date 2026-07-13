@@ -1,16 +1,24 @@
-<script>
+<script lang="ts">
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { ActionData } from './$types';
+	import { toast } from 'svelte-sonner';
 
-	let { form } = $props();
-	let copied = $state(false);
+	let { form }: { form: ActionData } = $props();
+
+	$effect(() => {
+		if (form?.success && form?.message) {
+			toast.success(form.message);
+		} else if (form?.message) {
+			toast.error(form.message);
+		}
+	});
 
 	const copyPassword = async () => {
 		if (!form?.tempPassword) return;
 		await navigator.clipboard.writeText(form.tempPassword);
-		copied = true;
-		setTimeout(() => (copied = false), 2000);
+		toast.success('Kopiert!');
 	};
 </script>
 
@@ -25,7 +33,6 @@
 		<div>
 			<Label for="email" class="mb-2 text-sm font-medium">E-Mail</Label>
 			<Input id="email" type="email" name="email" required placeholder="Email"></Input>
-			<p class="text-sm text-red-500">{form?.message}</p>
 		</div>
 		<Button class="size-lg w-full" type="submit">Erstellen</Button>
 	</form>
@@ -33,7 +40,7 @@
 
 	{#if form?.success && form?.tempPassword}
 		<div class="flex items-center gap-2 rounded-md border bg-secondary p-4">
-			<p>Temporary password: <code>{form.tempPassword}</code></p>
+			<p>Temporäres passwort: <code>{form.tempPassword}</code></p>
 			<Button onclick={copyPassword} class="bg-transparent hover:bg-transparent hover:fill-gray-500"
 				><svg
 					version="1.1"
@@ -59,8 +66,5 @@
 				></Button
 			>
 		</div>
-		{#if copied}
-			<p class="fixed bottom-10 rounded-md border bg-green-300 p-2 text-green-900">Copied!</p>
-		{/if}
 	{/if}
 </div>

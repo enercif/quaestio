@@ -12,7 +12,10 @@
 	import { toggleMode } from 'mode-watcher';
 	import { getInitials } from '$lib/utils.js';
 
-	let { data, children } = $props();
+	import type { Snippet } from 'svelte';
+	import type { LayoutData } from './$types';
+
+	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
 	const initials = $derived(getInitials(data.user?.name));
 
@@ -51,10 +54,11 @@
 					{#snippet child({ props })}
 						<Button {...props} class="bg-transparent text-xs text-black hover:bg-secondary">
 							<span
-								class="flex size-8 items-center justify-center rounded-full border border-black/25 bg-secondary text-xs leading-none dark:bg-gray-400"
+								class="flex size-8 items-center justify-center rounded-full border border-black/25 bg-secondary text-xs leading-none dark:text-white"
 								>{initials}</span
 							>
-							<ChevronDown class="hover:text-red" />
+
+							<ChevronDown class="dark:text-white" />
 						</Button>
 					{/snippet}
 				</DropdownMenu.Trigger>

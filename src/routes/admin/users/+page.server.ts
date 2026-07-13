@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ request }) => {
 		return { users };
 	} catch (err) {
 		console.error(err);
-		return { users: [], message: 'Nutzer konnten nicht geladen werden.' };
+		return { users: [], loadError: 'Nutzer konnten nicht geladen werden.' };
 	}
 };
 
@@ -27,6 +27,7 @@ export const actions: Actions = {
 
 		try {
 			await auth.api.removeUser({ body: { userId }, headers: request.headers });
+			return { success: true, message: 'Nutzer gelöscht' };
 		} catch (err) {
 			console.error(err);
 			if (err instanceof APIError) {

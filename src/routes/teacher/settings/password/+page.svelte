@@ -5,6 +5,7 @@
 	import { authClient } from '$lib/auth-client';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { toast } from 'svelte-sonner';
 
 	let currentPassword = $state('');
 	let newPassword = $state('');
@@ -13,17 +14,17 @@
 	async function changePassword(e: SubmitEvent) {
 		e.preventDefault();
 
-		// const { data, error: err }
 		const { error: err } = await authClient.changePassword({
 			currentPassword,
 			newPassword
 		});
 
 		if (err) {
-			error = err.message ?? 'Invalid password';
+			error = err.message ?? 'Ungültiges passwort';
 			return;
 		}
 
+		toast.success('Passwort wurde geändert.');
 		goto(resolve('/teacher/quizzes'));
 	}
 </script>
@@ -39,7 +40,7 @@
 				type="password"
 				bind:value={currentPassword}
 				required
-				placeholder="Current password"
+				placeholder="Aktuelles password"
 			></Input>
 		</div>
 		<div>
@@ -49,13 +50,13 @@
 				type="password"
 				bind:value={newPassword}
 				required
-				placeholder="New password"
+				placeholder="Neues passwort"
 			></Input>
 			{#if error}<p class="text-sm text-red-500">
 					{error}
 				</p>{/if}
 		</div>
-		<Button class="size-lg w-full" type="submit">Submit</Button>
+		<Button class="size-lg w-full" type="submit">Absenden</Button>
 	</form>
+	<Button href="/teacher/quizzes" variant="link">Zurück</Button>
 </div>
-<Button href="/teacher/quizzes" variant="link">Exit</Button>
