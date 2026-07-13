@@ -6,10 +6,10 @@
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import type { MultipleChoiceQuestion, SingleChoiceQuestion } from '$lib/schemas/question.schema';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
-	import { getTimeAsString, sequenceTypeToString, typeToBadge } from './quiz-editor-utils';
+	import { getTimeAsString, sequenceTypeToString, typeToBadge } from './editor-utils';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
+	const state = EditorState.get();
 	const selectedQuestion = $derived(state.selectedQuestion!);
 </script>
 
@@ -38,8 +38,7 @@
 
 				{#if selectedQuestion.type !== 'open'}
 					{@const choiceQuestion = selectedQuestion as
-						| MultipleChoiceQuestion
-						| SingleChoiceQuestion}
+						MultipleChoiceQuestion | SingleChoiceQuestion}
 					<Field.Separator />
 
 					<Field.Field>
@@ -60,10 +59,7 @@
 				<Field.Separator />
 
 				<Field.Field>
-					{@const pointErrors1 = state.getSelectedQuestionError('points')}
-					{@const pointErrors2 = state.getQuizError(
-						`questions.${state.getSelectedQuestionIndex()}.points`
-					)}
+					{@const pointErrors = state.getSelectedQuestionError('points')}
 
 					<Field.Label for="points">Punkte</Field.Label>
 					<Input
@@ -71,12 +67,9 @@
 						type="number"
 						min={0}
 						bind:value={selectedQuestion.points}
-						aria-invalid={!!pointErrors1 || !!pointErrors2}
+						aria-invalid={!!pointErrors}
 					/>
-					{#each pointErrors1 as error, i (i)}
-						<Field.Error>{error}</Field.Error>
-					{/each}
-					{#each pointErrors2 as error, i (i)}
+					{#each pointErrors as error, i (i)}
 						<Field.Error>{error}</Field.Error>
 					{/each}
 				</Field.Field>

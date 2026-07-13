@@ -5,17 +5,24 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import type { OpenTextQuestion } from '$lib/schemas/question.schema';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
-	import { UUIDToPromptPlaceholder } from './quiz-editor-utils';
+	import { UUIDToPromptPlaceholder } from './editor-utils';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
-	const selectedQuestion = $derived(state.selectedQuestion as OpenTextQuestion);
-	const promptError = $derived(
-		state.getQuizError(`questions.${state.getSelectedQuestionIndex()}.question`)
-	);
-	const keywordsError = $derived(
-		state.getQuizError(`questions.${state.getSelectedQuestionIndex()}.correct`)
-	);
+	const editor = EditorState.get();
+	const selectedQuestion = $derived(editor.selectedQuestion as OpenTextQuestion);
+	const promptError = $derived(editor.getSelectedQuestionError('question'));
+	const keywordsError = $derived(editor.getSelectedQuestionError('correct'));
+
+	let keywordInput = $state('');
+
+	function onKeywordKeydown(event: KeyboardEvent) {
+		if (event.key !== 'Enter') return;
+		const trimmed = keywordInput.trim();
+		if (trimmed) {
+			selectedQuestion.correct.push(trimmed);
+			keywordInput = '';
+		}
+	}
 </script>
 
 <Field.Field aria-invalid={!!promptError}>
@@ -38,8 +45,8 @@
 		id="keywords"
 		type="text"
 		placeholder="Keyword eingeben und mit Enter bestätigen..."
-		onkeydown={(event) => state.onKeywordKeydown(event)}
-		bind:value={state.keywordInputValue}
+		onkeydown={onKeywordKeydown}
+		bind:value={keywordInput}
 		aria-invalid={!!keywordsError}
 	/>
 

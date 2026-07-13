@@ -4,7 +4,7 @@
 	import * as Empty from '$lib/components/ui/empty/index.js';
 	import CircleQuestionMarkIcon from '@lucide/svelte/icons/circle-question-mark';
 	import PlusIcon from '@lucide/svelte/icons/plus';
-	import AddQuestionDropdown from './add-question-dropdown.svelte';
+	import AddQuestionDropdown from './editor-question-dropdown.svelte';
 </script>
 
 <div class="col-span-3">

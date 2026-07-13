@@ -6,9 +6,9 @@
 	import EyeIcon from '@lucide/svelte/icons/eye';
 	import SaveIcon from '@lucide/svelte/icons/save';
 	import TrashIcon from '@lucide/svelte/icons/trash';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
+	const state = EditorState.get();
 </script>
 
 <div class="flex w-full items-center justify-center border-b py-2">
@@ -43,7 +43,7 @@
 			<LaunchDialog
 				quiz={{ ...state.quiz, id: state.quizId! }}
 				label="Starte Quiz"
-				preOpenCallback={() => state.preOpenCallback()}
+				preOpenCallback={() => state.upsert()}
 			/>
 		</div>
 	</div>

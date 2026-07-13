@@ -1,22 +1,21 @@
 <script lang="ts">
+	import { indexToSequence } from '$lib/components/quiz/quiz.utils';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
-	import type { MultipleChoiceQuestion } from '$lib/schemas/question.schema';
+	import type { MultipleChoiceQuestion, SingleChoiceQuestion } from '$lib/schemas/question.schema';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import XIcon from '@lucide/svelte/icons/x';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
-	import {
-		indexToSequence,
-		UUIDToAnswerPlaceholder,
-		UUIDToPromptPlaceholder
-	} from './quiz-editor-utils';
+	import { UUIDToAnswerPlaceholder, UUIDToPromptPlaceholder } from './editor-utils';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
-	const selectedQuestion = $derived(state.selectedQuestion as MultipleChoiceQuestion);
+	const state = EditorState.get();
+	const selectedQuestion = $derived(
+		state.selectedQuestion as MultipleChoiceQuestion | SingleChoiceQuestion
+	);
 	const promptError = $derived(state.getSelectedQuestionError('question'));
 	const answersError = $derived(state.getSelectedQuestionError('answers'));
 </script>
@@ -45,8 +44,8 @@
 		{@const answerErrors = state.getSelectedQuestionError(`answers.${index}.text`)}
 		<div class="flex flex-row items-start gap-2">
 			<Toggle
-				pressed={state.isCorrectAnswer(selectedQuestion, answer.id)}
-				onPressedChange={() => state.toggleMultipleCorrectAnswer(selectedQuestion, answer.id)}
+				pressed={selectedQuestion.correct.includes(answer.id)}
+				onPressedChange={() => state.toggleCorrectAnswer(selectedQuestion, answer.id)}
 				variant="outline"
 				class="size-9 text-muted-foreground transition-all duration-200 data-[state=on]:border-green-500 data-[state=on]:bg-green-500/10 "
 				>{indexToSequence(index, selectedQuestion.sequence_type)}</Toggle
@@ -70,7 +69,7 @@
 		</div>
 	{/each}
 
-	<Button variant="ghost" class="w-fit" onclick={() => state.addAnswerToSelectedQuestion()}>
+	<Button variant="ghost" class="w-fit" onclick={() => state.addAnswer()}>
 		<PlusIcon class="text-primary" />
 		Antwort hinzufügen
 	</Button>

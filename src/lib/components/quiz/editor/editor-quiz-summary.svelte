@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index.js';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
+	const state = EditorState.get();
 </script>
 
 <Card.Root>

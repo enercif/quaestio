@@ -4,11 +4,11 @@
 	import * as Field from '$lib/components/ui/field/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import AddQuestionDropdown from './add-question-dropdown.svelte';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
-	import { typeToBadge } from './quiz-editor-utils';
+	import EditorQuestionDropdown from './editor-question-dropdown.svelte';
+	import { typeToBadge } from './editor-utils';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
+	const state = EditorState.get();
 </script>
 
 <div class="flex flex-col gap-2 text-xs">
@@ -22,14 +22,14 @@
 	{/each}
 
 	<div class="my-2 flex flex-col gap-2">
-		{#each state.quiz.questions as question, index (index)}
-			{@const hasError = !!state.getQuizErrorFuzzy(`questions.${index}`)}
+		{#each state.quiz.questions as question, index (question.id)}
+			{@const hasError = state.hasQuestionError(index)}
 			<button
-				class="flex cursor-pointer flex-col gap-2 rounded-md border px-3 py-2.5 text-start transition-all duration-150 {state
-					.selectedQuestion?.id === question.id
+				class="flex cursor-pointer flex-col gap-2 rounded-md border px-3 py-2.5 text-start transition-all duration-150 {state.selectedId ===
+				question.id
 					? 'border-primary bg-primary/3'
 					: ''}"
-				onclick={() => (state.selectedQuestion = question)}
+				onclick={() => (state.selectedId = question.id)}
 			>
 				<div class="flex flex-row items-center gap-1.5 font-bold">
 					<p class="text-muted-foreground">Q{index + 1}</p>
@@ -51,12 +51,12 @@
 		{/each}
 	</div>
 
-	<AddQuestionDropdown>
+	<EditorQuestionDropdown>
 		{#snippet trigger({ props })}
 			<Button variant="outline" class="w-full" {...props}>
 				<PlusIcon class="text-primary" />
 				Frage hinzufügen
 			</Button>
 		{/snippet}
-	</AddQuestionDropdown>
+	</EditorQuestionDropdown>
 </div>

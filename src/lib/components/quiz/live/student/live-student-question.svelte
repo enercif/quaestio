@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { indexToSequence } from '$lib/components/quiz/quiz.utils';
 	import ClockIcon from '@lucide/svelte/icons/clock';
 	import { Checkbox } from 'bits-ui';
 	import { onMount } from 'svelte';
-	import { indexToSequence } from '../../editor/quiz-editor-utils';
 	import { LiveStudentState, mcAnswersPersistedState } from './live-student.state.svelte';
 
 	const live = LiveStudentState.get();

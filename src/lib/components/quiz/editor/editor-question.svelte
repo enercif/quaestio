@@ -3,12 +3,11 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import TrashIcon from '@lucide/svelte/icons/trash';
-	import MultipleChoiceQuestionEditor from './multiple-choice-question-editor.svelte';
-	import OpenTextQuestionEditor from './open-text-question-editor.svelte';
-	import { getQuizEditorState } from './quiz-editor-state.svelte';
-	import SingleChoiceQuestionEditor from './single-choice-question-editor.svelte';
+	import EditorChoiceQuestion from './editor-choice-question.svelte';
+	import EditorOpenQuestion from './editor-open-question.svelte';
+	import { EditorState } from './editor.state.svelte';
 
-	const state = getQuizEditorState();
+	const state = EditorState.get();
 	const selectedQuestion = $derived(state.selectedQuestion!);
 </script>
 
@@ -28,11 +27,9 @@
 					</div>
 
 					{#if selectedQuestion.type === 'open'}
-						<OpenTextQuestionEditor />
-					{:else if selectedQuestion.type === 'multiple'}
-						<MultipleChoiceQuestionEditor />
-					{:else if selectedQuestion.type === 'single'}
-						<SingleChoiceQuestionEditor />
+						<EditorOpenQuestion />
+					{:else}
+						<EditorChoiceQuestion />
 					{/if}
 				</div>
 			</Field.Group>

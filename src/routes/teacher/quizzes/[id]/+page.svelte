@@ -1,11 +1,11 @@
 <script lang="ts">
-	import EmptyQuestionState from '$lib/components/quiz/editor/empty-question-state.svelte';
-	import QuestionEditor from '$lib/components/quiz/editor/question-editor.svelte';
-	import QuestionList from '$lib/components/quiz/editor/question-list.svelte';
-	import QuestionSettings from '$lib/components/quiz/editor/question-settings.svelte';
-	import { createQuizEditorState } from '$lib/components/quiz/editor/quiz-editor-state.svelte';
-	import QuizEditorHeader from '$lib/components/quiz/editor/quiz-editor-header.svelte';
-	import QuizSummary from '$lib/components/quiz/editor/quiz-summary.svelte';
+	import EditorEmpty from '$lib/components/quiz/editor/editor-empty.svelte';
+	import EditorQuestionList from '$lib/components/quiz/editor/editor-question-list.svelte';
+	import EditorQuestionSettings from '$lib/components/quiz/editor/editor-question-settings.svelte';
+	import EditorQuestion from '$lib/components/quiz/editor/editor-question.svelte';
+	import QuizEditorHeader from '$lib/components/quiz/editor/editor-quiz-header.svelte';
+	import EditorQuizSummary from '$lib/components/quiz/editor/editor-quiz-summary.svelte';
+	import { EditorState } from '$lib/components/quiz/editor/editor.state.svelte';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { PageProps } from './$types';
@@ -13,7 +13,7 @@
 	let { data }: PageProps = $props();
 
 	// svelte-ignore state_referenced_locally
-	const state = createQuizEditorState(data.quiz, data.id);
+	const state = EditorState.init(data.quiz, data.id);
 </script>
 
 <QuizEditorHeader />
@@ -37,17 +37,17 @@
 		</Field.Group>
 
 		<div class="grid grid-cols-4 gap-4">
-			<QuestionList />
+			<EditorQuestionList />
 
 			{#if state.selectedQuestion}
-				<QuestionEditor />
+				<EditorQuestion />
 
 				<div class="flex flex-col gap-4">
-					<QuestionSettings />
-					<QuizSummary />
+					<EditorQuestionSettings />
+					<EditorQuizSummary />
 				</div>
 			{:else}
-				<EmptyQuestionState />
+				<EditorEmpty />
 			{/if}
 		</div>
 	</Field.Set>
