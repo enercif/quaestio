@@ -18,6 +18,7 @@
 	import {
 		type MultipleChoiceQuestion,
 		type OpenTextQuestion,
+		type ProgrammingQuestion,
 		type QuestionAnswer,
 		type QuestionType,
 		type SequenceType,
@@ -49,8 +50,12 @@
 	);
 	const totalPoints = $derived(quiz.questions.reduce((acc, q) => acc + q.points, 0));
 
-	let selectedQuestion: MultipleChoiceQuestion | SingleChoiceQuestion | OpenTextQuestion | null =
-		$state(quiz.questions[0] ?? null);
+	let selectedQuestion:
+		| MultipleChoiceQuestion
+		| SingleChoiceQuestion
+		| OpenTextQuestion
+		| ProgrammingQuestion
+		| null = $state(quiz.questions[0] ?? null);
 
 	let keywordInputValue = $state('');
 
@@ -98,6 +103,25 @@
 		selectedQuestion = quiz.questions[quiz.questions.length - 1];
 	}
 
+	function addProgrammingQuestion() {
+		const newProgQuestion: ProgrammingQuestion = {
+			id: crypto.randomUUID(),
+			type: 'programming',
+			timelimit: 30,
+			points: 1,
+			prompt: '',
+			position: quiz.questions.length,
+			description: '',
+			code_snippet: '',
+			correct_lines: [],
+			language: '',
+			reasons: {},
+			hint: ''
+		};
+		quiz.questions.push(newProgQuestion);
+		selectedQuestion = quiz.questions[quiz.questions.length - 1];
+	}
+
 	function addAnswerToSelectedQuestion() {
 		if (!selectedQuestion || selectedQuestion.type === 'open') return;
 		const newAnswer: QuestionAnswer = {
@@ -117,6 +141,8 @@
 				return 'Single Choice';
 			case 'open':
 				return 'Open Text';
+			case 'programming':
+				return 'Programming';
 		}
 	}
 
@@ -287,6 +313,9 @@
 			case 'open':
 				questionTypeIndex = 2;
 				break;
+			case 'programming':
+				questionTypeIndex = 3;
+				break;
 		}
 
 		//@ts-expect-error: der Array errors existiert im Objekt aber nicht in der Typdefinition daher der ignore
@@ -418,6 +447,7 @@
 							>
 							<DropdownMenu.Item onclick={addSingleChoiceQuestion}>Single Choice</DropdownMenu.Item>
 							<DropdownMenu.Item onclick={addOpenTextQuestion}>Open Text</DropdownMenu.Item>
+							<DropdownMenu.Item onclick={addProgrammingQuestion}>Programming</DropdownMenu.Item>
 						</DropdownMenu.Group>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
@@ -487,6 +517,59 @@
 											{#each keywordsError as error, i (i)}
 												<Field.Error>{error}</Field.Error>
 											{/each}
+										</div>
+									{:else if selectedQuestion.type === 'programming'}
+										{@const descriptionError = getQuizError(
+											`questions.${getSelectedQuestionIndex()}.description`
+										)}
+
+										{@const codeError = getQuizError(
+											`questions.${getSelectedQuestionIndex()}.code_snippet`
+										)}
+
+										<Field.Field aria-invalid={!!descriptionError}>
+											<Field.Label>Beschreibung</Field.Label>
+
+											<Textarea
+												bind:value={(selectedQuestion as ProgrammingQuestion).description}
+												placeholder="Beschreibe die Aufgabe..."
+												aria-invalid={!!descriptionError}
+											/>
+
+											{#each descriptionError as error, i (i)}
+												<Field.Error>{error}</Field.Error>
+											{/each}
+										</Field.Field>
+
+										<Field.Field aria-invalid={!!codeError}>
+											<Field.Label>Code</Field.Label>
+
+											<Textarea
+												bind:value={(selectedQuestion as ProgrammingQuestion).code_snippet}
+												class="min-h-60 font-mono"
+												placeholder="Code hier eingeben..."
+												aria-invalid={!!codeError}
+											/>
+
+											{#each codeError as error, i (i)}
+												<Field.Error>{error}</Field.Error>
+											{/each}
+										</Field.Field>
+
+										<div class="flex flex-col gap-2">
+											<Label>Vorschau</Label>
+
+											<div class="rounded-md border bg-muted p-3 font-mono text-sm">
+												{#each (selectedQuestion as ProgrammingQuestion).code_snippet.split('\n') as line, index}
+													<div class="flex gap-4 py-0.5">
+														<span class="w-8 text-right text-muted-foreground">
+															{index + 1}
+														</span>
+
+														<code>{line}</code>
+													</div>
+												{/each}
+											</div>
 										</div>
 									{:else}
 										{@const promptError = getSelectedQuestionError('prompt')}
@@ -625,7 +708,7 @@
 										</div>
 									</Field.Field>
 
-									{#if selectedQuestion.type !== 'open'}
+									{#if selectedQuestion.type === 'multiple' || selectedQuestion.type === 'single'}
 										<Field.Separator />
 
 										<Field.Field>
@@ -744,6 +827,9 @@
 												Single Choice
 											</DropdownMenu.Item>
 											<DropdownMenu.Item onclick={addOpenTextQuestion}>Open Text</DropdownMenu.Item>
+											<DropdownMenu.Item onclick={addProgrammingQuestion}
+												>Programming</DropdownMenu.Item
+											>
 										</DropdownMenu.Group>
 									</DropdownMenu.Content>
 								</DropdownMenu.Root>
