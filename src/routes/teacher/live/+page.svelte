@@ -17,7 +17,8 @@
 	let { data }: PageProps = $props();
 
 	const quizzes = $derived(data.quizzes);
-	let selectedQuiz: Quiz = $state((() => quizzes)()[0]);
+	// svelte-ignore state_referenced_locally
+	let selectedQuiz: Quiz = $state(quizzes[0]);
 	let open = $state(false);
 
 	const _rooms: Room[] = $derived($rooms);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { default as favicon, default as src } from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/favicon.svg';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
@@ -27,7 +27,7 @@
 		<nav class="flex w-full items-center justify-center border-b py-4">
 			<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-14">
 				<div class="flex flex-row items-center gap-2">
-					<img class="size-6" {src} alt="Icon" />
+					<img class="size-6" src={favicon} alt="Icon" />
 					<span class="text-lg font-semibold">Quaestio</span>
 				</div>
 

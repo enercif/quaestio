@@ -4,7 +4,6 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
-	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import type { MultipleChoiceQuestion, SingleChoiceQuestion } from '$lib/schemas/question.schema';
 	import { getTimeAsString, sequenceTypeToString, typeToBadge } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
@@ -72,18 +71,6 @@
 					{#each pointErrors as error, i (i)}
 						<Field.Error>{error}</Field.Error>
 					{/each}
-				</Field.Field>
-
-				<Field.Separator />
-
-				<Field.Field>
-					<Field.Label for="result-selection">Resultat nach Abgabe anzeigen</Field.Label>
-					<Tabs.Root value="no" class="w-full" id="result-selection">
-						<Tabs.List class="w-full">
-							<Tabs.Trigger value="no">Nein</Tabs.Trigger>
-							<Tabs.Trigger value="yes">Ja</Tabs.Trigger>
-						</Tabs.List>
-					</Tabs.Root>
 				</Field.Field>
 			</div>
 		</Field.Group>

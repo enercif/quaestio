@@ -20,12 +20,7 @@ export function getTimeAsString(seconds: number) {
 }
 
 export function hashUUID(uuid: string) {
-	return uuid
-		.replace(/-/g, '')
-		.split('')
-		.reduce((acc, char) => {
-			return (acc * 31 + char.charCodeAt(0)) >>> 0;
-		}, 0);
+	return parseInt(uuid.replace(/-/g, '').slice(0, 8), 16);
 }
 
 export function UUIDToPromptPlaceholder(uuid: string) {
