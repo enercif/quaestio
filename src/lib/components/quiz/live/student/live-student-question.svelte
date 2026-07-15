@@ -4,10 +4,14 @@
 		evaluateAnswer,
 		indexToSequence,
 		remainingMs,
-		resultClass
+		resultClass,
+		typeToBadge,
+		typeToDescription
 	} from '$lib/components/quiz/quiz.utils';
+	import { Badge } from '$lib/components/ui/badge';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { submitAnswer } from '$live/rooms';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import ClockIcon from '@lucide/svelte/icons/clock';
@@ -88,7 +92,16 @@
 <div class="px-10 mt-5 flex flex-col size-full max-w-6xl justify-start">
 	<LiveQuestionHeader room={roomData} />
 
-	<h1 class="text-3xl font-semibold mt-10">{currentQuestion.question}</h1>
+	<Tooltip.Root>
+		<Tooltip.Trigger class="w-fit mt-10 cursor-help">
+			<Badge variant="default">{typeToBadge(currentQuestion.type)}</Badge>
+		</Tooltip.Trigger>
+		<Tooltip.Content>
+			<p>{typeToDescription(currentQuestion.type)}</p>
+		</Tooltip.Content>
+	</Tooltip.Root>
+
+	<h1 class="text-3xl font-semibold mt-2">{currentQuestion.question}</h1>
 
 	<div class="flex flex-col mt-5 justify-start relative">
 		{#if !revealed && (paused || timeUp)}

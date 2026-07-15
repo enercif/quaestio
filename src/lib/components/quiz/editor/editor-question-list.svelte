@@ -4,8 +4,8 @@
 	import * as Field from '$lib/components/ui/field/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import { typeToBadge } from '../quiz.utils';
 	import EditorQuestionDropdown from './editor-question-dropdown.svelte';
-	import { typeToBadge } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
 	const state = EditorState.get();

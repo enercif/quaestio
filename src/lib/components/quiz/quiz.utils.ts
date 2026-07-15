@@ -80,3 +80,25 @@ export function evaluateAnswer(
 	if (hits === 0) return 'wrong';
 	return 'partial';
 }
+
+export function typeToBadge(type: QuestionType) {
+	switch (type) {
+		case 'multiple':
+			return 'Multiple Choice';
+		case 'single':
+			return 'Single Choice';
+		case 'open':
+			return 'Open Text';
+	}
+}
+
+export function typeToDescription(type: QuestionType) {
+	switch (type) {
+		case 'multiple':
+			return 'Wähle eine oder mehrere Antworten aus.';
+		case 'single':
+			return 'Wähle genau eine Antwort aus.';
+		case 'open':
+			return 'Gib deine Antwort als Text ein.';
+	}
+}
