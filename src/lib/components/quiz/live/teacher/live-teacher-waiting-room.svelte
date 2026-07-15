@@ -27,7 +27,7 @@
 
 				<div class="size-64">
 					<QR
-						data={`${env.PUBLIC_BASE_URL}/student/r/${live.roomId}`}
+						data={`${env.PUBLIC_BASE_URL}/?roomId=${live.roomId}`}
 						logo={icon}
 						logoRatio={107 / 128}
 						shape="circle"

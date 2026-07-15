@@ -12,14 +12,20 @@
 	import Check from '@lucide/svelte/icons/check';
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import X from '@lucide/svelte/icons/x';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import type { PageData } from './$types';
 
-	let page: 1 | 2 = $state(1);
-	let roomIdUpperCase = $derived(String(roomCodeForm.fields.roomId.value() ?? '').toUpperCase());
+	let { data }: { data: PageData } = $props();
+
+	let page: 1 | 2 = $state(untrack(() => (data.result ? 2 : 1)));
+	let codeResult = $derived(roomCodeForm.result ?? data.result);
+	let roomIdUpperCase = $derived(
+		String(roomCodeForm.fields.roomId.value() ?? data.roomId ?? '').toUpperCase()
+	);
 
 	onMount(() => {
-		roomCodeForm.fields.roomId.set('');
+		roomCodeForm.fields.roomId.set(data.roomId ?? '');
 	});
 </script>
 
@@ -83,7 +89,7 @@
 		<Button href="/teacher/quizzes" variant="link">Zur Lehrer Ansicht</Button>
 	{:else}
 		<div class="w-1/2 max-w-90" in:fly>
-			{#if roomCodeForm.result?.success}
+			{#if codeResult?.success}
 				<Card.Root>
 					<Card.Header class="text-center">
 						<div class="flex flex-col items-start">
@@ -109,7 +115,10 @@
 								id="name"
 								autofocus
 								placeholder="Tony Stark"
-								{...roomNameForm.fields.name.as('text', roomCodeForm.result?.name ?? '')}
+								{...roomNameForm.fields.name.as(
+									'text',
+									codeResult?.success ? (codeResult.name ?? '') : ''
+								)}
 							/>
 
 							{#each roomNameForm.fields.name.issues() as issue (issue.message)}
@@ -127,10 +136,7 @@
 					</Card.Footer>
 				</Card.Root>
 			{:else}
-				{@const isFull =
-					roomCodeForm.result &&
-					!roomCodeForm.result.success &&
-					roomCodeForm.result.reason === 'full'}
+				{@const isFull = codeResult && !codeResult.success && codeResult.reason === 'full'}
 				<Card.Root>
 					<Card.Header class="text-center">
 						<div
