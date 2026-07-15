@@ -73,7 +73,7 @@ export function evaluateAnswer(
 ): AnswerResult {
 	if (type === 'open') {
 		const given = (selected[0] ?? '').trim().toLowerCase();
-		return correct.some((c) => c.trim().toLowerCase() === given) ? 'correct' : 'wrong';
+		return given.includes(correct[0].trim().toLowerCase()) ? 'correct' : 'wrong';
 	}
 	const hits = selected.filter((id) => correct.includes(id)).length;
 	if (hits === correct.length && selected.length === correct.length) return 'correct';

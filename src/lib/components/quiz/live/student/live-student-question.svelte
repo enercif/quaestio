@@ -10,7 +10,7 @@
 	} from '$lib/components/quiz/quiz.utils';
 	import { Badge } from '$lib/components/ui/badge';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Input } from '$lib/components/ui/input/index.js';
+	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { submitAnswer } from '$live/rooms';
 	import CheckIcon from '@lucide/svelte/icons/check';
@@ -21,7 +21,7 @@
 	import XIcon from '@lucide/svelte/icons/x';
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { LiveStudentState, studentAnswersPersistedState } from './live-student.state.svelte';
 
 	const live = LiveStudentState.get();
@@ -73,7 +73,7 @@
 	}
 
 	function answerTexts(ids: string[]) {
-		if (currentQuestion.type === 'open') return ids.join(' / ');
+		if (currentQuestion.type === 'open') return ids.join(', ');
 		return currentQuestion.answers
 			.filter((answer) => ids.includes(answer.id))
 			.map((answer) => answer.text)
@@ -107,7 +107,7 @@
 		{#if !revealed && (paused || timeUp)}
 			<div
 				transition:fade={{ duration: 50 }}
-				class="absolute inset-0 z-10 grid place-items-center backdrop-blur-xs font-medium"
+				class="absolute -inset-5 z-10 grid place-items-center backdrop-blur-xs font-medium"
 			>
 				<div class="flex flex-row items-center gap-2 w-fit bg-background/50 p-2 rounded-lg">
 					{#if paused}
@@ -122,37 +122,32 @@
 		{/if}
 
 		{#if currentQuestion.type === 'open'}
-			{#if revealed}
-				<div class="flex flex-col gap-4 w-full mt-5">
-					<div class={[rowClass, resultClass.correct]}>
-						<CheckIcon class="size-5 text-green-500" />
-						{correct.join(' / ')}
-					</div>
+			<form
+				class="flex flex-col items-end gap-3 w-full mt-5"
+				onsubmit={(event) => {
+					event.preventDefault();
+					if (openText.trim()) submit([openText.trim()]);
+				}}
+			>
+				<Textarea
+					placeholder="Deine Antwort…"
+					bind:value={openText}
+					disabled={locked}
+					class="h-50"
+				/>
+				<div class="flex flex-row justify-between items-start w-full">
+					<span class="text-sm text-muted-foreground">{openText.length} Zeichen</span>
 
-					{#if selected[0] && result !== 'correct'}
-						<div class={[rowClass, resultClass.wrong]}>
-							<XIcon class="size-5 text-destructive" />
-							{selected[0]}
-						</div>
+					{#if !revealed}
+						<Button type="submit" disabled={locked || !openText.trim()}>
+							<SendIcon />
+							Senden
+						</Button>
 					{/if}
 				</div>
-			{:else}
-				<form
-					class="flex flex-row gap-3 w-full mt-5"
-					onsubmit={(event) => {
-						event.preventDefault();
-						if (openText.trim()) submit([openText.trim()]);
-					}}
-				>
-					<Input placeholder="Deine Antwort…" bind:value={openText} disabled={locked} />
-					<Button type="submit" disabled={locked || !openText.trim()}>
-						<SendIcon />
-						Senden
-					</Button>
-				</form>
-				{#if selected[0]}
-					<p class="mt-2 text-sm text-muted-foreground">Gesendet: {selected[0]}</p>
-				{/if}
+			</form>
+			{#if selected[0]}
+				<p class="mt-2 text-sm text-muted-foreground">Gesendet: {selected[0]}</p>
 			{/if}
 		{:else}
 			<div class="flex flex-col gap-4 w-full mt-5">
@@ -197,6 +192,7 @@
 
 		{#if revealed}
 			<div
+				in:slide={{ duration: 150 }}
 				class={[
 					'mt-10 rounded-lg border px-5 py-4 flex flex-row items-center gap-4',
 					result === 'correct' && 'border-green-500 bg-green-500/10 text-green-600',
@@ -225,7 +221,9 @@
 							{result === 'partial' ? 'Teilweise richtig' : 'Falsche Antwort'}
 						</span>
 						<span>
-							Deine Antwort: {answerTexts(selected) || 'Keine'} | Richtig: {answerTexts(correct)}
+							Deine Antwort: {answerTexts(selected) || 'Keine'} | {currentQuestion.type === 'open'
+								? 'Gesucht'
+								: 'Richtig'}: {answerTexts(correct)}
 						</span>
 					</div>
 				{/if}

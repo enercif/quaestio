@@ -45,16 +45,6 @@
 		return answeredCount ? Math.round(((counts.get(answerId) ?? 0) / answeredCount) * 100) : 0;
 	}
 
-	function selectionLabel(selected: string[]) {
-		if (selected.length === 0) return '—';
-		if (currentQuestion.type === 'open') return selected[0];
-		return currentQuestion.answers
-			.flatMap((answer, index) =>
-				selected.includes(answer.id) ? indexToSequence(index, currentQuestion.sequence_type) : []
-			)
-			.join(', ');
-	}
-
 	function studentClass(selected: string[]) {
 		if (!revealed) {
 			return selected.length > 0 ? 'border-primary bg-primary/5' : 'bg-secondary';
@@ -183,7 +173,6 @@
 								{presence.data.name.slice(0, 2).toUpperCase()}
 							</div>
 							<span class="text-xs">{presence.data.name}</span>
-							<span class="text-xs font-semibold">{selectionLabel(selected)}</span>
 						</div>
 					{/each}
 				</div>
