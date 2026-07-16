@@ -5,7 +5,8 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 	import type { MultipleChoiceQuestion, SingleChoiceQuestion } from '$lib/schemas/question.schema';
-	import { getTimeAsString, sequenceTypeToString, typeToBadge } from './editor-utils';
+	import { typeToBadge } from '../quiz.utils';
+	import { getTimeAsString, sequenceTypeToString } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
 	const state = EditorState.get();
