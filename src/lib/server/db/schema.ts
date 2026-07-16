@@ -9,6 +9,7 @@ import {
 	unique,
 	uuid
 } from 'drizzle-orm/pg-core';
+import { user } from './auth.schema';
 
 export const quizTable = pgTable('quiz', {
 	id: uuid('id').defaultRandom().primaryKey(),
@@ -25,6 +26,9 @@ export const roomTable = pgTable('room', {
 	quiz: uuid('quiz_id')
 		.references(() => quizTable.id)
 		.notNull(),
+	teacherId: text('teacher_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	state: text('state').default('waiting').notNull(),
 	current_question: jsonb('current_question'),
 	current_answers: text('current_answers').array(),
@@ -53,3 +57,5 @@ export const answerTable = pgTable(
 export const roomRelations = relations(roomTable, ({ one }) => ({
 	quiz: one(quizTable, { fields: [roomTable.quiz], references: [quizTable.id] })
 }));
+
+export * from './auth.schema';

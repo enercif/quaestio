@@ -1,5 +1,5 @@
 import { placeholders } from '$lib/placeholders';
-import type { SequenceType } from '$lib/schemas/question.schema';
+import type { QuestionType, SequenceType } from '$lib/schemas/question.schema';
 
 export function sequenceTypeToString(type: SequenceType) {
 	switch (type) {
@@ -9,6 +9,17 @@ export function sequenceTypeToString(type: SequenceType) {
 			return 'Römisch';
 		case 'alphabetic':
 			return 'Alphabetisch';
+	}
+}
+
+export function typeToBadge(type: QuestionType) {
+	switch (type) {
+		case 'multiple':
+			return 'Multiple Choice';
+		case 'single':
+			return 'Single Choice';
+		case 'open':
+			return 'Freitext';
 	}
 }
 

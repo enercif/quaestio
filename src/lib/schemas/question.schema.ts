@@ -38,5 +38,6 @@ export type QuestionAnswerKey = z.infer<typeof questionAnswerKeySchema>;
 
 export * from './questions/multiple.question.schema';
 export * from './questions/open.question.schema';
+export * from './questions/programming.question.schema';
 export * from './questions/shared.question.schema';
 export * from './questions/single.question.schema';

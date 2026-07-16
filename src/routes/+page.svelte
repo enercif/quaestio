@@ -86,7 +86,7 @@
 			</Card.Root>
 		</div>
 
-		<Button href="/teacher/quizzes" variant="link">Zur Lehrer Ansicht</Button>
+		<Button href="/login" variant="link">Login</Button>
 	{:else}
 		<div class="w-1/2 max-w-90" in:fly>
 			{#if codeResult?.success}

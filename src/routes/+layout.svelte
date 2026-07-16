@@ -1,21 +1,32 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
+	import { authClient } from '$lib/auth-client';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { getInitials } from '$lib/utils';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import { ModeWatcher } from 'mode-watcher';
 	import './layout.css';
 
+	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { rooms } from '$live/rooms';
 	import { toggleMode } from 'mode-watcher';
+	import type { LayoutProps } from './$types';
 
-	let { children } = $props();
+	let { data, children }: LayoutProps = $props();
 
 	const isTeacherRoute = $derived(page.route.id?.includes('teacher') ?? false);
+	const initials = $derived(getInitials(data.user?.name));
+
+	async function logout() {
+		await authClient.signOut();
+		goto(resolve('/'));
+	}
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -74,8 +85,27 @@
 						<span class="sr-only">Toggle theme</span>
 					</Button>
 
-					{#if isTeacherRoute}
-						<span class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs"> EC </span>
+					{#if isTeacherRoute && data.user}
+						<DropdownMenu.Root>
+							<DropdownMenu.Trigger>
+								{#snippet child({ props })}
+									<button
+										{...props}
+										class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs"
+									>
+										{initials}
+									</button>
+								{/snippet}
+							</DropdownMenu.Trigger>
+							<DropdownMenu.Content side="bottom" align="end">
+								<DropdownMenu.Group>
+									<DropdownMenu.Item onclick={() => goto(resolve('/teacher/settings/password'))}>
+										Passwort ändern
+									</DropdownMenu.Item>
+									<DropdownMenu.Item onclick={logout}>Logout</DropdownMenu.Item>
+								</DropdownMenu.Group>
+							</DropdownMenu.Content>
+						</DropdownMenu.Root>
 					{/if}
 				</div>
 			</div>

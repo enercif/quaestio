@@ -39,3 +39,14 @@ export const removeNull = <T>(obj: T): RemoveNull<T> => {
 export function getRecordLength(record: Record<never, never>): number {
 	return Object.keys(record).length;
 }
+
+export function getInitials(name: string | null | undefined): string {
+	if (!name) return '??';
+
+	return name
+		.split(' ')
+		.map((c) => c[0])
+		.join('')
+		.slice(0, 2)
+		.toLocaleUpperCase();
+}

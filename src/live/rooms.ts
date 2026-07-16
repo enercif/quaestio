@@ -58,11 +58,11 @@ export const rooms = live.stream(
 export const insertRoom = live.validated(
 	roomInsertSchema,
 	async (ctx: LiveContext<User>, roomInsert: RoomInsert) => {
-		if (!ctx.user) throw new LiveError('UNAUTHORIZED', 'User not authenticated');
+		requireTeacher(ctx);
 		try {
 			const [{ id }] = await db
 				.insert(roomTable)
-				.values(roomInsert)
+				.values({ ...roomInsert, teacherId: ctx.user!.id })
 				.returning({ id: roomTable.id });
 
 			const room = await getRoomById(id);
@@ -153,9 +153,7 @@ export const nextQuestion = live(async (ctx: LiveContext<User>, roomId: string) 
 			state: RoomState.Question,
 			current_question: nextQuestion,
 			current_answers: null,
-			question_ends_at: nextQuestion.timelimit
-				? Date.now() + nextQuestion.timelimit * 1000
-				: null,
+			question_ends_at: nextQuestion.timelimit ? Date.now() + nextQuestion.timelimit * 1000 : null,
 			paused_remaining: null
 		});
 	} catch (error) {
@@ -173,9 +171,7 @@ export const pauseTimer = live(async (ctx: LiveContext<User>, roomId: string) =>
 
 	await updateRoom(ctx, room, {
 		// -1 = pausiert ohne Timelimit
-		paused_remaining: room.question_ends_at
-			? Math.max(0, room.question_ends_at - Date.now())
-			: -1,
+		paused_remaining: room.question_ends_at ? Math.max(0, room.question_ends_at - Date.now()) : -1,
 		question_ends_at: null
 	});
 });
