@@ -9,7 +9,7 @@ export type { OrgRole };
 
 let cachedOrgId: string | undefined;
 
-async function getOrgId() {
+export async function getOrgId() {
 	if (cachedOrgId) return cachedOrgId;
 	const [org] = await db
 		.select({ id: organization.id })
