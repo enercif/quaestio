@@ -5,6 +5,7 @@
 	import TrashIcon from '@lucide/svelte/icons/trash';
 	import EditorChoiceQuestion from './editor-choice-question.svelte';
 	import EditorOpenQuestion from './editor-open-question.svelte';
+	import EditorProgrammingQuestion from './editor-programming-question.svelte';
 	import { EditorState } from './editor.state.svelte';
 
 	const state = EditorState.get();
@@ -28,6 +29,8 @@
 
 					{#if selectedQuestion.type === 'open'}
 						<EditorOpenQuestion />
+					{:else if selectedQuestion.type === 'programming'}
+						<EditorProgrammingQuestion />
 					{:else}
 						<EditorChoiceQuestion />
 					{/if}

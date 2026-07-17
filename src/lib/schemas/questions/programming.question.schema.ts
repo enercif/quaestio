@@ -4,7 +4,6 @@ import { baseQuestionShape } from './shared.question.schema';
 const type = 'programming';
 const programmingQuestionShape = baseQuestionShape.omit({ correct: true }).extend({
 	type: z.literal(type),
-	description: z.string().min(1, 'Die Beschreibung darf nicht leer sein.'),
 	code_snippet: z.string().min(1, 'Der Code darf nicht leer sein.'),
 	language: z.string().min(1, 'Die Sprache darf nicht leer sein.'),
 	correct_lines: z

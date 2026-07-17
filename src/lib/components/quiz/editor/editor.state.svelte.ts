@@ -48,20 +48,29 @@ export class EditorState {
 			timelimit: 30,
 			points: 1,
 			question: '',
-			correct: [],
 			position: this.quiz.questions.length
 		};
 		const question: Question =
 			type === 'open'
-				? { ...base, type }
-				: { ...base, type, answers: [], sequence_type: 'numeric' };
+				? { ...base, type, correct: [] }
+				: type === 'programming'
+					? {
+							...base,
+							type,
+							code_snippet: '',
+							language: '',
+							correct_lines: [],
+							reasons: {},
+							hint: ''
+						}
+					: { ...base, type, correct: [], answers: [], sequence_type: 'numeric' };
 		this.quiz.questions.push(question);
 		this.selectedId = question.id;
 	};
 
 	addAnswer = () => {
 		const question = this.selectedQuestion;
-		if (!question || question.type === 'open') return;
+		if (!question || question.type === 'open' || question.type === 'programming') return;
 		question.answers.push({ id: crypto.randomUUID(), text: '', position: question.answers.length });
 	};
 

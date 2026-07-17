@@ -89,6 +89,8 @@ export function typeToBadge(type: QuestionType) {
 			return 'Single Choice';
 		case 'open':
 			return 'Open Text';
+		case 'programming':
+			return 'Programming';
 	}
 }
 
@@ -100,5 +102,7 @@ export function typeToDescription(type: QuestionType) {
 			return 'Wähle genau eine Antwort aus.';
 		case 'open':
 			return 'Gib deine Antwort als Text ein.';
+		case 'programming':
+			return 'Markiere die fehlerhaften Zeilen im Code.';
 	}
 }

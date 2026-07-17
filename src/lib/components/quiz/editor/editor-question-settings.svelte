@@ -36,7 +36,7 @@
 					</div>
 				</Field.Field>
 
-				{#if selectedQuestion.type !== 'open'}
+				{#if selectedQuestion.type === 'multiple' || selectedQuestion.type === 'single'}
 					{@const choiceQuestion = selectedQuestion as
 						MultipleChoiceQuestion | SingleChoiceQuestion}
 					<Field.Separator />

@@ -202,6 +202,9 @@ export const showResults = live(async (ctx: LiveContext<User>, roomId: string) =
 		.parse(quizQuestions?.questions)
 		.find((q) => q.id === room.current_question!.id);
 	if (!question) throw new LiveError('NOT_FOUND', 'Question not found');
+	if (question.type === 'programming') {
+		throw new LiveError('VALIDATION', 'Programming questions are not supported in live rooms yet');
+	}
 
 	await updateRoom(ctx, room, {
 		state: RoomState.Answer,

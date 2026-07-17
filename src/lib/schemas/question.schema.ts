@@ -7,6 +7,7 @@ import {
 	liveOpenTextQuestionSchema,
 	openTextQuestionSchema
 } from './questions/open.question.schema';
+import { programmingQuestionSchema } from './questions/programming.question.schema';
 import { baseQuestionShape } from './questions/shared.question.schema';
 import {
 	liveSingleChoiceQuestionSchema,
@@ -17,7 +18,8 @@ export const questionsSchema = z
 	.discriminatedUnion('type', [
 		multipleChoiceQuestionSchema,
 		singleChoiceQuestionSchema,
-		openTextQuestionSchema
+		openTextQuestionSchema,
+		programmingQuestionSchema
 	])
 	.array()
 	.min(1, 'Es muss mindestens eine Frage vorhanden sein.')
