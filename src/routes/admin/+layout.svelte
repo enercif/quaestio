@@ -1,17 +1,16 @@
 <script lang="ts">
+	import { authClient } from '$lib/auth-client';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import { authClient } from '$lib/auth-client';
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 
 	import { toggleMode } from 'mode-watcher';
 	import { getInitials } from '$lib/utils.js';
-
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
@@ -31,13 +30,6 @@
 			<GraduationCapIcon class="size-6 text-primary" />
 			<span class="text-lg font-semibold">Quaestio</span>
 		</div>
-
-		<div class="flex flex-row items-center gap-2">
-			<Button variant="ghost" class="font-semibold text-primary hover:text-primary">Quizzes</Button>
-			<Button variant="ghost">Live</Button>
-			<Button variant="ghost">Analyse</Button>
-		</div>
-
 		<div class="ml-auto flex flex-row items-center gap-1">
 			<Button onclick={toggleMode} variant="ghost" size="icon">
 				<SunIcon
@@ -48,7 +40,6 @@
 				/>
 				<span class="sr-only">Toggle theme</span>
 			</Button>
-
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
 					{#snippet child({ props })}
@@ -57,25 +48,19 @@
 								class="flex size-8 items-center justify-center rounded-full border border-black/25 bg-secondary text-xs leading-none dark:text-white"
 								>{initials}</span
 							>
-
 							<ChevronDown class="dark:text-white" />
 						</Button>
 					{/snippet}
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content side="bottom" align="end" class="w-full">
 					<DropdownMenu.Group>
-						<DropdownMenu.Item>
-							{#snippet child({ props })}
-								<a {...props} href={resolve('/teacher/settings/password')}>Passwort ändern</a>
-							{/snippet}
-						</DropdownMenu.Item>
-						<DropdownMenu.Item onclick={logout}>Logout</DropdownMenu.Item>
+						<DropdownMenu.Item class=" cursor-pointer" onclick={logout}>Logout</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
 	</div>
 </nav>
-<div class="flex w-full flex-col items-center justify-center">
+<div class="my-8">
 	{@render children()}
 </div>
