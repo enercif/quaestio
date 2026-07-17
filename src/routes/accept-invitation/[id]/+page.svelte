@@ -3,7 +3,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
-	import { completeRegistration } from '$lib/remote/register.remote';
+	import { completeRegistration } from '$lib/remote/accept-invitation.remote';
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import type { PageProps } from './$types';
 
@@ -23,8 +23,8 @@
 			</div>
 
 			{#if data.invite}
-				<Card.Title class="text-2xl font-bold">Willkommen, {data.invite.name}</Card.Title>
-				<Card.Description>Setze ein Passwort, um dein Konto zu aktivieren</Card.Description>
+				<Card.Title class="text-2xl font-bold">Willkommen bei Quaestio</Card.Title>
+				<Card.Description>Richte dein Konto für {data.invite.email} ein</Card.Description>
 			{:else}
 				<Card.Title class="text-2xl font-bold">Link ungültig</Card.Title>
 				<Card.Description>Dieser Einladungslink ist ungültig oder abgelaufen.</Card.Description>
@@ -35,18 +35,22 @@
 			<Card.Content class="mt-4">
 				<form {...completeRegistration} class="flex flex-col gap-2">
 					<div>
+						<Label for="name" class="mb-2 text-sm font-medium">Name</Label>
+						<Input id="name" autofocus {...completeRegistration.fields.name.as('text')} />
+						{#each completeRegistration.fields.name.issues() as issue (issue.message)}
+							<p class="mt-1 text-sm text-destructive">{issue.message}</p>
+						{/each}
+					</div>
+
+					<div>
 						<Label for="password" class="mb-2 text-sm font-medium">Passwort</Label>
-						<Input
-							id="password"
-							autofocus
-							{...completeRegistration.fields.password.as('password')}
-						/>
+						<Input id="password" {...completeRegistration.fields.password.as('password')} />
 						{#each completeRegistration.fields.password.issues() as issue (issue.message)}
 							<p class="mt-1 text-sm text-destructive">{issue.message}</p>
 						{/each}
 					</div>
 
-					<input {...completeRegistration.fields.token.as('hidden', data.token)} />
+					<input {...completeRegistration.fields.invitationId.as('hidden', data.invitationId)} />
 
 					{#if result && !result.success}
 						<p class="text-sm text-destructive">{result.error}</p>

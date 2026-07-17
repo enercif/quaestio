@@ -1,28 +1,30 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
 	import InviteUserDialog from '$lib/components/admin/invite-user-dialog.svelte';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { cancelInvite, deleteUser } from '$lib/remote/users.remote';
+	import * as Select from '$lib/components/ui/select/index.js';
+	import { cancelInvite, deleteUser, listUsers, updateMemberRole } from '$lib/remote/users.remote';
+	import { roleLabels, type OrgRole } from '$lib/types/org-role.type';
 	import { toast } from 'svelte-sonner';
-	import type { PageProps } from './$types';
 
-	let { data }: PageProps = $props();
-
-	const users = $derived(data.users);
+	const users = $derived(await listUsers());
 
 	async function onDelete(userId: string) {
 		const result = await deleteUser(userId);
-		if (result.success) {
-			await invalidateAll();
-		} else {
+		if (!result.success) {
 			toast.error(result.error ?? 'Nutzer konnte nicht gelöscht werden.');
 		}
 	}
 
-	async function onCancelInvite(verificationId: string) {
-		await cancelInvite(verificationId);
-		await invalidateAll();
+	async function onCancelInvite(invitationId: string) {
+		await cancelInvite(invitationId);
+	}
+
+	async function onRoleChange(memberId: string, role: OrgRole) {
+		const result = await updateMemberRole({ memberId, role });
+		if (!result.success) {
+			toast.error(result.error ?? 'Rolle konnte nicht geändert werden.');
+		}
 	}
 </script>
 
@@ -48,7 +50,25 @@
 					<tr class="border-b transition-colors duration-200 hover:bg-secondary">
 						<td class="py-2 pl-4">{user.name}</td>
 						<td class="py-2">{user.email}</td>
-						<td class="py-2">{user.role}</td>
+						<td class="py-2">
+							{#if user.status === 'aktiv' && user.memberId}
+								{@const memberId = user.memberId}
+								<Select.Root
+									type="single"
+									value={user.role}
+									onValueChange={(value) => onRoleChange(memberId, value as OrgRole)}
+								>
+									<Select.Trigger class="w-32">{roleLabels[user.role]}</Select.Trigger>
+									<Select.Content>
+										<Select.Item value="member">{roleLabels.member}</Select.Item>
+										<Select.Item value="admin">{roleLabels.admin}</Select.Item>
+										<Select.Item value="owner">{roleLabels.owner}</Select.Item>
+									</Select.Content>
+								</Select.Root>
+							{:else}
+								{roleLabels[user.role]}
+							{/if}
+						</td>
 						<td class="py-2">
 							<Badge variant={user.status === 'aktiv' ? 'secondary' : 'outline'}>
 								{user.status}
@@ -59,7 +79,7 @@
 								<Button variant="ghost" size="sm" onclick={() => onCancelInvite(user.id)}>
 									Einladung zurückziehen
 								</Button>
-							{:else if user.role !== 'admin'}
+							{:else if user.role !== 'owner'}
 								<Button variant="ghost" size="sm" onclick={() => onDelete(user.id)}>Löschen</Button>
 							{/if}
 						</td>

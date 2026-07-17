@@ -1,138 +1,163 @@
 import { command, getRequestEvent, query } from '$app/server';
-import { sendMail } from '$lib/server/mail';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { verification } from '$lib/server/db/auth.schema';
+import { user } from '$lib/server/db/auth.schema';
+import { sendMail } from '$lib/server/mail';
+import { getMemberRole, getMemberRoleById, isOrgAdmin, type OrgRole } from '$lib/server/org';
 import { APIError } from 'better-auth';
-import { and, eq, gt, like } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import z from 'zod';
 
-const INVITE_PREFIX = 'invite:';
-const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const roleSchema = z.enum(['owner', 'admin', 'member']);
 
-function requireAdmin() {
+async function requireOrgAdmin() {
 	const event = getRequestEvent();
-	if (event.locals.user?.role !== 'admin') {
+	const userId = event.locals.user?.id;
+	const role = userId ? await getMemberRole(userId) : undefined;
+	if (!isOrgAdmin(role)) {
 		throw new Error('Forbidden');
 	}
-	return event;
+	return { event, role: role! };
 }
 
 type UserRow = {
 	id: string;
+	memberId?: string;
 	name: string;
 	email: string;
-	role: string;
+	role: OrgRole;
 	status: 'aktiv' | 'eingeladen';
 	inviteUrl?: string;
 };
 
 export const listUsers = query(async (): Promise<UserRow[]> => {
-	const event = requireAdmin();
+	const { event } = await requireOrgAdmin();
+	const headers = event.request.headers;
 
-	const { users } = await auth.api.listUsers({
-		query: { limit: 200, sortBy: 'createdAt', sortDirection: 'desc' },
-		headers: event.request.headers
+	const { members } = await auth.api.listMembers({
+		query: { sortBy: 'createdAt', sortDirection: 'desc' },
+		headers
+	});
+	const invitations = await auth.api.listInvitations({
+		headers
 	});
 
-	const pendingInvites = await db
-		.select()
-		.from(verification)
-		.where(
-			and(
-				like(verification.identifier, `${INVITE_PREFIX}%`),
-				gt(verification.expiresAt, new Date())
-			)
-		);
-
-	const knownEmails = new Set(users.map((u) => u.email));
-
-	const invited: UserRow[] = pendingInvites
-		.map((invite) => {
-			const { email, name } = JSON.parse(invite.value) as { email: string; name: string };
-			if (knownEmails.has(email)) return null;
-			const token = invite.identifier.slice(INVITE_PREFIX.length);
-			return {
-				id: invite.id,
-				name,
-				email,
-				role: 'teacher',
-				status: 'eingeladen' as const,
-				inviteUrl: `${event.url.origin}/register/${token}`
-			};
-		})
-		.filter((row) => row !== null);
-
-	const active: UserRow[] = users.map((u) => ({
-		id: u.id,
-		name: u.name,
-		email: u.email,
-		role: u.role ?? 'teacher',
+	const active: UserRow[] = members.map((m) => ({
+		id: m.userId,
+		memberId: m.id,
+		name: m.user.name,
+		email: m.user.email,
+		role: m.role as OrgRole,
 		status: 'aktiv' as const
 	}));
+
+	const invited: UserRow[] = invitations
+		.filter((i) => i.status === 'pending')
+		.map((i) => ({
+			id: i.id,
+			name: i.email,
+			email: i.email,
+			role: i.role as OrgRole,
+			status: 'eingeladen' as const,
+			inviteUrl: `${event.url.origin}/accept-invitation/${i.id}`
+		}));
 
 	return [...active, ...invited];
 });
 
 export const inviteUser = command(
-	z.object({ name: z.string().min(1, 'Der Name darf nicht leer sein.'), email: z.email() }),
-	async ({ name, email }) => {
-		const event = requireAdmin();
-
-		const { users } = await auth.api.listUsers({
-			query: { limit: 200, sortBy: 'createdAt', sortDirection: 'desc' },
-			headers: event.request.headers
-		});
-		if (users.some((u) => u.email === email)) {
-			return {
-				success: false as const,
-				error: 'Es existiert bereits ein Account mit dieser E-Mail.'
-			};
+	z.object({ email: z.email(), role: roleSchema }),
+	async ({ email, role }) => {
+		const { event, role: callerRole } = await requireOrgAdmin();
+		if (role === 'owner' && callerRole !== 'owner') {
+			return { success: false as const, error: 'Nur Owner können die Owner-Rolle vergeben.' };
 		}
 
-		const token = crypto.randomUUID();
-		await db.insert(verification).values({
-			id: crypto.randomUUID(),
-			identifier: `${INVITE_PREFIX}${token}`,
-			value: JSON.stringify({ email, name }),
-			expiresAt: new Date(Date.now() + INVITE_TTL_MS)
-		});
-
-		return { success: true as const, url: `${event.url.origin}/register/${token}` };
+		try {
+			const invitation = await auth.api.createInvitation({
+				body: { email, role },
+				headers: event.request.headers
+			});
+			void listUsers().refresh();
+			return {
+				success: true as const,
+				url: `${event.url.origin}/accept-invitation/${invitation.id}`
+			};
+		} catch (error) {
+			const message = error instanceof APIError ? error.body?.message : undefined;
+			return {
+				success: false as const,
+				error: message ?? 'Einladung konnte nicht erstellt werden.'
+			};
+		}
 	}
 );
 
 export const sendInviteEmail = command(
-	z.object({ email: z.email(), name: z.string(), url: z.string() }),
-	async ({ email, name, url }) => {
-		requireAdmin();
+	z.object({ email: z.email(), url: z.string() }),
+	async ({ email, url }) => {
+		await requireOrgAdmin();
 		return sendMail({
 			to: email,
 			subject: 'Einladung zu Quaestio',
-			html: `<p>Hallo ${name},</p><p>du wurdest eingeladen, ein Lehrer-Konto bei Quaestio zu erstellen.</p><p><a href="${url}">${url}</a></p>`
+			html: `<p>Hallo,</p><p>du wurdest eingeladen, ein Konto bei Quaestio zu erstellen.</p><p><a href="${url}">${url}</a></p>`
 		});
 	}
 );
 
-export const cancelInvite = command(z.string(), async (verificationId) => {
-	requireAdmin();
-	await db.delete(verification).where(eq(verification.id, verificationId));
-	return { success: true };
+export const cancelInvite = command(z.string(), async (invitationId) => {
+	const { event } = await requireOrgAdmin();
+	try {
+		await auth.api.cancelInvitation({
+			body: { invitationId },
+			headers: event.request.headers
+		});
+		void listUsers().refresh();
+		return { success: true };
+	} catch (error) {
+		console.error('Fehler beim Zurückziehen der Einladung:', error);
+		return { success: false };
+	}
 });
 
+export const updateMemberRole = command(
+	z.object({ memberId: z.string(), role: roleSchema }),
+	async ({ memberId, role }) => {
+		const { event, role: callerRole } = await requireOrgAdmin();
+		const currentRole = await getMemberRoleById(memberId);
+		const touchesOwnerRank = role === 'owner' || currentRole === 'owner';
+		if (touchesOwnerRank && callerRole !== 'owner') {
+			return {
+				success: false as const,
+				error: 'Nur Owner können die Owner-Rolle vergeben oder entziehen.'
+			};
+		}
+
+		try {
+			await auth.api.updateMemberRole({
+				body: { memberId, role },
+				headers: event.request.headers
+			});
+			void listUsers().refresh();
+			return { success: true as const };
+		} catch (error) {
+			const message = error instanceof APIError ? error.body?.message : undefined;
+			return { success: false as const, error: message ?? 'Rolle konnte nicht geändert werden.' };
+		}
+	}
+);
+
 export const deleteUser = command(z.string(), async (userId) => {
-	const event = requireAdmin();
+	const { event } = await requireOrgAdmin();
 
 	if (event.locals.user?.id === userId) {
 		return { success: false as const, error: 'Du kannst dich nicht selbst löschen.' };
 	}
-
-	try {
-		await auth.api.removeUser({ body: { userId }, headers: event.request.headers });
-		return { success: true as const };
-	} catch (error) {
-		console.error('Fehler beim Löschen des Nutzers:', error);
-		const message = error instanceof APIError ? error.body?.message : undefined;
-		return { success: false as const, error: message ?? 'Nutzer konnte nicht gelöscht werden.' };
+	if ((await getMemberRole(userId)) === 'owner') {
+		return { success: false as const, error: 'Der Owner kann nicht gelöscht werden.' };
 	}
+
+	await db.delete(user).where(eq(user.id, userId));
+	void listUsers().refresh();
+	return { success: true as const };
 });

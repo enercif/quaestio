@@ -1,10 +1,12 @@
 import { redirect } from '@sveltejs/kit';
+import { getMemberRole } from '$lib/server/org';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
-	if (!locals.user || (locals.user.role !== 'teacher' && locals.user.role !== 'admin')) {
+	const role = locals.user ? await getMemberRole(locals.user.id) : undefined;
+	if (!locals.user || !role) {
 		redirect(303, '/login');
 	}
 
-	return { user: locals.user };
+	return { user: locals.user, role };
 };

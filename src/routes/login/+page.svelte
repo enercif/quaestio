@@ -22,19 +22,14 @@
 		error = '';
 
 		try {
-			const { data, error: signInError } = await authClient.signIn.email({ email, password });
+			const { error: signInError } = await authClient.signIn.email({ email, password });
 
 			if (signInError) {
 				error = signInError.message ?? 'Ungültige E-Mail oder Passwort.';
 				return;
 			}
 
-			const role = (data?.user as { role?: string } | undefined)?.role;
-			if (role === 'admin') {
-				goto(resolve('/teacher/settings/users'));
-			} else {
-				goto(resolve('/teacher/quizzes'));
-			}
+			goto(resolve('/teacher/quizzes'));
 		} catch (err) {
 			console.error(err);
 			error = 'Verbindung zum Server fehlgeschlagen. Bitte versuchen Sie es erneut.';
@@ -111,7 +106,12 @@
 					</div>
 					<div>
 						<Label for="password" class="mb-2 text-sm font-medium">Password</Label>
-						<Input id="password" type="password" bind:value={password} placeholder="Password" required
+						<Input
+							id="password"
+							type="password"
+							bind:value={password}
+							placeholder="Password"
+							required
 						></Input>
 						{#if error}<p class="text-sm text-red-500">
 								{error}

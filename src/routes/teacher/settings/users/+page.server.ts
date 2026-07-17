@@ -1,12 +1,10 @@
 import { redirect } from '@sveltejs/kit';
-import { listUsers } from '$lib/remote/users.remote';
+import { isOrgAdmin } from '$lib/server/org';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ parent }) => {
-	const { user } = await parent();
-	if (user.role !== 'admin') {
+	const { role } = await parent();
+	if (!isOrgAdmin(role)) {
 		redirect(303, '/teacher/quizzes');
 	}
-
-	return { users: await listUsers() };
 };
