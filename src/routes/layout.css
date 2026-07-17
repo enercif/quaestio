@@ -1,7 +1,7 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
-@import "shadcn-svelte/tailwind.css";
-@import "@fontsource-variable/inter";
+@import 'tw-animate-css';
+@import 'shadcn-svelte/tailwind.css';
+@import '@fontsource-variable/inter';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -126,4 +126,35 @@
 	html {
 		@apply font-sans;
 	}
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+	color: var(--shiki-dark) !important;
+	background-color: var(--shiki-dark-bg) !important;
+	font-style: var(--shiki-dark-font-style) !important;
+	font-weight: var(--shiki-dark-font-weight) !important;
+	text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.programming-code-preview .line::before {
+	content: attr(data-line);
+	color: var(--muted-foreground);
+	padding-inline: 0.75rem;
+}
+
+.programming-code-preview .line:hover {
+	box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+
+.programming-code-preview .line.correct-line {
+	box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--color-green-500) 15%, transparent);
+}
+
+.programming-code-preview .line span {
+	background-color: transparent !important;
+}
+
+.programming-code-preview code {
+	display: grid;
 }

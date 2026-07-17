@@ -12,15 +12,64 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1781012464490,
-      "tag": "0001_lean_warstar",
+      "when": 1778196431286,
+      "tag": "0001_loose_madripoor",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1782359975199,
-      "tag": "0002_cloudy_next_avengers",
+      "when": 1782938501245,
+      "tag": "0002_omniscient_penance",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782946575800,
+      "tag": "0003_melted_midnight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1783191909825,
+      "tag": "0004_wise_alex_wilder",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1783871404348,
+      "tag": "0005_odd_harry_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1783885192812,
+      "tag": "0006_loud_sir_ram",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783942815573,
+      "tag": "0007_soft_imperial_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1784189463584,
+      "tag": "0008_absurd_sugar_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1784246006809,
+      "tag": "0009_grey_xavin",
       "breakpoints": true
     }
   ]

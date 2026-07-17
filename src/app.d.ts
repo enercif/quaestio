@@ -1,4 +1,4 @@
-import type { auth } from '$lib/server/db/auth';
+import type { auth } from '$lib/server/auth';
 type Session = typeof auth.$Infer.Session;
 
 // See https://svelte.dev/docs/kit/types#app.d.ts

@@ -1,0 +1,9 @@
+import { findAllQuizzes } from '$lib/remote/quiz.remote';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => {
+	const quizzes = await findAllQuizzes();
+	return {
+		quizzes
+	};
+};

@@ -1,0 +1,1 @@
+ALTER TABLE "quiz" ADD COLUMN "questions_length" integer NOT NULL;

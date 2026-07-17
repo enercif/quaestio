@@ -5,5 +5,6 @@ allowBuilds:
   '@prisma/client': true
   better-sqlite3: true
   esbuild: true
-minimumReleaseAgeExclude:
-  - '@sveltejs/adapter-node@5.5.6'
+blockExoticSubdeps: false
+patchedDependencies:
+  svelte-realtime: patches/svelte-realtime.patch

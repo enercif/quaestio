@@ -1,0 +1,24 @@
+diff --git a/vite.js b/vite.js
+index 0692a9d223d28d862dc3ee7df442d7c2d1b45f15..609b06f35c69745e1b547785457b106af6f3c368 100644
+--- a/vite.js
++++ b/vite.js
+@@ -863,6 +863,7 @@ import('svelte-realtime/devtools');
+ 
+ 		async handleHotUpdate({ file, server }) {
+ 			if (!file.startsWith(liveDir)) return;
++			if (file.endsWith('.d.ts') || file.endsWith('.test.js') || file.endsWith('.test.ts')) return;
+ 			_fileCache.delete(file);
+ 			_codeCache.delete('client:' + file);
+ 			_codeCache.delete('ssr:' + file);
+@@ -2147,6 +2148,11 @@ function _writeTypeDeclarations(liveDir, dir) {
+ 	const typesPath = resolve(liveDir, '$types.d.ts');
+ 	const content = _generateTypeDeclarations(liveDir, dir);
+ 	if (content) {
++		// Skip the write when nothing changed so the file watcher does not
++		// see a new mtime and re-trigger HMR for the generated file
++		try {
++			if (readFileSync(typesPath, 'utf8') === content) return;
++		} catch {}
+ 		writeFileSync(typesPath, content);
+ 	} else if (existsSync(typesPath)) {
+ 		// Remove stale declarations when all live modules are deleted
