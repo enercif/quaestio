@@ -7,7 +7,10 @@ import {
 	liveOpenTextQuestionSchema,
 	openTextQuestionSchema
 } from './questions/open.question.schema';
-import { programmingQuestionSchema } from './questions/programming.question.schema';
+import {
+	liveProgrammingQuestionSchema,
+	programmingQuestionSchema
+} from './questions/programming.question.schema';
 import { baseQuestionShape } from './questions/shared.question.schema';
 import {
 	liveSingleChoiceQuestionSchema,
@@ -28,7 +31,8 @@ export const questionsSchema = z
 export const liveQuestionSchema = z.discriminatedUnion('type', [
 	liveMultipleChoiceQuestionSchema,
 	liveSingleChoiceQuestionSchema,
-	liveOpenTextQuestionSchema
+	liveOpenTextQuestionSchema,
+	liveProgrammingQuestionSchema
 ]);
 
 export const questionAnswerKeySchema = baseQuestionShape.pick({ id: true, correct: true });

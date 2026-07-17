@@ -8,6 +8,7 @@
 	} from '$lib/components/quiz/quiz.utils';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
+	import { highlightCode } from '$lib/shiki';
 	import { nextQuestion, pauseTimer, resumeTimer, showResults } from '$live/rooms';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import CheckIcon from '@lucide/svelte/icons/check';
@@ -16,6 +17,7 @@
 	import PauseIcon from '@lucide/svelte/icons/pause';
 	import PlayIcon from '@lucide/svelte/icons/play';
 	import SkipForwardIcon from '@lucide/svelte/icons/skip-forward';
+	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { LiveTeacherState } from './live-teacher.state.svelte';
@@ -40,6 +42,26 @@
 		return map;
 	});
 	const openCounts = $derived([...counts].sort((a, b) => b[1] - a[1]));
+
+	let codeContainer: HTMLDivElement | undefined = $state();
+	const programmingHtml = $derived.by(async () => {
+		if (currentQuestion.type !== 'programming') return '';
+		return highlightCode(currentQuestion.code_snippet, currentQuestion.language);
+	});
+
+	watch(
+		() => [counts, revealed, correct] as const,
+		([counts, revealed, correct]) => {
+			if (!codeContainer) return;
+			for (const line of codeContainer.querySelectorAll<HTMLElement>('.line')) {
+				const lineNumber = line.dataset.line;
+				if (!lineNumber) continue;
+				const voteCount = counts.get(lineNumber) ?? 0;
+				line.dataset.votes = voteCount ? `${voteCount}×` : '';
+				line.classList.toggle('correct-line', revealed && correct.includes(lineNumber));
+			}
+		}
+	);
 
 	function pctFor(answerId: string) {
 		return answeredCount ? Math.round(((counts.get(answerId) ?? 0) / answeredCount) * 100) : 0;
@@ -119,6 +141,14 @@
 					{:else}
 						<p class="text-sm text-muted-foreground">Noch keine Antworten.</p>
 					{/each}
+				{:else if currentQuestion.type === 'programming'}
+					<div
+						bind:this={codeContainer}
+						class="programming-code-preview overflow-x-auto rounded-md border text-sm [&_code]:py-3"
+					>
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html await programmingHtml}
+					</div>
 				{:else}
 					{#each currentQuestion.answers as answer, index (answer.id)}
 						{@const isCorrect = revealed && correct.includes(answer.id)}
@@ -180,3 +210,12 @@
 		</Card.Root>
 	</div>
 </div>
+
+<style>
+	.programming-code-preview :global(.line::after) {
+		content: attr(data-votes);
+		color: var(--muted-foreground);
+		padding-inline: 0.75rem;
+		font-size: 0.75rem;
+	}
+</style>

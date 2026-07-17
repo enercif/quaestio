@@ -98,7 +98,7 @@
 		{/each}
 	</Field.Field>
 
-	<Field.Separator />
+	<Field.Separator class="-my-5 mx-20" />
 
 	<div class="flex flex-col gap-2">
 		<div
@@ -149,26 +149,7 @@
 </Field.Group>
 
 <style>
-	.programming-code-preview :global(.line:hover) {
-		box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--foreground) 6%, transparent);
-	}
-
-	.programming-code-preview :global(.line::before) {
-		content: attr(data-line);
-		color: var(--muted-foreground);
-		padding-inline: 0.75rem;
-	}
-
 	.programming-code-preview :global(.line.wrong-line) {
 		box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--destructive) 12%, transparent);
-	}
-
-	.programming-code-preview :global(.line:hover span),
-	.programming-code-preview :global(.line.wrong-line span) {
-		background-color: transparent !important;
-	}
-
-	.programming-code-preview :global(code) {
-		display: grid;
 	}
 </style>

@@ -12,6 +12,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { highlightCode } from '$lib/shiki';
 	import { submitAnswer } from '$live/rooms';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import ClockIcon from '@lucide/svelte/icons/clock';
@@ -39,6 +40,29 @@
 	);
 
 	let openText = $state('');
+	let codeContainer: HTMLDivElement | undefined = $state();
+	const programmingHtml = $derived.by(async () => {
+		if (currentQuestion.type !== 'programming') return '';
+		return highlightCode(currentQuestion.code_snippet, currentQuestion.language);
+	});
+
+	watch(
+		() => [selected, revealed, correct] as const,
+		([selected, revealed, correct]) => {
+			if (!codeContainer) return;
+			for (const line of codeContainer.querySelectorAll<HTMLElement>('.line')) {
+				const lineNumber = line.dataset.line;
+				if (!lineNumber) continue;
+				const isSelected = selected.includes(lineNumber);
+				line.classList.toggle('selected-line', !revealed && isSelected);
+				line.classList.toggle('correct-line', revealed && correct.includes(lineNumber));
+				line.classList.toggle(
+					'wrong-line',
+					revealed && isSelected && !correct.includes(lineNumber)
+				);
+			}
+		}
+	);
 
 	watch(
 		() => currentQuestion.id,
@@ -74,10 +98,25 @@
 
 	function answerTexts(ids: string[]) {
 		if (currentQuestion.type === 'open') return ids.join(', ');
+		if (currentQuestion.type === 'programming') {
+			return ids.length ? `Zeile ${ids.join(', ')}` : '';
+		}
 		return currentQuestion.answers
 			.filter((answer) => ids.includes(answer.id))
 			.map((answer) => answer.text)
 			.join(', ');
+	}
+
+	function onCodeClick(event: MouseEvent) {
+		if (locked) return;
+		const line = (event.target as HTMLElement).closest<HTMLElement>('.line');
+		const lineNumber = line?.dataset.line;
+		if (!lineNumber) return;
+		submit(
+			selected.includes(lineNumber)
+				? selected.filter((id) => id !== lineNumber)
+				: [...selected, lineNumber]
+		);
 	}
 
 	function revealClass(answerId: string) {
@@ -149,6 +188,19 @@
 			{#if selected[0]}
 				<p class="mt-2 text-sm text-muted-foreground">Gesendet: {selected[0]}</p>
 			{/if}
+		{:else if currentQuestion.type === 'programming'}
+			<div
+				bind:this={codeContainer}
+				onclick={onCodeClick}
+				role="presentation"
+				class={[
+					'programming-code-preview overflow-x-auto rounded-md border text-sm mt-2 [&_code]:py-3',
+					!locked && '[&_.line]:cursor-pointer'
+				]}
+			>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html await programmingHtml}
+			</div>
 		{:else}
 			<div class="flex flex-col gap-4 w-full mt-5">
 				{#each currentQuestion.answers as answer, index (answer.id)}
@@ -194,28 +246,21 @@
 			<div
 				in:slide={{ duration: 150 }}
 				class={[
-					'mt-10 rounded-lg border px-5 py-4 flex flex-row items-center gap-4',
+					'mt-10 rounded-lg border px-5 py-4 flex flex-row items-center gap-4 text-sm',
 					result === 'correct' && 'border-green-500 bg-green-500/10 text-green-600',
 					result === 'partial' && 'border-yellow-500 bg-yellow-500/10 text-yellow-600',
 					result === 'wrong' && 'border-destructive bg-destructive/10 text-destructive'
 				]}
 			>
 				{#if result === 'correct'}
-					<CheckIcon class="size-5" />
+					<CheckIcon class="size-7" />
 					Richtige Antwort!
 				{:else}
-					<div
-						class={[
-							'size-10 text-primary-foreground rounded-lg grid place-items-center',
-							result === 'partial' ? 'bg-yellow-500' : 'bg-destructive'
-						]}
-					>
-						{#if result === 'partial'}
-							<TriangleAlertIcon />
-						{:else}
-							<XIcon />
-						{/if}
-					</div>
+					{#if result === 'partial'}
+						<TriangleAlertIcon class="size-7" />
+					{:else}
+						<XIcon class="size-7" />
+					{/if}
 					<div class="flex flex-col">
 						<span class="font-semibold">
 							{result === 'partial' ? 'Teilweise richtig' : 'Falsche Antwort'}
@@ -231,3 +276,13 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.programming-code-preview :global(.line.selected-line) {
+		box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--primary) 12%, transparent);
+	}
+
+	.programming-code-preview :global(.line.wrong-line) {
+		box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--destructive) 15%, transparent);
+	}
+</style>
