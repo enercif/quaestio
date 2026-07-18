@@ -11,7 +11,7 @@ import {
 	liveProgrammingQuestionSchema,
 	programmingQuestionSchema
 } from './questions/programming.question.schema';
-import { baseQuestionShape } from './questions/shared.question.schema';
+import { questionBaseSchema } from './questions/shared.question.schema';
 import {
 	liveSingleChoiceQuestionSchema,
 	singleChoiceQuestionSchema
@@ -35,7 +35,7 @@ export const liveQuestionSchema = z.discriminatedUnion('type', [
 	liveProgrammingQuestionSchema
 ]);
 
-export const questionAnswerKeySchema = baseQuestionShape.pick({ id: true, correct: true });
+export const questionAnswerKeySchema = questionBaseSchema.pick({ id: true, correct: true });
 
 export type Question = z.infer<typeof questionsSchema>[number];
 export type QuestionType = Question['type'];

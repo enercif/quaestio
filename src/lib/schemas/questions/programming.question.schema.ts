@@ -1,8 +1,8 @@
 import z from 'zod';
-import { baseQuestionShape } from './shared.question.schema';
+import { questionBaseSchema } from './shared.question.schema';
 
 const type = 'programming';
-const programmingQuestionShape = baseQuestionShape.omit({ correct: true }).extend({
+const programmingQuestionBaseSchema = questionBaseSchema.omit({ correct: true }).extend({
 	type: z.literal(type),
 	code_snippet: z.string().min(1, 'Der Code darf nicht leer sein.'),
 	language: z.string().min(1, 'Die Sprache darf nicht leer sein.'),
@@ -13,7 +13,7 @@ const programmingQuestionShape = baseQuestionShape.omit({ correct: true }).exten
 	hint: z.string().optional()
 });
 
-export const programmingQuestionSchema = programmingQuestionShape.refine(
+export const programmingQuestionSchema = programmingQuestionBaseSchema.refine(
 	(question) => question.correct_lines.every((line) => question.reasons[line]?.trim()),
 	{
 		message: 'Für jede markierte Fehler-Zeile muss eine Begründung angegeben werden.',
@@ -21,7 +21,7 @@ export const programmingQuestionSchema = programmingQuestionShape.refine(
 	}
 );
 
-export const liveProgrammingQuestionSchema = programmingQuestionShape.omit({
+export const liveProgrammingQuestionSchema = programmingQuestionBaseSchema.omit({
 	correct_lines: true,
 	reasons: true
 });

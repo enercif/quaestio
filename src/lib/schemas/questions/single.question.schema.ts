@@ -1,10 +1,10 @@
 import z from 'zod';
-import { choiceQuestionShape } from './shared.question.schema';
+import { choiceQuestionBaseSchema } from './shared.question.schema';
 
 const type = 'single';
-const singleChoiceQuestionShape = choiceQuestionShape.extend({ type: z.literal(type) });
+const singleChoiceQuestionBaseSchema = choiceQuestionBaseSchema.extend({ type: z.literal(type) });
 
-export const singleChoiceQuestionSchema = singleChoiceQuestionShape
+export const singleChoiceQuestionSchema = singleChoiceQuestionBaseSchema
 	.refine((question) => question.correct.length === 1, {
 		message: 'Es darf nur genau eine richtige Antwort geben.',
 		path: ['correct']
@@ -14,7 +14,9 @@ export const singleChoiceQuestionSchema = singleChoiceQuestionShape
 		path: ['correct']
 	});
 
-export const liveSingleChoiceQuestionSchema = singleChoiceQuestionShape.omit({ correct: true });
+export const liveSingleChoiceQuestionSchema = singleChoiceQuestionBaseSchema.omit({
+	correct: true
+});
 
 export type SingleChoiceQuestionType = typeof type;
 export type SingleChoiceQuestion = z.infer<typeof singleChoiceQuestionSchema>;

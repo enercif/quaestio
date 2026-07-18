@@ -2,7 +2,7 @@ import z from 'zod';
 
 export const sequenceTypeEnum = z.enum(['numeric', 'roman', 'alphabetic']);
 
-export const baseQuestionShape = z.object({
+export const questionBaseSchema = z.object({
 	id: z.uuid(),
 	position: z.number(),
 	timelimit: z.number().min(0, 'Das Zeitlimit muss größer gleich 0 sein.'),
@@ -15,18 +15,18 @@ export const baseQuestionShape = z.object({
 		.min(1, 'Es muss mindestens eine richtige Antwort geben.')
 });
 
-export const questionAnswerSchema = z.object({
+export const choiceQuestionAnswerBaseSchema = z.object({
 	id: z.uuid(),
 	text: z.string().min(1, 'Die Antwort darf nicht leer sein.'),
 	position: z.number()
 });
 
-export const choiceQuestionShape = baseQuestionShape.extend({
+export const choiceQuestionBaseSchema = questionBaseSchema.extend({
 	sequence_type: sequenceTypeEnum,
 	answers: z
-		.array(questionAnswerSchema)
+		.array(choiceQuestionAnswerBaseSchema)
 		.min(2, 'Es müssen mindestens zwei Antwortmöglichkeiten vorhanden sein.')
 });
 
 export type SequenceType = z.infer<typeof sequenceTypeEnum>;
-export type QuestionAnswer = z.infer<typeof questionAnswerSchema>;
+export type ChoiceQuestionAnswer = z.infer<typeof choiceQuestionAnswerBaseSchema>;

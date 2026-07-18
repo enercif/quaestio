@@ -1,12 +1,12 @@
 import z from 'zod';
-import { baseQuestionShape } from './shared.question.schema';
+import { questionBaseSchema } from './shared.question.schema';
 
 const type = 'open';
-const openTextQuestionShape = baseQuestionShape.extend({ type: z.literal(type) });
+const openTextQuestionBaseSchema = questionBaseSchema.extend({ type: z.literal(type) });
 
-export const openTextQuestionSchema = openTextQuestionShape;
+export const openTextQuestionSchema = openTextQuestionBaseSchema;
 
-export const liveOpenTextQuestionSchema = openTextQuestionShape.omit({ correct: true });
+export const liveOpenTextQuestionSchema = openTextQuestionBaseSchema.omit({ correct: true });
 
 export type OpenQuestionType = typeof type;
 export type OpenTextQuestion = z.infer<typeof openTextQuestionSchema>;
