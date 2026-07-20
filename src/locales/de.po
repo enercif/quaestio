@@ -387,26 +387,22 @@ msgstr "Code hier eingeben..."
 msgid "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 msgstr "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
-msgid "Warum ist diese Zeile falsch?"
-msgstr "Warum ist diese Zeile falsch?"
+#~ msgid "Warum ist diese Zeile falsch?"
+#~ msgstr "Warum ist diese Zeile falsch?"
 
-#. 0: lineNumber
-#. 0: ids.join(', ')
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#. 0: answers.join(', ')
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Zeile {0}"
 msgstr "Zeile {0}"
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
-msgid "Begründungen"
-msgstr "Begründungen"
+#~ msgid "Begründungen"
+#~ msgstr "Begründungen"
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#: src/lib/components/quiz/editor/editor-question.svelte
 msgid "Optionaler Hinweis..."
 msgstr "Optionaler Hinweis..."
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#: src/lib/components/quiz/editor/editor-question.svelte
 msgid "Hinweis (optional)"
 msgstr "Hinweis (optional)"
 
@@ -661,15 +657,14 @@ msgstr "Falsche Antwort"
 msgid "Keine"
 msgstr "Keine"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-msgid "Gesucht"
-msgstr "Gesucht"
+#~ msgid "Gesucht"
+#~ msgstr "Gesucht"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Richtig"
 msgstr "Richtig"
 
-#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesucht' \\: 'Richtig'; 2: answerTexts(correct)
+#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Deine Antwort: {0} | {1}: {2}"
 msgstr "Deine Antwort: {0} | {1}: {2}"
@@ -803,3 +798,53 @@ msgstr "Englisch"
 #: src/lib/state/locale.state.svelte.ts
 msgid "{0}={1}; path=/; max-age={2}; samesite=lax"
 msgstr "{0}={1}; path=/; max-age={2}; samesite=lax"
+
+#. 0: answer.text
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "Warum ist {0} richtig?"
+msgstr "Warum ist {0} richtig?"
+
+#. 0: Object.values(selectedQuestion.correct)[0]
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "Warum ist \"{0}\" die richtige Antwort?"
+msgstr "Warum ist \"{0}\" die richtige Antwort?"
+
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Begründung (optional)"
+msgstr "Begründung (optional)"
+
+#. 0: lineNumber
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Warum ist Zeile {0} falsch?"
+msgstr "Warum ist Zeile {0} falsch?"
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Begründungen (optional)"
+msgstr "Begründungen (optional)"
+
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum ist die Antwort korrekt?"
+msgstr "Warum ist die Antwort korrekt?"
+
+#. 0: selectedQuestion.correct[0]
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum ist \"{0}\" das richtige Keyword?"
+msgstr "Warum ist \"{0}\" das richtige Keyword?"
+
+#. 0: selectedQuestion.correct.join(', ')
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum sind \"{0}\" die richtigen Keywords?"
+msgstr "Warum sind \"{0}\" die richtigen Keywords?"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Hinweis"
+msgstr "Hinweis"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Gesuchte Keywords"
+msgstr "Gesuchte Keywords"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Begründung"
+msgstr "Begründung"

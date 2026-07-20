@@ -10,6 +10,7 @@ const roomBaseSchema = z.object({
 	state: z.enum(roomStateEnum),
 	current_question: liveQuestionSchema.nullish(),
 	current_answers: z.array(z.string()).nullish(),
+	current_reasons: z.array(z.string()).nullish(),
 	question_ends_at: z.number().nullish(),
 	paused_remaining: z.number().nullish()
 });

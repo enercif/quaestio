@@ -18,7 +18,7 @@
 
 <QuizEditorHeader />
 
-<div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10">
+<div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10 mb-10">
 	<Field.Set>
 		<Field.Group>
 			<Field.Field aria-invalid={!!state.getQuizError('title')}>
