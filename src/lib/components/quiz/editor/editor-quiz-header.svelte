@@ -15,7 +15,7 @@
 	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-4">
 		<Button variant="ghost" href={resolve('/teacher/quizzes')}>
 			<ArrowLeftIcon />
-			Back
+			Zurück
 		</Button>
 
 		<h1 class="text-center leading-none font-semibold">
