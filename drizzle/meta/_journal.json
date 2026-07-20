@@ -71,6 +71,13 @@
       "when": 1784246006809,
       "tag": "0009_grey_xavin",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1784505171808,
+      "tag": "0010_magical_callisto",
+      "breakpoints": true
     }
   ]
 }

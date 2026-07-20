@@ -23,6 +23,17 @@
 			keywordInput = '';
 		}
 	}
+
+	function getReasonPlaceholder() {
+		switch (selectedQuestion.correct.length) {
+			case 0:
+				return 'Warum ist die Antwort korrekt?';
+			case 1:
+				return `Warum ist "${selectedQuestion.correct[0]}" das richtige Keyword?`;
+			default:
+				return `Warum sind "${selectedQuestion.correct.join(', ')}" die richtigen Keywords?`;
+		}
+	}
 </script>
 
 <Field.Field aria-invalid={!!promptError}>
@@ -62,3 +73,12 @@
 		<Field.Error>{error}</Field.Error>
 	{/each}
 </div>
+
+<Field.Field>
+	<Field.Label for="reason">Begründung (optional)</Field.Label>
+	<Textarea
+		id="reason"
+		placeholder={getReasonPlaceholder()}
+		bind:value={selectedQuestion.reasons}
+	/>
+</Field.Field>

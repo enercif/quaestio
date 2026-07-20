@@ -35,7 +35,7 @@ export const liveQuestionSchema = z.discriminatedUnion('type', [
 	liveProgrammingQuestionSchema
 ]);
 
-export const questionAnswerKeySchema = questionBaseSchema.pick({ id: true, correct: true });
+export const questionAnswerKeySchema = questionBaseSchema.pick({ id: true });
 
 export type Question = z.infer<typeof questionsSchema>[number];
 export type QuestionType = Question['type'];

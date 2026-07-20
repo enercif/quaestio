@@ -46,7 +46,7 @@
 	let codeContainer: HTMLDivElement | undefined = $state();
 	const programmingHtml = $derived.by(async () => {
 		if (currentQuestion.type !== 'programming') return '';
-		return highlightCode(currentQuestion.code_snippet, currentQuestion.language);
+		return highlightCode(currentQuestion.code, currentQuestion.language);
 	});
 
 	watch(

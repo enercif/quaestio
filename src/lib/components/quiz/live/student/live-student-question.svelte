@@ -31,6 +31,7 @@
 	const currentQuestion = $derived(roomData.current_question!);
 	const revealed = $derived(roomData.state === 'answer');
 	const correct = $derived(roomData.current_answers ?? []);
+	const reasons = $derived(roomData.current_reasons ?? []);
 	const paused = $derived(roomData.paused_remaining != null);
 	const timeUp = $derived(remainingMs(roomData) === 0);
 	const locked = $derived(revealed || paused || timeUp);
@@ -43,7 +44,7 @@
 	let codeContainer: HTMLDivElement | undefined = $state();
 	const programmingHtml = $derived.by(async () => {
 		if (currentQuestion.type !== 'programming') return '';
-		return highlightCode(currentQuestion.code_snippet, currentQuestion.language);
+		return highlightCode(currentQuestion.code, currentQuestion.language);
 	});
 
 	watch(
@@ -84,27 +85,21 @@
 		}
 	}
 
-	function choose(answerId: string) {
+	function choose(text: string) {
 		if (currentQuestion.type === 'single') {
-			submit([answerId]);
+			submit([text]);
 		} else {
 			submit(
-				selected.includes(answerId)
-					? selected.filter((id) => id !== answerId)
-					: [...selected, answerId]
+				selected.includes(text) ? selected.filter((select) => select !== text) : [...selected, text]
 			);
 		}
 	}
 
-	function answerTexts(ids: string[]) {
-		if (currentQuestion.type === 'open') return ids.join(', ');
+	function answerTexts(answers: string[]) {
 		if (currentQuestion.type === 'programming') {
-			return ids.length ? `Zeile ${ids.join(', ')}` : '';
+			return answers.length ? `Zeile ${answers.join(', ')}` : '';
 		}
-		return currentQuestion.answers
-			.filter((answer) => ids.includes(answer.id))
-			.map((answer) => answer.text)
-			.join(', ');
+		return answers.join(', ');
 	}
 
 	function onCodeClick(event: MouseEvent) {
@@ -131,14 +126,27 @@
 <div class="px-10 mt-5 flex flex-col size-full max-w-6xl justify-start">
 	<LiveQuestionHeader room={roomData} />
 
-	<Tooltip.Root>
-		<Tooltip.Trigger class="w-fit mt-10 cursor-help">
-			<Badge variant="default">{typeToBadge(currentQuestion.type)}</Badge>
-		</Tooltip.Trigger>
-		<Tooltip.Content>
-			<p>{typeToDescription(currentQuestion.type)}</p>
-		</Tooltip.Content>
-	</Tooltip.Root>
+	<div class="flex flex-row items-center gap-4">
+		<Tooltip.Root>
+			<Tooltip.Trigger class="w-fit mt-10 cursor-help">
+				<Badge variant="default">{typeToBadge(currentQuestion.type)}</Badge>
+			</Tooltip.Trigger>
+			<Tooltip.Content>
+				<p>{typeToDescription(currentQuestion.type)}</p>
+			</Tooltip.Content>
+		</Tooltip.Root>
+
+		{#if currentQuestion.hint}
+			<Tooltip.Root>
+				<Tooltip.Trigger class="w-fit mt-10 cursor-help">
+					<Badge variant="secondary">Hinweis</Badge>
+				</Tooltip.Trigger>
+				<Tooltip.Content>
+					<p>{currentQuestion.hint}</p>
+				</Tooltip.Content>
+			</Tooltip.Root>
+		{/if}
+	</div>
 
 	<h1 class="text-3xl font-semibold mt-2">{currentQuestion.question}</h1>
 
@@ -204,14 +212,14 @@
 		{:else}
 			<div class="flex flex-col gap-4 w-full mt-5">
 				{#each currentQuestion.answers as answer, index (answer.id)}
-					{@const isSelected = selected.includes(answer.id)}
+					{@const isSelected = selected.includes(answer.text)}
 					<button
 						type="button"
 						class={[
 							rowClass,
 							'justify-start transition duration-150',
 							revealed
-								? revealClass(answer.id)
+								? revealClass(answer.text)
 								: [
 										'cursor-pointer disabled:cursor-not-allowed disabled:opacity-60',
 										isSelected && 'border-primary bg-primary/5'
@@ -219,7 +227,7 @@
 						]}
 						disabled={locked}
 						aria-pressed={isSelected}
-						onclick={() => choose(answer.id)}
+						onclick={() => choose(answer.text)}
 					>
 						<div
 							class={[
@@ -232,7 +240,7 @@
 
 						{answer.text}
 
-						{#if revealed && correct.includes(answer.id)}
+						{#if revealed && correct.includes(answer.text)}
 							<CheckIcon class="ml-auto size-5 text-green-500" />
 						{:else if revealed && isSelected}
 							<XIcon class="ml-auto size-5 text-destructive" />
@@ -246,30 +254,41 @@
 			<div
 				in:slide={{ duration: 150 }}
 				class={[
-					'mt-10 rounded-lg border px-5 py-4 flex flex-row items-center gap-4 text-sm',
+					'mt-10 rounded-lg border px-5 py-4 flex flex-col  gap-4 text-sm',
 					result === 'correct' && 'border-green-500 bg-green-500/10 text-green-600',
 					result === 'partial' && 'border-yellow-500 bg-yellow-500/10 text-yellow-600',
 					result === 'wrong' && 'border-destructive bg-destructive/10 text-destructive'
 				]}
 			>
-				{#if result === 'correct'}
-					<CheckIcon class="size-7" />
-					Richtige Antwort!
-				{:else}
-					{#if result === 'partial'}
-						<TriangleAlertIcon class="size-7" />
+				<div class="flex flex-row gap-4 items-center">
+					{#if result === 'correct'}
+						<CheckIcon class="size-7" />
+						Richtige Antwort!
 					{:else}
-						<XIcon class="size-7" />
+						{#if result === 'partial'}
+							<TriangleAlertIcon class="size-7" />
+						{:else}
+							<XIcon class="size-7" />
+						{/if}
+						<div class="flex flex-col">
+							<span class="font-semibold mb-1">
+								{result === 'partial' ? 'Teilweise richtig' : 'Falsche Antwort'}
+							</span>
+							<span>
+								Deine Antwort: {answerTexts(selected) || 'Keine'} | {currentQuestion.type === 'open'
+									? 'Gesuchte Keywords'
+									: 'Richtig'}: {answerTexts(correct)}
+							</span>
+						</div>
 					{/if}
-					<div class="flex flex-col">
-						<span class="font-semibold">
-							{result === 'partial' ? 'Teilweise richtig' : 'Falsche Antwort'}
-						</span>
-						<span>
-							Deine Antwort: {answerTexts(selected) || 'Keine'} | {currentQuestion.type === 'open'
-								? 'Gesucht'
-								: 'Richtig'}: {answerTexts(correct)}
-						</span>
+				</div>
+
+				{#if reasons.length > 0}
+					<div class="flex flex-col mt-4 ml-11">
+						<p class="font-semibold mb-1">Begründung</p>
+						{#each reasons as reason, index (index)}
+							<p>{reason}</p>
+						{/each}
 					</div>
 				{/if}
 			</div>

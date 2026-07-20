@@ -32,6 +32,7 @@ export const roomTable = pgTable('room', {
 	state: text('state').default('waiting').notNull(),
 	current_question: jsonb('current_question'),
 	current_answers: text('current_answers').array(),
+	current_reasons: text('current_reasons').array(),
 	question_ends_at: bigint('question_ends_at', { mode: 'number' }),
 	paused_remaining: integer('paused_remaining')
 });

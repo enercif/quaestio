@@ -75,7 +75,7 @@ export function evaluateAnswer(
 		const given = (selected[0] ?? '').trim().toLowerCase();
 		return given.includes(correct[0].trim().toLowerCase()) ? 'correct' : 'wrong';
 	}
-	const hits = selected.filter((id) => correct.includes(id)).length;
+	const hits = selected.filter((answer) => correct.includes(answer)).length;
 	if (hits === correct.length && selected.length === correct.length) return 'correct';
 	if (hits === 0) return 'wrong';
 	return 'partial';
