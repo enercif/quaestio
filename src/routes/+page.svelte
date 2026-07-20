@@ -41,7 +41,7 @@
 						<p>Quaestio</p>
 					</div>
 					<Card.Title class="text-2xl font-bold">Quiz beitreten</Card.Title>
-					<Card.Description>Enter the room code your teacher shared</Card.Description>
+					<Card.Description>Gib den Raumcode ein, den dein Lehrer geteilt hat</Card.Description>
 				</Card.Header>
 				<Card.Content class="mt-4">
 					<form
@@ -68,25 +68,25 @@
 				</Card.Content>
 				<Card.Footer class="flex flex-col gap-4">
 					<Button class="w-full" size="lg" type="submit" form="room-code-form">
-						Continue
+						Weiter
 						<ArrowRightIcon />
 					</Button>
 
 					<div class="flex w-full flex-row items-center gap-4">
 						<Separator class="flex-1" />
-						<p>OR</p>
+						<p>ODER</p>
 						<Separator class="flex-1" />
 					</div>
 
 					<Button class="w-full" size="lg" variant="secondary" href={resolve('/student')}>
-						Practice
+						Üben
 						<BookOpenCheckIcon />
 					</Button>
 				</Card.Footer>
 			</Card.Root>
 		</div>
 
-		<Button href="/login" variant="link">Login</Button>
+		<Button href="/login" variant="link">Anmelden</Button>
 	{:else}
 		<div class="w-1/2 max-w-90" in:fly>
 			{#if codeResult?.success}

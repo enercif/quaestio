@@ -37,6 +37,7 @@
 		"@types/node": "^26.1.0",
 		"@types/nodemailer": "^8.0.1",
 		"@vitest/browser-playwright": "^4.1.9",
+		"@wuchale/svelte": "^0.20.5",
 		"better-auth": "~1.4.21",
 		"bits-ui": "^2.18.1",
 		"clsx": "^2.1.1",
@@ -73,6 +74,7 @@
 		"vitest": "^4.1.9",
 		"vitest-browser-svelte": "^2.2.0",
 		"ws": "^8.21.0",
+		"wuchale": "^0.25.6",
 		"zod": "^4.4.3"
 	},
 	"packageManager": "pnpm@11.10.0"
