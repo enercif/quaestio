@@ -17,7 +17,8 @@ export const quizTable = pgTable('quiz', {
 	last_run: timestamp('last_run', { mode: 'string' }),
 	tags: text('tags').array().notNull(),
 	questions: jsonb('questions').notNull(),
-	questions_length: integer('questions_length').notNull()
+	questions_length: integer('questions_length').notNull(),
+	deleted_at: timestamp('deleted_at', { mode: 'string' })
 });
 
 export const roomTable = pgTable('room', {
