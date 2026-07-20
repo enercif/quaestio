@@ -85,7 +85,7 @@
 						<DropdownMenu.Trigger>
 							{#snippet child({ props })}
 								<Button {...props} variant="ghost" size="icon">
-									<LanguagesIcon class="size-5" />
+									<LanguagesIcon />
 								</Button>
 							{/snippet}
 						</DropdownMenu.Trigger>
@@ -98,11 +98,9 @@
 					</DropdownMenu.Root>
 
 					<Button onclick={toggleMode} variant="ghost" size="icon">
-						<SunIcon
-							class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all! dark:scale-0 dark:-rotate-90"
-						/>
+						<SunIcon class="scale-100 rotate-0 transition-all! dark:scale-0 dark:-rotate-90" />
 						<MoonIcon
-							class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all! dark:scale-100 dark:rotate-0"
+							class="absolute scale-0 rotate-90 transition-all! dark:scale-100 dark:rotate-0"
 						/>
 						<span class="sr-only">Design wechseln</span>
 					</Button>
