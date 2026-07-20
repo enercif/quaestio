@@ -85,6 +85,13 @@
       "when": 1784572213459,
       "tag": "0011_fine_the_anarchist",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1784576305525,
+      "tag": "0012_whole_spectrum",
+      "breakpoints": true
     }
   ]
 }

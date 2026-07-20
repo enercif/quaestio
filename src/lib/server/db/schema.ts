@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
 	bigint,
 	integer,
@@ -7,6 +7,7 @@ import {
 	text,
 	timestamp,
 	unique,
+	uniqueIndex,
 	uuid
 } from 'drizzle-orm/pg-core';
 import { user } from './auth.schema';
@@ -21,22 +22,33 @@ export const quizTable = pgTable('quiz', {
 	deleted_at: timestamp('deleted_at', { mode: 'string' })
 });
 
-export const roomTable = pgTable('room', {
-	id: text('id').primaryKey(),
-	limit: integer('limit'),
-	quiz: uuid('quiz_id')
-		.references(() => quizTable.id)
-		.notNull(),
-	teacherId: text('teacher_id')
-		.notNull()
-		.references(() => user.id, { onDelete: 'cascade' }),
-	state: text('state').default('waiting').notNull(),
-	current_question: jsonb('current_question'),
-	current_answers: text('current_answers').array(),
-	current_reasons: text('current_reasons').array(),
-	question_ends_at: bigint('question_ends_at', { mode: 'number' }),
-	paused_remaining: integer('paused_remaining')
-});
+export const roomTable = pgTable(
+	'room',
+	{
+		pk: uuid('pk').defaultRandom().primaryKey(),
+		id: text('id').notNull(),
+		limit: integer('limit'),
+		quiz: uuid('quiz_id')
+			.references(() => quizTable.id)
+			.notNull(),
+		teacherId: text('teacher_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		state: text('state').default('waiting').notNull(),
+		current_question: jsonb('current_question'),
+		current_answers: text('current_answers').array(),
+		current_reasons: text('current_reasons').array(),
+		question_ends_at: bigint('question_ends_at', { mode: 'number' }),
+		paused_remaining: integer('paused_remaining'),
+		created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
+		deleted_at: timestamp('deleted_at', { mode: 'string' })
+	},
+	(table) => [
+		uniqueIndex('room_id_active_unique')
+			.on(table.id)
+			.where(sql`${table.deleted_at} is null`)
+	]
+);
 
 // Bewusst kein FK auf roomTable: Antworten überleben das Löschen des Raums.
 export const answerTable = pgTable(

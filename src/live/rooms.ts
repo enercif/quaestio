@@ -37,7 +37,8 @@ export async function getRooms(): Promise<Room[]> {
 					id: true
 				}
 			}
-		}
+		},
+		where: (room, { isNull }) => isNull(room.deleted_at)
 	});
 	return roomSelectSchema.array().parse(rooms);
 }
@@ -53,7 +54,7 @@ export async function getRoomById(roomId: string): Promise<Room | undefined> {
 				}
 			}
 		},
-		where: (room, { eq }) => eq(room.id, roomId)
+		where: (room, { eq, and, isNull }) => and(eq(room.id, roomId), isNull(room.deleted_at))
 	});
 	return room ? roomSelectSchema.parse(room) : undefined;
 }
@@ -99,7 +100,10 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) =>
 		}
 		room.state = RoomState.Finished;
 
-		await db.delete(roomTable).where(eq(roomTable.id, roomId)).returning();
+		await db
+			.update(roomTable)
+			.set({ deleted_at: new Date().toISOString() })
+			.where(eq(roomTable.id, roomId));
 		ctx.publish(TOPICS.rooms, 'deleted', { id: roomId });
 		ctx.publish(TOPICS.room(roomId), 'set', room);
 
