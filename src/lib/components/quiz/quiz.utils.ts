@@ -72,8 +72,12 @@ export function evaluateAnswer(
 	selected: string[]
 ): AnswerResult {
 	if (type === 'open') {
+		let matched = false;
 		const given = (selected[0] ?? '').trim().toLowerCase();
-		return given.includes(correct[0].trim().toLowerCase()) ? 'correct' : 'wrong';
+		correct.forEach((c) => {
+			if (given.includes(c.trim().toLowerCase())) matched = true;
+		});
+		return matched ? 'correct' : 'wrong';
 	}
 	const hits = selected.filter((answer) => correct.includes(answer)).length;
 	if (hits === correct.length && selected.length === correct.length) return 'correct';

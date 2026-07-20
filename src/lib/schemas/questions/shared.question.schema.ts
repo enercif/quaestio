@@ -18,6 +18,8 @@ export const choiceQuestionAnswerBaseSchema = z.object({
 	text: z.string().min(1, 'Die Antwort darf nicht leer sein.')
 });
 
+export const liveChoiceQuestionAnswerSchema = choiceQuestionAnswerBaseSchema.omit({ id: true });
+
 export const choiceQuestionBaseSchema = questionBaseSchema.extend({
 	sequence_type: sequenceTypeEnum,
 	answers: z

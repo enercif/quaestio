@@ -63,8 +63,8 @@
 		}
 	);
 
-	function pctFor(answerId: string) {
-		return answeredCount ? Math.round(((counts.get(answerId) ?? 0) / answeredCount) * 100) : 0;
+	function pctFor(answer: string) {
+		return answeredCount ? Math.round(((counts.get(answer) ?? 0) / answeredCount) * 100) : 0;
 	}
 
 	function studentClass(selected: string[]) {
@@ -150,8 +150,8 @@
 						{@html await programmingHtml}
 					</div>
 				{:else}
-					{#each currentQuestion.answers as answer, index (answer.id)}
-						{@const isCorrect = revealed && correct.includes(answer.id)}
+					{#each currentQuestion.answers as answer, index (answer.text)}
+						{@const isCorrect = revealed && correct.includes(answer.text)}
 						<div
 							class={[
 								'relative overflow-hidden rounded-lg border px-4 py-3',
@@ -163,7 +163,7 @@
 									'absolute inset-y-0 left-0 transition-[width] duration-300',
 									isCorrect ? 'bg-green-500/15' : 'bg-primary/10'
 								]}
-								style:width="{pctFor(answer.id)}%"
+								style:width="{pctFor(answer.text)}%"
 							></div>
 
 							<div class="relative flex flex-row items-center gap-3">
@@ -175,7 +175,7 @@
 									<CheckIcon class="size-5 shrink-0 text-green-500" />
 								{/if}
 								<span class="shrink-0 text-sm text-muted-foreground tabular-nums">
-									{counts.get(answer.id) ?? 0} · {pctFor(answer.id)}%
+									{counts.get(answer.text) ?? 0} · {pctFor(answer.text)}%
 								</span>
 							</div>
 						</div>

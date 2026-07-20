@@ -1,5 +1,9 @@
 import z from 'zod';
-import { allOrNothingReasons, choiceQuestionBaseSchema } from './shared.question.schema';
+import {
+	allOrNothingReasons,
+	choiceQuestionBaseSchema,
+	liveChoiceQuestionAnswerSchema
+} from './shared.question.schema';
 
 const type = 'multiple';
 const multipleChoiceQuestionBaseSchema = choiceQuestionBaseSchema.extend({
@@ -20,10 +24,9 @@ export const multipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
 		{ message: 'Jede korrekte Antwort muss eine gültige Antwort-ID sein.', path: ['correct'] }
 	);
 
-export const liveMultipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema.omit({
-	correct: true,
-	reasons: true
-});
+export const liveMultipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
+	.omit({ correct: true, reasons: true })
+	.extend({ answers: z.array(liveChoiceQuestionAnswerSchema) });
 
 export type MultipleChoiceQuestionType = typeof type;
 export type MultipleChoiceQuestion = z.infer<typeof multipleChoiceQuestionSchema>;

@@ -211,7 +211,7 @@
 			</div>
 		{:else}
 			<div class="flex flex-col gap-4 w-full mt-5">
-				{#each currentQuestion.answers as answer, index (answer.id)}
+				{#each currentQuestion.answers as answer, index (answer.text)}
 					{@const isSelected = selected.includes(answer.text)}
 					<button
 						type="button"

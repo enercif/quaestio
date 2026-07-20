@@ -1,5 +1,5 @@
 import z from 'zod';
-import { choiceQuestionBaseSchema } from './shared.question.schema';
+import { choiceQuestionBaseSchema, liveChoiceQuestionAnswerSchema } from './shared.question.schema';
 
 const type = 'single';
 const singleChoiceQuestionBaseSchema = choiceQuestionBaseSchema.extend({
@@ -20,10 +20,9 @@ export const singleChoiceQuestionSchema = singleChoiceQuestionBaseSchema
 		{ message: 'Jede korrekte Antwort muss eine gültige Antwort-ID sein.', path: ['correct'] }
 	);
 
-export const liveSingleChoiceQuestionSchema = singleChoiceQuestionBaseSchema.omit({
-	correct: true,
-	reasons: true
-});
+export const liveSingleChoiceQuestionSchema = singleChoiceQuestionBaseSchema
+	.omit({ correct: true, reasons: true })
+	.extend({ answers: z.array(liveChoiceQuestionAnswerSchema) });
 
 export type SingleChoiceQuestionType = typeof type;
 export type SingleChoiceQuestion = z.infer<typeof singleChoiceQuestionSchema>;
