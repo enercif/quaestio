@@ -797,7 +797,7 @@ msgstr "English"
 #. 0: COOKIE_NAME; 1: value; 2: 60 * 60 * 24 * 365
 #: src/lib/state/locale.state.svelte.ts
 msgid "{0}={1}; path=/; max-age={2}; samesite=lax"
-msgstr ""
+msgstr "{0}={1}; path=/; max-age={2}; samesite=lax"
 
 #. 0: answer.text
 #: src/lib/components/quiz/editor/editor-choice-question.svelte
