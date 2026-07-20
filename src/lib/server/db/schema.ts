@@ -15,11 +15,11 @@ import { user } from './auth.schema';
 export const quizTable = pgTable('quiz', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	title: text('title').notNull(),
-	last_run: timestamp('last_run', { mode: 'string' }),
+	last_run: timestamp('last_run', { mode: 'string', withTimezone: true }),
 	tags: text('tags').array().notNull(),
 	questions: jsonb('questions').notNull(),
 	questions_length: integer('questions_length').notNull(),
-	deleted_at: timestamp('deleted_at', { mode: 'string' })
+	deleted_at: timestamp('deleted_at', { mode: 'string', withTimezone: true })
 });
 
 export const roomTable = pgTable(
@@ -40,8 +40,8 @@ export const roomTable = pgTable(
 		current_reasons: text('current_reasons').array(),
 		question_ends_at: bigint('question_ends_at', { mode: 'number' }),
 		paused_remaining: integer('paused_remaining'),
-		created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-		deleted_at: timestamp('deleted_at', { mode: 'string' })
+		created_at: timestamp('created_at', { mode: 'string', withTimezone: true }).defaultNow().notNull(),
+		deleted_at: timestamp('deleted_at', { mode: 'string', withTimezone: true })
 	},
 	(table) => [
 		uniqueIndex('room_id_active_unique')
@@ -63,7 +63,7 @@ export const answerTable = pgTable(
 		student_id: text('student_id').notNull(),
 		student_name: text('student_name').notNull(),
 		selected: text('selected').array().notNull(),
-		answered_at: timestamp('answered_at', { mode: 'string' }).defaultNow().notNull()
+		answered_at: timestamp('answered_at', { mode: 'string', withTimezone: true }).defaultNow().notNull()
 	},
 	(table) => [unique().on(table.room_id, table.question_id, table.student_id)]
 );
