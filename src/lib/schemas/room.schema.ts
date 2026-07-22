@@ -5,7 +5,7 @@ import { quizSelectSchema } from './quiz.schema';
 const roomStateEnum = ['waiting', 'finished', 'question', 'answer'] as const;
 
 const roomBaseSchema = z.object({
-	id: z.string().length(6, 'Die Raum-ID muss genau 6 Zeichen lang sein.'),
+	code: z.string().length(6, 'Die Raum-ID muss genau 6 Zeichen lang sein.'),
 	limit: z.number().nullish(),
 	state: z.enum(roomStateEnum),
 	current_question: liveQuestionSchema.nullish(),
@@ -20,7 +20,8 @@ export const roomSelectSchema = roomBaseSchema.extend({
 		title: true,
 		questions_length: true,
 		id: true
-	})
+	}),
+	id: z.uuid()
 });
 
 export const roomInsertSchema = roomBaseSchema.extend({

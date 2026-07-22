@@ -29,7 +29,7 @@
 		<div class="flex h-4 flex-row items-center gap-3">
 			<h1 class="text-center leading-none font-semibold">{live.roomData?.quiz.title}</h1>
 			<Separator orientation="vertical" />
-			<h1 class="text-center leading-none font-semibold">{live.roomData?.id}</h1>
+			<h1 class="text-center leading-none font-semibold">{live.roomData?.code}</h1>
 		</div>
 
 		<div class="ml-auto flex flex-row items-center gap-2 font-semibold">

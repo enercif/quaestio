@@ -194,7 +194,7 @@ msgstr "There are currently no active rooms. Start a quiz to create a room."
 msgid "Starte ein Quiz"
 msgstr "Start a quiz"
 
-#. 0: room.id
+#. 0: room.code
 #: src/routes/teacher/live/+page.svelte
 msgid "Raum {0}"
 msgstr "Room {0}"

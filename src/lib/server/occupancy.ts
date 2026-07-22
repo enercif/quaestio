@@ -30,18 +30,18 @@ export function studentCount(topic: string): number {
 }
 
 export async function checkRoomCode(
-	roomId: string,
+	code: string,
 	cookies: Cookies
 ): Promise<{ success: true; name?: string } | { success: false; reason: 'not_found' | 'full' }> {
 	const room = await db.query.roomTable.findFirst({
-		where: (room) => and(eq(room.id, roomId.toUpperCase()), isNull(room.deleted_at))
+		where: (room) => and(eq(room.code, code.toUpperCase()), isNull(room.deleted_at))
 	});
 
 	if (!room) {
 		return { success: false, reason: 'not_found' };
 	}
 
-	const topic = TOPICS.room(room.id);
+	const topic = TOPICS.room(room.code);
 	const userId = cookies.get('id');
 	const alreadyJoined = !!userId && hasStudent(topic, userId);
 	if (room.limit && !alreadyJoined && studentCount(topic) >= room.limit) {

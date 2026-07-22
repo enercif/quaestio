@@ -4,18 +4,18 @@ import { RoomState } from '../room.state.svelte';
 const liveStudentContext = new Context<LiveStudentState>('live-student');
 
 export class LiveStudentState extends RoomState {
-	readonly roomId: string;
+	readonly code: string;
 	readonly name: string;
 	readonly id: string;
 
-	constructor(data: { roomId: string; name: string; id: string }) {
-		super(data.roomId);
-		this.roomId = data.roomId;
+	constructor(data: { code: string; name: string; id: string }) {
+		super(data.code);
+		this.code = data.code;
 		this.name = data.name;
 		this.id = data.id;
 	}
 
-	static init(data: { roomId: string; name: string; id: string }) {
+	static init(data: { code: string; name: string; id: string }) {
 		return liveStudentContext.set(new LiveStudentState(data));
 	}
 
