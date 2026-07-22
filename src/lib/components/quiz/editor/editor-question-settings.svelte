@@ -4,8 +4,14 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
-	import type { MultipleChoiceQuestion, SingleChoiceQuestion } from '$lib/schemas/question.schema';
-	import { typeToBadge } from '../quiz.utils';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import { Toggle } from '$lib/components/ui/toggle';
+	import type {
+		MultipleChoiceQuestion,
+		ProgrammingQuestion,
+		SingleChoiceQuestion
+	} from '$lib/schemas/question.schema';
+	import { questionMaxPoints, typeToBadge } from '../quiz.utils';
 	import { getTimeAsString, sequenceTypeToString } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
@@ -58,21 +64,92 @@
 
 				<Field.Separator />
 
-				<Field.Field>
+				{#if selectedQuestion.type === 'multiple' || selectedQuestion.type === 'programming'}
+					{@const scoredQuestion = selectedQuestion as MultipleChoiceQuestion | ProgrammingQuestion}
 					{@const pointErrors = state.getSelectedQuestionError('points')}
+					{@const partialPointsErrors = state.getSelectedQuestionError('partial_points')}
+					{@const entries = Object.entries(scoredQuestion.correct)}
 
-					<Field.Label for="points">Punkte</Field.Label>
-					<Input
-						id="points"
-						type="number"
-						min={0}
-						bind:value={selectedQuestion.points}
-						aria-invalid={!!pointErrors}
-					/>
-					{#each pointErrors as error, i (i)}
-						<Field.Error>{error}</Field.Error>
-					{/each}
-				</Field.Field>
+					<Field.Field>
+						<Field.Label>Punkte</Field.Label>
+
+						<Tabs.Root value={scoredQuestion.scoring}>
+							<Tabs.List class="w-full">
+								<Tabs.Trigger
+									class="flex-1"
+									value="binary"
+									onclick={() => (scoredQuestion.scoring = 'binary')}
+								>
+									Binär
+								</Tabs.Trigger>
+								<Tabs.Trigger
+									class="flex-1"
+									value="partial"
+									onclick={() => (scoredQuestion.scoring = 'partial')}
+								>
+									Teilpunkte
+								</Tabs.Trigger>
+							</Tabs.List>
+						</Tabs.Root>
+
+						{#if scoredQuestion.scoring === 'binary'}
+							<Input
+								id="points"
+								type="number"
+								min={0}
+								bind:value={scoredQuestion.points}
+								aria-invalid={!!pointErrors}
+							/>
+							{#each pointErrors as error, i (i)}
+								<Field.Error>{error}</Field.Error>
+							{/each}
+						{:else if entries.length === 0}
+							<p class="text-sm text-muted-foreground">
+								Markiere zuerst die richtigen {scoredQuestion.type === 'multiple'
+									? 'Antworten'
+									: 'Zeilen'}.
+							</p>
+						{:else}
+							<div class="flex flex-col gap-2">
+								{#each entries as [key, label] (key)}
+									<div class="flex flex-row items-center gap-2">
+										<Toggle disabled class="size-9 disabled:opacity-100" variant="outline"
+											>{label}</Toggle
+										>
+										<Input
+											type="number"
+											min={0}
+											class="w-full"
+											bind:value={scoredQuestion.partial_points[key]}
+										/>
+									</div>
+								{/each}
+							</div>
+							{#each partialPointsErrors as error, i (i)}
+								<Field.Error>{error}</Field.Error>
+							{/each}
+							<p class="text-sm text-muted-foreground">
+								Gesamt: {questionMaxPoints(scoredQuestion)} Punkte
+							</p>
+						{/if}
+					</Field.Field>
+				{:else}
+					<Field.Field>
+						{@const pointErrors = state.getSelectedQuestionError('points')}
+
+						<Field.Label for="points">Punkte</Field.Label>
+						<Input
+							id="points"
+							type="number"
+							min={0}
+							bind:value={selectedQuestion.points}
+							aria-invalid={!!pointErrors}
+						/>
+						{#each pointErrors as error, i (i)}
+							<Field.Error>{error}</Field.Error>
+						{/each}
+					</Field.Field>
+				{/if}
 			</div>
 		</Field.Group>
 	</Card.Content>

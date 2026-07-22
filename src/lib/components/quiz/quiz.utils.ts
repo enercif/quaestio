@@ -1,4 +1,10 @@
-import type { QuestionType, SequenceType } from '$lib/schemas/question.schema';
+import type {
+	MultipleChoiceQuestion,
+	ProgrammingQuestion,
+	Question,
+	QuestionType,
+	SequenceType
+} from '$lib/schemas/question.schema';
 import type { Room } from '$lib/schemas/room.schema';
 import { createSubscriber } from 'svelte/reactivity';
 
@@ -83,6 +89,54 @@ export function evaluateAnswer(
 	if (hits === correct.length && selected.length === correct.length) return 'correct';
 	if (hits === 0) return 'wrong';
 	return 'partial';
+}
+
+/** Die als richtig hinterlegten Werte einer Frage, vergleichbar mit `selected`. */
+export function correctAnswersFor(question: Question): string[] {
+	switch (question.type) {
+		case 'open':
+			return question.correct;
+		case 'single':
+		case 'multiple':
+			return Object.values(question.correct);
+		case 'programming':
+			return question.correct.map(String);
+	}
+}
+
+/** Maximal erreichbare Punkte einer Frage (Summe der Teilpunkte im partial-Modus). */
+export function questionMaxPoints(question: Question): number {
+	if (hasPartialScoring(question)) {
+		return Object.values(question.partial_points).reduce((sum, p) => sum + p, 0);
+	}
+	return question.points;
+}
+
+/** Erreichte Punkte für eine Antwort. */
+export function computedPoints(question: Question, selected: string[]): number {
+	if (hasPartialScoring(question)) {
+		const keys = question.type === 'multiple' ? question.correct : keyedByValue(question.correct);
+		return Object.entries(keys).reduce(
+			(sum, [key, value]) =>
+				sum + (selected.includes(value) ? (question.partial_points[key] ?? 0) : 0),
+			0
+		);
+	}
+	const result = evaluateAnswer(question.type, correctAnswersFor(question), selected);
+	return result === 'correct' ? question.points : 0;
+}
+
+function hasPartialScoring(
+	question: Question
+): question is (MultipleChoiceQuestion | ProgrammingQuestion) & { scoring: 'partial' } {
+	return (
+		(question.type === 'multiple' || question.type === 'programming') &&
+		question.scoring === 'partial'
+	);
+}
+
+function keyedByValue(lines: string[]): Record<string, string> {
+	return Object.fromEntries(lines.map((line) => [line, line]));
 }
 
 export function typeToBadge(type: QuestionType) {
