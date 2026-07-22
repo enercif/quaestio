@@ -71,6 +71,13 @@
       "when": 1784246006809,
       "tag": "0009_grey_xavin",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1784749152091,
+      "tag": "0010_bored_silk_fever",
+      "breakpoints": true
     }
   ]
 }

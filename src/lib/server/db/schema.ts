@@ -11,6 +11,17 @@ import {
 } from 'drizzle-orm/pg-core';
 import { user } from './auth.schema';
 
+// Singleton row (id = 'default'): eine Organisation, eine SMTP-Konfiguration.
+export const smtpSettingsTable = pgTable('smtp_settings', {
+	id: text('id').primaryKey().default('default'),
+	host: text('host').notNull(),
+	port: integer('port').notNull(),
+	user: text('user'),
+	pass: text('pass'),
+	from: text('from'),
+	updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull()
+});
+
 export const quizTable = pgTable('quiz', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	title: text('title').notNull(),
