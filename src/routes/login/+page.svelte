@@ -46,7 +46,7 @@
 				error = result.error;
 				return;
 			}
-			goto(resolve('/teacher/settings/users'));
+			goto(resolve('/teacher/admin/users'));
 		} catch (err) {
 			console.error(err);
 			error = 'Verbindung zum Server fehlgeschlagen. Bitte versuchen Sie es erneut.';

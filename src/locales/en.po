@@ -31,8 +31,7 @@ msgstr "<0/> Live"
 msgid "Analyse"
 msgstr "Analysis"
 
-#: src/routes/+layout.svelte
-#: src/routes/teacher/settings/password/+page.svelte
+#: src/lib/components/account-settings-dialog.svelte
 msgid "Passwort ändern"
 msgstr "Change password"
 
@@ -52,17 +51,18 @@ msgstr "<0/> New user"
 msgid "Benutzer einladen"
 msgstr "Invite user"
 
+#: src/lib/components/account-settings-dialog.svelte
 #: src/lib/components/admin/invite-user-dialog.svelte
 #: src/routes/login/+page.svelte
 #: src/routes/login/+page.svelte
 #: src/routes/login/+page.svelte
 #: src/routes/login/+page.svelte
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "E-Mail"
 msgstr "Email"
 
 #: src/lib/components/admin/invite-user-dialog.svelte
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Rolle"
 msgstr "Role"
 
@@ -155,10 +155,11 @@ msgstr "Invalid link"
 msgid "Dieser Einladungslink ist ungültig oder abgelaufen."
 msgstr "This invitation link is invalid or has expired."
 
+#: src/lib/components/account-settings-dialog.svelte
 #: src/routes/accept-invitation/[id]/+page.svelte
 #: src/routes/login/+page.svelte
 #: src/routes/login/+page.svelte
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Name"
 msgstr "Name"
 
@@ -167,6 +168,7 @@ msgstr "Name"
 #: src/routes/login/+page.svelte
 #: src/routes/login/+page.svelte
 #: src/routes/login/+page.svelte
+#: src/routes/teacher/admin/settings/+page.svelte
 msgid "Passwort"
 msgstr "Password"
 
@@ -240,7 +242,6 @@ msgid "E-Mail und Passwort eingeben"
 msgstr "Enter email and password"
 
 #: src/routes/login/+page.svelte
-#: src/routes/teacher/settings/password/+page.svelte
 msgid "Zurück"
 msgstr "Back"
 
@@ -387,16 +388,10 @@ msgstr "Enter code here..."
 msgid "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 msgstr "Choose a language and enter code to see the preview."
 
-#~ msgid "Warum ist diese Zeile falsch?"
-#~ msgstr "Why is this line wrong?"
-
 #. 0: answers.join(', ')
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Zeile {0}"
 msgstr "Line {0}"
-
-#~ msgid "Begründungen"
-#~ msgstr "Explanations"
 
 #: src/lib/components/quiz/editor/editor-question.svelte
 msgid "Optionaler Hinweis..."
@@ -511,54 +506,33 @@ msgstr "The quiz has ended. You will now be redirected back to the overview."
 msgid "Raum wird geladen…"
 msgstr "Loading room…"
 
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Nutzer konnte nicht gelöscht werden."
 msgstr "User could not be deleted."
 
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Rolle konnte nicht geändert werden."
 msgstr "Role could not be changed."
 
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/+layout.svelte
 msgid "Benutzer"
 msgstr "Users"
 
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Status"
 msgstr "Status"
 
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Einladung zurückziehen"
 msgstr "Withdraw invitation"
 
-#: src/routes/teacher/settings/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Löschen"
 msgstr "Delete"
 
-#: src/routes/teacher/settings/password/+page.svelte
-msgid "Ungültiges passwort"
-msgstr "Invalid password"
-
-#: src/routes/teacher/settings/password/+page.svelte
+#: src/lib/components/account-settings-dialog.svelte
 msgid "Passwort wurde geändert."
 msgstr "Password was changed."
-
-#: src/routes/teacher/settings/password/+page.svelte
-msgid "Aktuelles password"
-msgstr "Current password"
-
-#: src/routes/teacher/settings/password/+page.svelte
-msgid "Aktuelles passwort"
-msgstr "Current password"
-
-#: src/routes/teacher/settings/password/+page.svelte
-#: src/routes/teacher/settings/password/+page.svelte
-msgid "Neues passwort"
-msgstr "New password"
-
-#: src/routes/teacher/settings/password/+page.svelte
-msgid "Absenden"
-msgstr "Submit"
 
 #. 0: live.name
 #: src/lib/components/quiz/live/student/live-student-waiting-room.svelte
@@ -657,9 +631,6 @@ msgstr "Wrong answer"
 msgid "Keine"
 msgstr "None"
 
-#~ msgid "Gesucht"
-#~ msgstr "Expected"
-
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Richtig"
 msgstr "Correct"
@@ -754,10 +725,6 @@ msgstr "Quizzes"
 msgid "Design wechseln"
 msgstr "Toggle theme"
 
-#: src/routes/+layout.svelte
-msgid "Abmelden"
-msgstr "Log out"
-
 #: src/routes/student/+page.svelte
 msgid "Hallo"
 msgstr "Hello"
@@ -798,6 +765,101 @@ msgstr "English"
 #: src/lib/state/locale.state.svelte.ts
 msgid "{0}={1}; path=/; max-age={2}; samesite=lax"
 msgstr ""
+
+#: src/routes/+layout.svelte
+#: src/routes/teacher/admin/+layout.svelte
+msgid "Admin"
+msgstr "Admin"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Konto"
+msgstr "Account"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Name konnte nicht geändert werden."
+msgstr "Name could not be changed."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Name wurde geändert."
+msgstr "Name was changed."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "E-Mail konnte nicht geändert werden."
+msgstr "Email could not be changed."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Bestätigungslink wurde an die neue E-Mail-Adresse gesendet."
+msgstr "A confirmation link was sent to the new email address."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Ungültiges Passwort"
+msgstr "Invalid password"
+
+#: src/lib/components/account-settings-dialog.svelte
+#: src/lib/components/account-settings-dialog.svelte
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Speichern"
+msgstr "Save"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Aktuelles Passwort"
+msgstr "Current password"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Neues Passwort"
+msgstr "New password"
+
+#: src/routes/teacher/admin/+layout.svelte
+msgid "Einstellungen"
+msgstr "Settings"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "SMTP-Einstellungen gespeichert."
+msgstr "SMTP settings saved."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "SMTP-Einstellungen konnten nicht gespeichert werden."
+msgstr "SMTP settings could not be saved."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Test-E-Mail wurde versendet."
+msgstr "Test email was sent."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Test-E-Mail konnte nicht versendet werden."
+msgstr "Test email could not be sent."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Host"
+msgstr "Host"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Port"
+msgstr "Port"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Benutzername"
+msgstr "Username"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Quaestio <noreply@example.com>"
+msgstr "Quaestio <noreply@example.com>"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Absender"
+msgstr "Sender"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Testen"
+msgstr "Test"
+
+#: src/routes/+layout.svelte
+msgid "<0/> Konto"
+msgstr "<0/> Account"
+
+#: src/routes/+layout.svelte
+msgid "<0/> Abmelden"
+msgstr "<0/> Sign out"
 
 #. 0: answer.text
 #: src/lib/components/quiz/editor/editor-choice-question.svelte

@@ -28,9 +28,8 @@
 	}
 </script>
 
-<div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
-	<div class="flex flex-row items-center justify-between">
-		<h1 class="text-2xl font-semibold">Benutzer</h1>
+<div class="flex w-full flex-col gap-4">
+	<div class="flex flex-row items-center justify-end">
 		<InviteUserDialog />
 	</div>
 

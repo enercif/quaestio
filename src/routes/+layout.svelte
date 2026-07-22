@@ -4,6 +4,7 @@
 	import { page } from '$app/state';
 	import favicon from '$lib/assets/favicon.svg';
 	import { authClient } from '$lib/auth-client';
+	import AccountSettingsDialog from '$lib/components/account-settings-dialog.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
@@ -12,8 +13,10 @@
 	import { getInitials } from '$lib/utils';
 	import { rooms } from '$live/rooms';
 	import LanguagesIcon from '@lucide/svelte/icons/languages';
+	import LogOutIcon from '@lucide/svelte/icons/log-out';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import SunIcon from '@lucide/svelte/icons/sun';
+	import UserIcon from '@lucide/svelte/icons/user';
 	import { ModeWatcher, toggleMode } from 'mode-watcher';
 	import { loadLocale } from 'wuchale/load-utils';
 	import type { LayoutProps } from './$types';
@@ -22,7 +25,10 @@
 	let { data, children }: LayoutProps = $props();
 
 	const isTeacherRoute = $derived(page.route.id?.includes('teacher') ?? false);
+	const isOrgAdmin = $derived(data.role === 'owner' || data.role === 'admin');
 	const initials = $derived(getInitials(data.user?.name));
+
+	let accountDialogOpen = $state(false);
 
 	async function logout() {
 		await authClient.signOut();
@@ -77,6 +83,14 @@
 							class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
 							variant="ghost">Analyse</Button
 						>
+						{#if isOrgAdmin}
+							<Button
+								data-active={page.route.id?.includes('/teacher/admin')}
+								class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
+								variant="ghost"
+								href={resolve('/teacher/admin')}>Admin</Button
+							>
+						{/if}
 					</div>
 				{/if}
 
@@ -111,7 +125,7 @@
 								{#snippet child({ props })}
 									<button
 										{...props}
-										class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs"
+										class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs cursor-pointer"
 									>
 										{initials}
 									</button>
@@ -119,13 +133,21 @@
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content side="bottom" align="end">
 								<DropdownMenu.Group>
-									<DropdownMenu.Item onclick={() => goto(resolve('/teacher/settings/password'))}>
-										Passwort ändern
+									<DropdownMenu.Item onclick={() => (accountDialogOpen = true)}>
+										<UserIcon />
+
+										Konto
 									</DropdownMenu.Item>
-									<DropdownMenu.Item onclick={logout}>Abmelden</DropdownMenu.Item>
+									<DropdownMenu.Separator />
+									<DropdownMenu.Item onclick={logout}>
+										<LogOutIcon class="text-destructive" />
+
+										Abmelden
+									</DropdownMenu.Item>
 								</DropdownMenu.Group>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
+						<AccountSettingsDialog bind:open={accountDialogOpen} />
 					{/if}
 				</div>
 			</div>
