@@ -8,7 +8,7 @@ import {
 	type RoomInsert
 } from '$lib/schemas/room.schema';
 import { db } from '$lib/server/db';
-import { answerTable, roomTable } from '$lib/server/db/schema';
+import { answerTable, quizTable, roomTable } from '$lib/server/db/schema';
 import { addStudent, hasStudent, removeStudent, studentCount } from '$lib/server/occupancy';
 import { TOPICS } from '$lib/server/topics';
 import type { PresenceUser } from '$lib/types/presence.type';
@@ -81,6 +81,12 @@ export const insertRoom = live.validated(
 			if (!room) {
 				throw new LiveError('NOT_FOUND', 'Room not found');
 			}
+
+			await db
+				.update(quizTable)
+				.set({ last_run: room.created_at })
+				.where(eq(quizTable.id, room.quiz.id))
+				.returning();
 
 			ctx.publish(TOPICS.rooms, 'created', room);
 			return true;

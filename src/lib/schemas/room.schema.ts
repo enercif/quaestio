@@ -21,7 +21,8 @@ export const roomSelectSchema = roomBaseSchema.extend({
 		questions_length: true,
 		id: true
 	}),
-	id: z.uuid()
+	id: z.uuid(),
+	created_at: z.string()
 });
 
 export const roomInsertSchema = roomBaseSchema.extend({

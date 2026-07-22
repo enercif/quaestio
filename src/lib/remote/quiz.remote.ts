@@ -2,7 +2,6 @@ import { command, query } from '$app/server';
 import { quizInsertSchema, quizSelectSchema, quizUpdateSchema } from '$lib/schemas/quiz.schema';
 import { db } from '$lib/server/db';
 import { quizTable } from '$lib/server/db/schema';
-import { removeNull } from '$lib/utils';
 import { eq } from 'drizzle-orm';
 import z from 'zod';
 
@@ -11,25 +10,22 @@ export const findQuizById = query(z.uuid(), async (quizId: string) => {
 		where: (quiz, { eq, and, isNull }) => and(eq(quiz.id, quizId), isNull(quiz.deleted_at))
 	});
 
-	const cleanedQuiz = removeNull(quiz);
-	return quiz ? quizSelectSchema.parse(cleanedQuiz) : undefined;
+	return quiz ? quizSelectSchema.parse(quiz) : undefined;
 });
 
 export const findAllQuizzes = query(async () => {
 	const quizzes = await db.query.quizTable.findMany({
 		where: (quiz, { isNull }) => isNull(quiz.deleted_at)
 	});
-	const cleanedQuizzes = removeNull(quizzes);
-	return quizSelectSchema.array().parse(cleanedQuizzes);
+	return quizSelectSchema.array().parse(quizzes);
 });
 
 export const insertQuiz = command(quizInsertSchema, async (quiz) => {
 	try {
 		const [result] = await db.insert(quizTable).values(quiz).returning();
-		const cleanedResult = removeNull(result);
 		return {
 			success: true,
-			quiz: quizSelectSchema.parse(cleanedResult)
+			quiz: quizSelectSchema.parse(result)
 		};
 	} catch (error) {
 		console.error('Fehler beim Einfügen des Quiz:', error);
@@ -47,10 +43,9 @@ export const updateQuiz = command(quizUpdateSchema, async (quiz) => {
 			.set(quiz)
 			.where(eq(quizTable.id, quiz.id))
 			.returning();
-		const cleanedUpdatedQuiz = removeNull(updatedQuiz);
 		return {
 			success: true,
-			quiz: quizSelectSchema.parse(cleanedUpdatedQuiz)
+			quiz: quizSelectSchema.parse(updatedQuiz)
 		};
 	} catch (error) {
 		console.error('Fehler beim Aktualisieren des Quiz:', error);

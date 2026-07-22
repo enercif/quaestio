@@ -502,10 +502,12 @@ msgstr "Nichts gefunden."
 msgid "+{0} weitere"
 msgstr "+{0} weitere"
 
+#: src/routes/student/r/[code]/+page.svelte
 #: src/routes/student/r/[id]/+page.svelte
 msgid "Das Quiz wurde beendet. Du wirst nun zurück zur Übersicht geleitet."
 msgstr "Das Quiz wurde beendet. Du wirst nun zurück zur Übersicht geleitet."
 
+#: src/routes/student/r/[code]/+page.svelte
 #: src/routes/student/r/[id]/+page.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
 msgid "Raum wird geladen…"
@@ -715,6 +717,8 @@ msgstr "Studenten"
 msgid "{0} im Raum"
 msgstr "{0} im Raum"
 
+#: src/routes/student/r/[code]/+page.server.ts
+#: src/routes/student/r/[code]/+page.server.ts
 #: src/routes/student/r/[id]/+page.server.ts
 #: src/routes/student/r/[id]/+page.server.ts
 msgid "Unbekannt"
