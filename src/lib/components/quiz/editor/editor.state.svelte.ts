@@ -50,20 +50,44 @@ export class EditorState {
 			question: '',
 			position: this.quiz.questions.length
 		};
-		const question: Question =
-			type === 'open'
-				? { ...base, type, correct: [] }
-				: type === 'programming'
-					? {
-							...base,
-							type,
-							code_snippet: '',
-							language: '',
-							correct_lines: [],
-							reasons: {},
-							hint: ''
-						}
-					: { ...base, type, correct: [], answers: [], sequence_type: 'numeric' };
+
+		let question: Question;
+
+		switch (type) {
+			case 'open':
+				question = { ...base, type, correct: [] };
+				break;
+
+			case 'multiple':
+				question = {
+					...base,
+					type,
+					correct: {},
+					answers: [],
+					sequence_type: 'numeric',
+					reasons: {}
+				};
+				break;
+
+			case 'single':
+				question = {
+					...base,
+					type,
+					correct: {},
+					answers: [],
+					sequence_type: 'numeric',
+					reasons: ''
+				};
+				break;
+
+			case 'programming':
+				question = { ...base, type, code: '', language: '', correct: [], reasons: {}, hint: '' };
+				break;
+
+			default:
+				throw new Error(`Unsupported question type: ${type}`);
+		}
+
 		this.quiz.questions.push(question);
 		this.selectedId = question.id;
 	};
@@ -71,25 +95,29 @@ export class EditorState {
 	addAnswer = () => {
 		const question = this.selectedQuestion;
 		if (!question || question.type === 'open' || question.type === 'programming') return;
-		question.answers.push({ id: crypto.randomUUID(), text: '', position: question.answers.length });
+		question.answers.push({ id: crypto.randomUUID(), text: '' });
 	};
 
 	toggleCorrectAnswer = (
 		question: MultipleChoiceQuestion | SingleChoiceQuestion,
-		answerId: string
+		id: string,
+		text: string
 	) => {
 		if (question.type === 'single') {
-			question.correct = [answerId];
+			question.correct = { [id]: text };
 		} else {
-			question.correct = question.correct.includes(answerId)
-				? question.correct.filter((id) => id !== answerId)
-				: [...question.correct, answerId];
+			if (question.correct[id]) {
+				delete question.reasons[id];
+				delete question.correct[id];
+			} else {
+				question.correct[id] = text;
+			}
 		}
 	};
 
 	removeAnswer = (question: MultipleChoiceQuestion | SingleChoiceQuestion, answerId: string) => {
 		question.answers = question.answers.filter((a) => a.id !== answerId);
-		question.correct = question.correct.filter((id) => id !== answerId);
+		delete question.correct[answerId];
 	};
 
 	removeQuestion = (questionId: string) => {
@@ -124,6 +152,14 @@ export class EditorState {
 	/** Validiert und speichert (Insert oder Update). Gibt zurück, ob es geklappt hat. */
 	upsert = async (): Promise<boolean> => {
 		this.quiz.questions_length = this.quiz.questions.length;
+
+		this.quiz.questions.forEach((q) => {
+			if (q.type === 'single' || q.type === 'open') return;
+
+			Object.entries(q.reasons).forEach(([key, value]) => {
+				if (value.trim() === '') delete q.reasons[key];
+			});
+		});
 
 		const parsed = quizInsertSchema.safeParse(this.quiz);
 		if (!parsed.success) {

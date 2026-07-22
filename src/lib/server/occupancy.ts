@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
 import { TOPICS } from '$lib/server/topics';
 import type { Cookies } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 const occupancy = new Map<string, Set<string>>();
 
@@ -34,7 +34,7 @@ export async function checkRoomCode(
 	cookies: Cookies
 ): Promise<{ success: true; name?: string } | { success: false; reason: 'not_found' | 'full' }> {
 	const room = await db.query.roomTable.findFirst({
-		where: (room) => eq(room.id, roomId.toUpperCase())
+		where: (room) => and(eq(room.id, roomId.toUpperCase()), isNull(room.deleted_at))
 	});
 
 	if (!room) {
