@@ -1,6 +1,6 @@
 {
-  "id": "5e7fda7c-f212-40df-86ac-efb580b0b38c",
-  "prevId": "47973d4d-9597-4574-a3a1-14a85c073a23",
+  "id": "46abc85a-adde-4791-bc7b-1eb9ebd57dec",
+  "prevId": "5e7fda7c-f212-40df-86ac-efb580b0b38c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -17,7 +17,7 @@
         },
         "room_id": {
           "name": "room_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -50,17 +50,23 @@
           "type": "text[]",
           "primaryKey": false,
           "notNull": true
-        },
-        "answered_at": {
-          "name": "answered_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
+        "answer_room_id_room_id_fk": {
+          "name": "answer_room_id_room_id_fk",
+          "tableFrom": "answer",
+          "tableTo": "room",
+          "columnsFrom": [
+            "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "answer_quiz_id_quiz_id_fk": {
           "name": "answer_quiz_id_quiz_id_fk",
           "tableFrom": "answer",
@@ -151,15 +157,15 @@
       "name": "room",
       "schema": "",
       "columns": {
-        "pk": {
-          "name": "pk",
+        "id": {
+          "name": "id",
           "type": "uuid",
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "id": {
-          "name": "id",
+        "code": {
+          "name": "code",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -234,11 +240,11 @@
         }
       },
       "indexes": {
-        "room_id_active_unique": {
-          "name": "room_id_active_unique",
+        "room_code_active_unique": {
+          "name": "room_code_active_unique",
           "columns": [
             {
-              "expression": "id",
+              "expression": "code",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -279,63 +285,6 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.smtp_settings": {
-      "name": "smtp_settings",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "'default'"
-        },
-        "host": {
-          "name": "host",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "port": {
-          "name": "port",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user": {
-          "name": "user",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "pass": {
-          "name": "pass",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "from": {
-          "name": "from",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -992,6 +941,63 @@
           "with": {}
         }
       },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.smtp_settings": {
+      "name": "smtp_settings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "'default'"
+        },
+        "host": {
+          "name": "host",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "port": {
+          "name": "port",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user": {
+          "name": "user",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pass": {
+          "name": "pass",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from": {
+          "name": "from",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
