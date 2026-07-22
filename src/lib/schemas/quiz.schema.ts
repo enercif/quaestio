@@ -6,7 +6,9 @@ const quizBaseSchema = z.object({
 	last_run: z.string().nullish(),
 	tags: z.array(z.string()),
 	questions: questionsSchema,
-	questions_length: z.number().positive('Die Anzahl der Fragen muss größer als 0 sein.')
+	questions_length: z.number().positive('Die Anzahl der Fragen muss größer als 0 sein.'),
+	// add visibility
+	visibility: z.enum(['private', 'public']).default('public')
 });
 
 export const quizSelectSchema = quizBaseSchema.extend({
