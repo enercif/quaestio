@@ -67,7 +67,7 @@
 				<Card.Title class="text-2xl font-bold">Admin-Konto erstellen</Card.Title>
 				<Card.Description>Es existiert noch kein Konto. Lege den ersten Admin an.</Card.Description>
 			{:else}
-				<Card.Title class="text-2xl font-bold">Login</Card.Title>
+				<Card.Title class="text-2xl font-bold">Anmelden</Card.Title>
 				<Card.Description>E-Mail und Passwort eingeben</Card.Description>
 			{/if}
 		</Card.Header>
@@ -80,15 +80,15 @@
 					</div>
 					<div>
 						<Label for="email" class="mb-2 text-sm font-medium">E-Mail</Label>
-						<Input id="email" type="email" bind:value={email} required placeholder="Email"></Input>
+						<Input id="email" type="email" bind:value={email} required placeholder="E-Mail"></Input>
 					</div>
 					<div>
-						<Label for="password" class="mb-2 text-sm font-medium">Password</Label>
+						<Label for="password" class="mb-2 text-sm font-medium">Passwort</Label>
 						<Input
 							id="password"
 							type="password"
 							bind:value={password}
-							placeholder="Password"
+							placeholder="Passwort"
 							minlength={8}
 							required
 						></Input>
@@ -102,22 +102,22 @@
 				<form onsubmit={login} class="flex flex-col gap-2">
 					<div>
 						<Label for="email" class="mb-2 text-sm font-medium">E-Mail</Label>
-						<Input id="email" type="email" bind:value={email} required placeholder="Email"></Input>
+						<Input id="email" type="email" bind:value={email} required placeholder="E-Mail"></Input>
 					</div>
 					<div>
-						<Label for="password" class="mb-2 text-sm font-medium">Password</Label>
+						<Label for="password" class="mb-2 text-sm font-medium">Passwort</Label>
 						<Input
 							id="password"
 							type="password"
 							bind:value={password}
-							placeholder="Password"
+							placeholder="Passwort"
 							required
 						></Input>
 						{#if error}<p class="text-sm text-red-500">
 								{error}
 							</p>{/if}
 					</div>
-					<Button class="size-lg w-full" type="submit">Login</Button>
+					<Button class="size-lg w-full" type="submit">Anmelden</Button>
 				</form>
 			{/if}
 		</Card.Content>

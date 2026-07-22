@@ -90,7 +90,7 @@ export function typeToBadge(type: QuestionType) {
 		case 'open':
 			return 'Open Text';
 		case 'programming':
-			return 'Programming';
+			return 'Coding';
 	}
 }
 

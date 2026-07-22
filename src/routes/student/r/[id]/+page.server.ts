@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
 	return {
 		roomId: params.id,
-		name: cookies.get('name') ?? 'Unknown',
-		id: id ?? 'Unknown'
+		name: cookies.get('name') ?? 'Unbekannt',
+		id: id ?? 'Unbekannt'
 	};
 };

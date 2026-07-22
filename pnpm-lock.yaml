@@ -53,6 +53,9 @@ importers:
       '@vitest/browser-playwright':
         specifier: ^4.1.9
         version: 4.1.9(playwright@1.61.1)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.0))(vitest@4.1.9)
+      '@wuchale/svelte':
+        specifier: ^0.20.5
+        version: 0.20.5(svelte@5.56.4(@typescript-eslint/types@8.62.1))
       better-auth:
         specifier: ~1.4.21
         version: 1.4.22(@prisma/client@5.22.0)(@sveltejs/kit@2.69.1(@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.56.4(@typescript-eslint/types@8.62.1))(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.0)))(svelte@5.56.4(@typescript-eslint/types@8.62.1))(typescript@6.0.3)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.0)))(better-sqlite3@12.11.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.11.1)(kysely@0.28.17)(pg@8.22.0)(postgres@3.4.9))(pg@8.22.0)(svelte@5.56.4(@typescript-eslint/types@8.62.1))(vitest@4.1.9)
@@ -161,6 +164,9 @@ importers:
       ws:
         specifier: ^8.21.0
         version: 8.21.0
+      wuchale:
+        specifier: ^0.25.6
+        version: 0.25.6
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -1418,6 +1424,11 @@ packages:
   '@vitest/utils@4.1.9':
     resolution: {integrity: sha512-A51o8ymO5PpqlWNnBP9ZHPXDIpuMtTLlGSjN7la4US+LJzoUMyhwjA5QXlm39JexgwHKW4Xjs8Z2d3dLCXOeuA==}
 
+  '@wuchale/svelte@0.20.5':
+    resolution: {integrity: sha512-wRu+pKdZxGEBdoxoxjQTacKUoHSYQfB1eV7UVsHlGUW1rG9bf4qhJz4bX8jcZZLCGBmfcjyvQJwdBxJN+nD9Jw==}
+    peerDependencies:
+      svelte: ^5
+
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -1563,6 +1574,10 @@ packages:
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
+
+  chokidar@5.0.0:
+    resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
+    engines: {node: '>= 20.19.0'}
 
   chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
@@ -2299,6 +2314,9 @@ packages:
     resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
     engines: {node: '>=14.19.0'}
 
+  pofile@1.1.4:
+    resolution: {integrity: sha512-r6Q21sKsY1AjTVVjOuU02VYKVNQGJNQHjTIvs4dEbeuuYfxgYk/DGD2mqqq4RDaVkwdSq0VEtmQUOPe/wH8X3g==}
+
   postcss-load-config@3.1.4:
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
     engines: {node: '>= 10'}
@@ -2449,6 +2467,10 @@ packages:
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
+
+  readdirp@5.0.0:
+    resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
+    engines: {node: '>= 20.19.0'}
 
   regex-recursion@6.0.2:
     resolution: {integrity: sha512-0YCaSCq2VRIebiaUviZNs0cBz1kg5kVS2UKUfNIx8YVs1cN3AV7NTctO5FOKBA+UT2BPJIWZauYHPqJODG50cg==}
@@ -2915,6 +2937,10 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  wuchale@0.25.6:
+    resolution: {integrity: sha512-GKs1xbU3ra0filKodUtjQuIHuiHnYbCLM8mxuiKRGWTjz/FOmYxuZEoWNXF5uyONxJybNaxvwGFzROVtWFbS8g==}
+    hasBin: true
 
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
@@ -3904,6 +3930,11 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
+  '@wuchale/svelte@0.20.5(svelte@5.56.4(@typescript-eslint/types@8.62.1))':
+    dependencies:
+      svelte: 5.56.4(@typescript-eslint/types@8.62.1)
+      wuchale: 0.25.6
+
   acorn-jsx@5.3.2(acorn@8.17.0):
     dependencies:
       acorn: 8.17.0
@@ -4015,6 +4046,10 @@ snapshots:
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
+
+  chokidar@5.0.0:
+    dependencies:
+      readdirp: 5.0.0
 
   chownr@1.1.4:
     optional: true
@@ -4685,6 +4720,8 @@ snapshots:
 
   pngjs@7.0.0: {}
 
+  pofile@1.1.4: {}
+
   postcss-load-config@3.1.4(postcss@8.5.16):
     dependencies:
       lilconfig: 2.1.0
@@ -4784,6 +4821,8 @@ snapshots:
     optional: true
 
   readdirp@4.1.2: {}
+
+  readdirp@5.0.0: {}
 
   regex-recursion@6.0.2:
     dependencies:
@@ -5265,6 +5304,16 @@ snapshots:
     optional: true
 
   ws@8.21.0: {}
+
+  wuchale@0.25.6:
+    dependencies:
+      '@sveltejs/acorn-typescript': 1.0.10(acorn@8.17.0)
+      acorn: 8.17.0
+      chokidar: 5.0.0
+      magic-string: 0.30.21
+      picomatch: 4.0.5
+      pofile: 1.1.4
+      tinyglobby: 0.2.17
 
   xtend@4.0.2:
     optional: true

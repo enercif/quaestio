@@ -4,9 +4,10 @@ import { playwright } from '@vitest/browser-playwright';
 import uws from 'svelte-adapter-uws/vite';
 import realtime from 'svelte-realtime/vite';
 import { defineConfig } from 'vitest/config';
+import { wuchale } from 'wuchale/vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit(), uws(), realtime()],
+	plugins: [tailwindcss(), wuchale(), sveltekit(), uws(), realtime()],
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

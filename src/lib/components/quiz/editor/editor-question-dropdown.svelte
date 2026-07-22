@@ -27,9 +27,7 @@
 				>Single Choice</DropdownMenu.Item
 			>
 			<DropdownMenu.Item onclick={() => state.addQuestion('open')}>Open Text</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => state.addQuestion('programming')}>
-				Programming
-			</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => state.addQuestion('programming')}>Coding</DropdownMenu.Item>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

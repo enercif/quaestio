@@ -23,7 +23,7 @@
 	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-4">
 		<Button variant="ghost" onclick={onLeaveClick}>
 			<ArrowLeftIcon />
-			Back
+			Zurück
 		</Button>
 
 		<div class="flex h-4 flex-row items-center gap-3">
