@@ -1,15 +1,32 @@
 import z from 'zod';
-import { choiceQuestionShape } from './shared.question.schema';
+import {
+	allOrNothingReasons,
+	choiceQuestionBaseSchema,
+	liveChoiceQuestionAnswerSchema
+} from './shared.question.schema';
 
 const type = 'multiple';
-const multipleChoiceQuestionShape = choiceQuestionShape.extend({ type: z.literal(type) });
+const multipleChoiceQuestionBaseSchema = choiceQuestionBaseSchema.extend({
+	type: z.literal(type),
+	reasons: z.record(z.string(), z.string())
+});
 
-export const multipleChoiceQuestionSchema = multipleChoiceQuestionShape.refine(
-	(question) => question.correct.every((id) => question.answers.some((a) => a.id === id)),
-	{ message: 'Jede korrekte Antwort muss eine gültige Antwort-ID sein.', path: ['correct'] }
-);
+export const multipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
+	.refine((question) => allOrNothingReasons(Object.keys(question.correct), question.reasons), {
+		message: 'Begründungen müssen für jede korrekte Antwort angegeben werden oder für gar keine',
+		path: ['reasons']
+	})
+	.refine(
+		(question) =>
+			Object.keys(question.correct).every((key) =>
+				question.answers.some((answer) => answer.id === key)
+			),
+		{ message: 'Jede korrekte Antwort muss eine gültige Antwort-ID sein.', path: ['correct'] }
+	);
 
-export const liveMultipleChoiceQuestionSchema = multipleChoiceQuestionShape.omit({ correct: true });
+export const liveMultipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
+	.omit({ correct: true, reasons: true })
+	.extend({ answers: z.array(liveChoiceQuestionAnswerSchema) });
 
 export type MultipleChoiceQuestionType = typeof type;
 export type MultipleChoiceQuestion = z.infer<typeof multipleChoiceQuestionSchema>;

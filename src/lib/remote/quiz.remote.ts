@@ -8,7 +8,7 @@ import z from 'zod';
 
 export const findQuizById = query(z.uuid(), async (quizId: string) => {
 	const quiz = await db.query.quizTable.findFirst({
-		where: (quiz, { eq }) => eq(quiz.id, quizId)
+		where: (quiz, { eq, and, isNull }) => and(eq(quiz.id, quizId), isNull(quiz.deleted_at))
 	});
 
 	const cleanedQuiz = removeNull(quiz);
@@ -16,7 +16,9 @@ export const findQuizById = query(z.uuid(), async (quizId: string) => {
 });
 
 export const findAllQuizzes = query(async () => {
-	const quizzes = await db.query.quizTable.findMany();
+	const quizzes = await db.query.quizTable.findMany({
+		where: (quiz, { isNull }) => isNull(quiz.deleted_at)
+	});
 	const cleanedQuizzes = removeNull(quizzes);
 	return quizSelectSchema.array().parse(cleanedQuizzes);
 });
@@ -61,7 +63,10 @@ export const updateQuiz = command(quizUpdateSchema, async (quiz) => {
 
 export const deleteQuizById = command(z.uuid(), async (quizId: string) => {
 	try {
-		await db.delete(quizTable).where(eq(quizTable.id, quizId));
+		await db
+			.update(quizTable)
+			.set({ deleted_at: new Date().toISOString() })
+			.where(eq(quizTable.id, quizId));
 		return {
 			success: true
 		};

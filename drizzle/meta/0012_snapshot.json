@@ -1,6 +1,6 @@
 {
-  "id": "656d3e2b-ca28-4fe7-9506-3b60bf383a77",
-  "prevId": "799fbb74-db0a-4d0d-a9a5-6a138bce6704",
+  "id": "52a4f1bb-7ba1-419e-8d02-e5a857059d92",
+  "prevId": "926561ab-caed-4f8f-b221-91d1015c6685",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -131,6 +131,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -145,10 +151,17 @@
       "name": "room",
       "schema": "",
       "columns": {
+        "pk": {
+          "name": "pk",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "id": {
           "name": "id",
           "type": "text",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "limit": {
@@ -205,9 +218,39 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "room_id_active_unique": {
+          "name": "room_id_active_unique",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"room\".\"deleted_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "room_quiz_id_quiz_id_fk": {
           "name": "room_quiz_id_quiz_id_fk",

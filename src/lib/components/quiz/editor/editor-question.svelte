@@ -2,6 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Field from '$lib/components/ui/field/index.js';
+	import { Textarea } from '$lib/components/ui/textarea';
 	import TrashIcon from '@lucide/svelte/icons/trash';
 	import EditorChoiceQuestion from './editor-choice-question.svelte';
 	import EditorOpenQuestion from './editor-open-question.svelte';
@@ -34,6 +35,15 @@
 					{:else}
 						<EditorChoiceQuestion />
 					{/if}
+
+					<Field.Field>
+						<Field.Label for="hint">Hinweis (optional)</Field.Label>
+						<Textarea
+							id="hint"
+							bind:value={selectedQuestion.hint}
+							placeholder="Optionaler Hinweis..."
+						/>
+					</Field.Field>
 				</div>
 			</Field.Group>
 		</Card.Content>

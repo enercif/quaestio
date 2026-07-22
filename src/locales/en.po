@@ -388,26 +388,16 @@ msgstr "Enter code here..."
 msgid "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 msgstr "Choose a language and enter code to see the preview."
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
-msgid "Warum ist diese Zeile falsch?"
-msgstr "Why is this line wrong?"
-
-#. 0: lineNumber
-#. 0: ids.join(', ')
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#. 0: answers.join(', ')
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Zeile {0}"
 msgstr "Line {0}"
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
-msgid "Begründungen"
-msgstr "Explanations"
-
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#: src/lib/components/quiz/editor/editor-question.svelte
 msgid "Optionaler Hinweis..."
 msgstr "Optional hint..."
 
-#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#: src/lib/components/quiz/editor/editor-question.svelte
 msgid "Hinweis (optional)"
 msgstr "Hint (optional)"
 
@@ -642,14 +632,10 @@ msgid "Keine"
 msgstr "None"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
-msgid "Gesucht"
-msgstr "Expected"
-
-#: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Richtig"
 msgstr "Correct"
 
-#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesucht' \\: 'Richtig'; 2: answerTexts(correct)
+#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Deine Antwort: {0} | {1}: {2}"
 msgstr "Your answer: {0} | {1}: {2}"
@@ -874,3 +860,53 @@ msgstr "<0/> Account"
 #: src/routes/+layout.svelte
 msgid "<0/> Abmelden"
 msgstr "<0/> Sign out"
+
+#. 0: answer.text
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "Warum ist {0} richtig?"
+msgstr "Why is {0} correct?"
+
+#. 0: Object.values(selectedQuestion.correct)[0]
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "Warum ist \"{0}\" die richtige Antwort?"
+msgstr "Why is \"{0}\" the correct answer?"
+
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Begründung (optional)"
+msgstr "Explanation (optional)"
+
+#. 0: lineNumber
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Warum ist Zeile {0} falsch?"
+msgstr "Why is line {0} wrong?"
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Begründungen (optional)"
+msgstr "Explanations (optional)"
+
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum ist die Antwort korrekt?"
+msgstr "Why is the answer correct?"
+
+#. 0: selectedQuestion.correct[0]
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum ist \"{0}\" das richtige Keyword?"
+msgstr "Why is \"{0}\" the correct keyword?"
+
+#. 0: selectedQuestion.correct.join(', ')
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum sind \"{0}\" die richtigen Keywords?"
+msgstr "Why are \"{0}\" the correct keywords?"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Hinweis"
+msgstr "Hint"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Gesuchte Keywords"
+msgstr "Expected keywords"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Begründung"
+msgstr "Explanation"

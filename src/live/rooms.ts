@@ -16,6 +16,17 @@ import type { User } from '$lib/types/user.type';
 import { eq } from 'drizzle-orm/sql/expressions/conditions';
 import { live, LiveError, type LiveContext } from 'svelte-realtime';
 
+function reasonList(reason: string | undefined): string[] {
+	return reason ? [reason] : [];
+}
+
+function reasonEntries(
+	reasons: Record<string, string>,
+	format: (key: string, value: string) => string
+): string[] {
+	return Object.entries(reasons).map(([key, value]) => format(key, value));
+}
+
 export async function getRooms(): Promise<Room[]> {
 	const rooms = await db.query.roomTable.findMany({
 		with: {
@@ -26,7 +37,8 @@ export async function getRooms(): Promise<Room[]> {
 					id: true
 				}
 			}
-		}
+		},
+		where: (room, { isNull }) => isNull(room.deleted_at)
 	});
 	return roomSelectSchema.array().parse(rooms);
 }
@@ -42,7 +54,7 @@ export async function getRoomById(roomId: string): Promise<Room | undefined> {
 				}
 			}
 		},
-		where: (room, { eq }) => eq(room.id, roomId)
+		where: (room, { eq, and, isNull }) => and(eq(room.id, roomId), isNull(room.deleted_at))
 	});
 	return room ? roomSelectSchema.parse(room) : undefined;
 }
@@ -88,7 +100,10 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) =>
 		}
 		room.state = RoomState.Finished;
 
-		await db.delete(roomTable).where(eq(roomTable.id, roomId)).returning();
+		await db
+			.update(roomTable)
+			.set({ deleted_at: new Date().toISOString() })
+			.where(eq(roomTable.id, roomId));
 		ctx.publish(TOPICS.rooms, 'deleted', { id: roomId });
 		ctx.publish(TOPICS.room(roomId), 'set', room);
 
@@ -203,13 +218,49 @@ export const showResults = live(async (ctx: LiveContext<User>, roomId: string) =
 		.find((q) => q.id === room.current_question!.id);
 	if (!question) throw new LiveError('NOT_FOUND', 'Question not found');
 
-	await updateRoom(ctx, room, {
+	let update: Partial<Omit<Room, 'id' | 'quiz'>> = {
 		state: RoomState.Answer,
-		current_answers:
-			question.type === 'programming' ? question.correct_lines.map(String) : question.correct,
 		question_ends_at: null,
 		paused_remaining: null
-	});
+	};
+
+	switch (question.type) {
+		case 'open':
+			update = {
+				...update,
+				current_answers: question.correct,
+				current_reasons: reasonList(question.reasons)
+			};
+			break;
+		case 'single':
+			update = {
+				...update,
+				current_answers: Object.values(question.correct),
+				current_reasons: reasonList(question.reasons)
+			};
+			break;
+		case 'multiple':
+			update = {
+				...update,
+				current_answers: Object.values(question.correct),
+				current_reasons: reasonEntries(
+					question.reasons,
+					(key, value) => `${question.answers.find((answer) => answer.id === key)!.text}: ${value}`
+				)
+			};
+			break;
+		case 'programming':
+			update = {
+				...update,
+				current_answers: question.correct.map(String),
+				current_reasons: reasonEntries(question.reasons, (key, value) => `Zeile ${key}: ${value}`)
+			};
+			break;
+		default:
+			throw new LiveError('NOT_FOUND', 'Unsupported question type');
+	}
+
+	await updateRoom(ctx, room, update);
 });
 
 export const submitAnswer = live(
