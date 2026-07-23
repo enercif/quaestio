@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import AnalyticsQuestionAnswerRow from '$lib/components/analytics/analytics-question-answer-row.svelte';
+	import { questionResultsFor } from '$lib/components/analytics/analytics.utils';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Progress } from '$lib/components/ui/progress';
@@ -17,14 +18,25 @@
 	const data = $derived(await getStudentRooms(params.id));
 
 	const rooms = $derived(
-		(data?.rooms ?? []).map((room) => ({
-			...room,
-			totalPoints: room.questions.reduce((sum, q) => sum + q.points, 0),
-			accuracy:
-				room.questions.length > 0
-					? room.questions.reduce((sum, q) => sum + q.accuracy, 0) / room.questions.length
-					: 0
-		}))
+		(data?.rooms ?? []).map(({ room, quiz, answers }) => {
+			const questions = quiz.questions.toSorted((a, b) => a.position - b.position);
+			const questionResults = questionResultsFor(questions, answers);
+			const maxPoints = questionResults.reduce((sum, q) => sum + q.maxPoints, 0);
+			const totalPoints = questionResults.reduce((sum, q) => sum + q.points, 0);
+			const accuracy =
+				questionResults.length > 0
+					? questionResults.reduce((sum, q) => sum + q.accuracy, 0) / questionResults.length
+					: 0;
+			return {
+				roomId: room.id,
+				createdAt: room.createdAt,
+				quizTitle: quiz.title,
+				questions: questionResults,
+				maxPoints,
+				totalPoints,
+				accuracy
+			};
+		})
 	);
 
 	const totalPoints = $derived(rooms.reduce((sum, r) => sum + r.totalPoints, 0));
@@ -81,7 +93,6 @@
 			<div class="flex flex-col gap-3">
 				{#each rooms as room (room.roomId)}
 					{@const isOpen = expanded.has(room.roomId)}
-					{@const maxPoints = room.questions.reduce((sum, q) => sum + q.maxPoints, 0)}
 					<div class="rounded-lg border">
 						<button
 							class="flex w-full flex-row items-center gap-3 px-4 py-3 text-left"
@@ -102,7 +113,7 @@
 								})}
 							</span>
 							<span class="text-sm tabular-nums text-muted-foreground">
-								{room.totalPoints} / {maxPoints} Punkte
+								{room.totalPoints} / {room.maxPoints} Punkte
 							</span>
 							<Progress value={room.accuracy} class="h-2 w-32" />
 						</button>

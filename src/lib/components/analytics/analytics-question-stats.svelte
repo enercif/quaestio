@@ -1,22 +1,24 @@
 <script lang="ts">
+	import { correctAnswersFor, questionAccuracy } from '$lib/components/analytics/analytics.utils';
 	import { typeToBadge } from '$lib/components/quiz/quiz.utils';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import type { getRoomAnalysis } from '$lib/remote/analytics.remote';
+	import type { Question } from '$lib/schemas/question.schema';
 	import { highlightCode } from '$lib/shiki';
 	import { watch } from 'runed';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { slide } from 'svelte/transition';
 
-	type RoomAnalysis = NonNullable<Awaited<ReturnType<typeof getRoomAnalysis>>>;
-	type QuestionStat = RoomAnalysis['questionStats'][number];
-
 	interface Props {
-		question: QuestionStat;
+		index: number;
+		question: Question;
 		selections: string[][];
 	}
 
-	let { question, selections }: Props = $props();
+	let { index, question, selections }: Props = $props();
+
+	const accuracy = $derived(questionAccuracy(question, selections));
+	const correct = $derived(correctAnswersFor(question));
 
 	const respondents = $derived(selections.filter((s) => s.length > 0).length);
 
@@ -25,10 +27,13 @@
 	}
 
 	const optionCounts = $derived(
-		(question.answers ?? []).map((answer) => ({
-			...answer,
-			count: selections.filter((s) => s.includes(answer.text)).length
-		}))
+		question.type === 'multiple' || question.type === 'single'
+			? question.answers.map((answer) => ({
+					...answer,
+					correct: correct.includes(answer.text),
+					count: selections.filter((s) => s.includes(answer.text)).length
+				}))
+			: []
 	);
 
 	const lineCounts = $derived.by(() => {
@@ -42,18 +47,18 @@
 
 	let codeContainer: HTMLDivElement | undefined = $state();
 	const programmingHtml = $derived.by(async () => {
-		if (question.type !== 'programming' || !question.code || !question.language) return '';
+		if (question.type !== 'programming') return '';
 		return highlightCode(question.code, question.language);
 	});
 
-	watch([() => lineCounts, () => question.correctLines, () => isOpen], ([counts, correctLines]) => {
+	watch([() => lineCounts, () => correct, () => isOpen], ([counts, correctLines]) => {
 		if (!codeContainer) return;
 		for (const line of codeContainer.querySelectorAll<HTMLElement>('.line')) {
 			const lineNumber = line.dataset.line;
 			if (!lineNumber) continue;
 			const voteCount = counts.get(lineNumber) ?? 0;
 			line.dataset.votes = voteCount ? `${voteCount}×` : '';
-			line.classList.toggle('correct-line', !!correctLines?.includes(lineNumber));
+			line.classList.toggle('correct-line', correctLines.includes(lineNumber));
 		}
 	});
 
@@ -64,10 +69,10 @@
 	<Card.Header>
 		<div class="flex flex-col gap-2 items-start w-full">
 			<div class="flex flex-row items-center gap-2 w-full">
-				<p class="text-muted-foreground">Frage {question.position + 1}</p>
+				<p class="text-muted-foreground">Frage {index + 1}</p>
 				<Badge variant="secondary">{typeToBadge(question.type)}</Badge>
 				<span class="ml-auto shrink-0 text-sm font-semibold">
-					{Math.round(question.accuracy)}% Genauigkeit
+					{Math.round(accuracy)}% Genauigkeit
 				</span>
 			</div>
 			<div class="flex flex-row items-center gap-2 w-full">
@@ -97,7 +102,7 @@
 								<div
 									class={[
 										'flex flex-row items-center justify-between rounded-lg border px-4 py-3',
-										question.correctLines?.includes(line) && 'border-green-500 bg-green-500/10'
+										correct.includes(line) && 'border-green-500 bg-green-500/10'
 									]}
 								>
 									<span>Zeile {line}</span>

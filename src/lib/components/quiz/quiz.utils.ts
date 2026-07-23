@@ -89,28 +89,6 @@ export function evaluateAnswer(
 	return 'partial';
 }
 
-export function correctAnswersFor(question: Question): string[] {
-	switch (question.type) {
-		case 'open':
-			return question.correct;
-		case 'single':
-		case 'multiple':
-			return Object.values(question.correct);
-		case 'programming':
-			return question.correct.map(String);
-	}
-}
-
-export function answerAccuracy(question: Question, selected: string[]): number {
-	const correct = correctAnswersFor(question);
-	if (correct.length === 0) return 0;
-	if (question.type === 'open') {
-		return evaluateAnswer('open', correct, selected) === 'correct' ? 1 : 0;
-	}
-	const hits = selected.filter((value) => correct.includes(value)).length;
-	return hits / correct.length;
-}
-
 export function questionMaxPoints(question: Question): number {
 	if (hasPartialScoring(question)) {
 		return Object.values(question.partial_points).reduce((sum, p) => sum + p, 0);
@@ -118,23 +96,7 @@ export function questionMaxPoints(question: Question): number {
 	return question.points;
 }
 
-export function computedPoints(question: Question, selected: string[]): number {
-	if (hasPartialScoring(question)) {
-		const keys =
-			question.type === 'multiple'
-				? question.correct
-				: Object.fromEntries(question.correct.map((line) => [line, line]));
-		return Object.entries(keys).reduce(
-			(sum, [key, value]) =>
-				sum + (selected.includes(value) ? (question.partial_points[key] ?? 0) : 0),
-			0
-		);
-	}
-	const result = evaluateAnswer(question.type, correctAnswersFor(question), selected);
-	return result === 'correct' ? question.points : 0;
-}
-
-function hasPartialScoring(
+export function hasPartialScoring(
 	question: Question
 ): question is (MultipleChoiceQuestion | ProgrammingQuestion) & { scoring: 'partial' } {
 	return (

@@ -1,26 +1,17 @@
 <script lang="ts">
+	import type { QuestionResult } from '$lib/components/analytics/analytics.utils';
 	import { typeToBadge } from '$lib/components/quiz/quiz.utils';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { setPointsOverride } from '$lib/remote/analytics.remote';
-	import type { QuestionType } from '$lib/schemas/question.schema';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import RotateCcwIcon from '@lucide/svelte/icons/rotate-ccw';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		index: number;
-		question: {
-			answerId: string | undefined;
-			question: string;
-			type: QuestionType;
-			correct: string[];
-			selected: string[];
-			points: number;
-			maxPoints: number;
-			overridden: boolean;
-		};
+		question: QuestionResult;
 	}
 	let { index, question: q }: Props = $props();
 

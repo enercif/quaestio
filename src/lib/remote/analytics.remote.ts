@@ -1,10 +1,4 @@
 import { command, query } from '$app/server';
-import {
-	answerAccuracy,
-	computedPoints,
-	correctAnswersFor,
-	questionMaxPoints
-} from '$lib/components/quiz/quiz.utils';
 import { quizSelectSchema } from '$lib/schemas/quiz.schema';
 import { db } from '$lib/server/db';
 import { answerTable } from '$lib/server/db/schema';
@@ -68,128 +62,44 @@ export const getRoomAnalysis = query(z.uuid(), async (roomId) => {
 	});
 	if (!room) return undefined;
 
-	const quiz = quizSelectSchema.parse(room.quiz);
-	const questions = quiz.questions.toSorted((a, b) => a.position - b.position);
 	const answers = await db.query.answerTable.findMany({
 		where: (answer, { eq }) => eq(answer.room_id, roomId)
 	});
 
-	const studentIds = [...new Set(answers.map((a) => a.student_id))];
-
-	const students = studentIds
-		.map((studentId) => {
-			const studentName = answers.find((a) => a.student_id === studentId)!.student_name;
-			const questionResults = questions.map((question) => {
-				const answer = answers.find(
-					(a) => a.student_id === studentId && a.question_id === question.id
-				);
-				const auto = answer ? computedPoints(question, answer.selected) : 0;
-				return {
-					answerId: answer?.id,
-					questionId: question.id,
-					question: question.question,
-					type: question.type,
-					correct: Object.values(question.correct),
-					maxPoints: questionMaxPoints(question),
-					selected: answer?.selected ?? [],
-					points: answer?.points_override ?? auto,
-					overridden: answer?.points_override != null
-				};
-			});
-			return {
-				studentId,
-				studentName,
-				questions: questionResults,
-				totalPoints: questionResults.reduce((sum, q) => sum + q.points, 0)
-			};
-		})
-		.sort((a, b) => a.studentName.localeCompare(b.studentName));
-
-	const questionStats = questions.map((question, index) => {
-		const max = questionMaxPoints(question);
-		const selections = students.map((s) => s.questions[index].selected);
-		const accuracy =
-			selections.length > 0
-				? (selections.reduce((sum, selected) => sum + answerAccuracy(question, selected), 0) /
-						selections.length) *
-					100
-				: 0;
-
-		return {
-			questionId: question.id,
-			position: index,
-			question: question.question,
-			type: question.type,
-			maxPoints: max,
-			accuracy,
-			answers:
-				question.type === 'multiple' || question.type === 'single'
-					? question.answers.map((a) => ({
-							id: a.id,
-							text: a.text,
-							correct: correctAnswersFor(question).includes(a.text)
-						}))
-					: undefined,
-			code: question.type === 'programming' ? question.code : undefined,
-			language: question.type === 'programming' ? question.language : undefined,
-			correctLines: question.type === 'programming' ? question.correct : undefined
-		};
-	});
-
 	return {
 		room: { id: room.id, code: room.code, createdAt: room.created_at },
-		quiz: { id: quiz.id, title: quiz.title },
-		questionStats,
-		students
+		quiz: quizSelectSchema.parse(room.quiz),
+		answers
 	};
 });
 
 export const getStudentRooms = query(z.string(), async (studentId) => {
 	const answers = await db.query.answerTable.findMany({
-		where: (answer, { eq }) => eq(answer.student_id, studentId),
-		with: { room: { with: { quiz: true } } }
+		where: (answer, { eq }) => eq(answer.student_id, studentId)
 	});
 	if (answers.length === 0) return undefined;
 
 	const studentName = answers[0].student_name;
 	const roomIds = [...new Set(answers.map((a) => a.room_id))];
 
+	const roomRows = await db.query.roomTable.findMany({
+		where: (room, { inArray }) => inArray(room.id, roomIds),
+		with: { quiz: true }
+	});
+	const roomById = new Map(roomRows.map((r) => [r.id, r]));
+
 	const rooms = roomIds
 		.map((roomId) => {
-			const roomAnswers = answers.filter((a) => a.room_id === roomId);
-			const room = roomAnswers[0].room;
-			const quiz = quizSelectSchema.parse(room.quiz);
-			const questions = quiz.questions.toSorted((a, b) => a.position - b.position);
-
-			const questionResults = questions.map((question) => {
-				const answer = roomAnswers.find((a) => a.question_id === question.id);
-				const selected = answer?.selected ?? [];
-				const auto = answer ? computedPoints(question, selected) : 0;
-				return {
-					answerId: answer?.id,
-					questionId: question.id,
-					question: question.question,
-					type: question.type,
-					maxPoints: questionMaxPoints(question),
-					correct: Object.values(question.correct),
-					selected,
-					points: answer?.points_override ?? auto,
-					overridden: answer?.points_override != null,
-					accuracy: answerAccuracy(question, selected) * 100
-				};
-			});
-
+			const room = roomById.get(roomId)!;
 			return {
-				roomId,
-				code: room.code,
-				createdAt: room.created_at,
-				quizTitle: quiz.title,
-				questions: questionResults
+				room: { id: room.id, code: room.code, createdAt: room.created_at },
+				quiz: quizSelectSchema.parse(room.quiz),
+				answers: answers.filter((a) => a.room_id === roomId)
 			};
 		})
-		.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+		.sort((a, b) => b.room.createdAt.localeCompare(a.room.createdAt));
 
-	return { studentId, studentName, rooms };
+	return { studentName, rooms };
 });
 
 export const setPointsOverride = command(
