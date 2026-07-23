@@ -1149,3 +1149,11 @@ msgstr "Download example CSV"
 #: src/lib/import/import-dialog.svelte
 msgid "Datei(en) auswählen"
 msgstr "Select file(s)"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Exportiere als CSV"
+msgstr "Export to CSV"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Exportiere als XLSX"
+msgstr "Export to XLSX"
