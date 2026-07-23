@@ -12,10 +12,14 @@
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SquarePenIcon from '@lucide/svelte/icons/square-pen';
 	import type { PageProps } from './$types';
+	import QuizImporter from '$lib/import/quiz-importer.svelte';
 	let { data }: PageProps = $props();
 
 	const quizzes = $derived(data.quizzes);
+	let quizImporter = $state<QuizImporter>();
 </script>
+
+<QuizImporter bind:this={quizImporter} />
 
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
 	<div class="flex flex-row items-center justify-between">
@@ -37,8 +41,8 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content side="bottom" align="end" class="w-full">
 					<DropdownMenu.Group>
-						<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
-						<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+						<DropdownMenu.Item onSelect={() => quizImporter?.openCsv()}>Importiere CSV</DropdownMenu.Item>
+						<DropdownMenu.Item onSelect={() => quizImporter?.openXlsx()}>Importiere XLSX</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
@@ -87,8 +91,8 @@
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content side="bottom" align="end" class="w-full">
 								<DropdownMenu.Group>
-									<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
-									<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+									<DropdownMenu.Item onSelect={() => quizImporter?.openCsv()}>Importiere CSV</DropdownMenu.Item>
+									<DropdownMenu.Item onSelect={() => quizImporter?.openXlsx()}>Importiere XLSX</DropdownMenu.Item>
 								</DropdownMenu.Group>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>

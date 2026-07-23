@@ -910,3 +910,242 @@ msgstr "Expected keywords"
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Begründung"
 msgstr "Explanation"
+
+#: src/lib/import/quiz-importer.svelte
+msgid "Import fehlgeschlagen."
+msgstr "Import failed."
+
+#: src/lib/import/quiz-importer.svelte
+msgid "Importiertes Quiz"
+msgstr "Imported Quiz"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Quiz importieren"
+msgstr "Import Quiz"
+
+#. 0: format.toUpperCase()
+#: src/lib/import/import-dialog.svelte
+msgid "Du kannst eine oder mehrere {0}-Dateien auswählen. Alle enthaltenen Fragen werden zu einem gemeinsamen Quiz zusammengeführt. Die erste Zeile muss die Spaltennamen enthalten."
+msgstr "You can select one or more {0} files. All contained questions will be merged into a single quiz. The first row must contain the column names."
+
+#: src/lib/import/import-dialog.svelte
+msgid "<0>Allgemein:</0> Jede Zeile entspricht genau einer Frage. Die Spalten heißen:"
+msgstr "<0>General:</0> Each row represents exactly one question. The columns are:"
+
+#: src/lib/import/import-dialog.svelte
+msgid "type, question, code, options, solution, language, hint, reasons, points, timelimit"
+msgstr "type, question, code, options, solution, language, hint, reasons, points, timelimit"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Je nach <0>Fragentyp</0> müssen unterschiedliche Spalten ausgefüllt werden. Wähle unten den gewünschten Fragentyp aus."
+msgstr "Depending on the <0>question type</0>, different columns must be filled in. Select the desired question type below."
+
+#: src/lib/import/import-dialog.svelte
+msgid "Single"
+msgstr "Single"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Multiple"
+msgstr "Multiple"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Open"
+msgstr "Open"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Programming"
+msgstr "Programming"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "Spalte"
+msgstr "Column"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "Inhalt"
+msgstr "Content"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "type"
+msgstr "type"
+
+#: src/lib/import/import-dialog.svelte
+msgid "single"
+msgstr "single"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "question"
+msgstr "question"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "Fragestellung <0>(Pflicht)</0>"
+msgstr "Question <0>(required)</0>"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "code"
+msgstr "code"
+
+#: src/lib/import/import-dialog.svelte
+msgid "(Nicht verwendet) leer lassen"
+msgstr "(Not used) leave empty"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "options"
+msgstr "options"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "Antworten mit <0/> trennen <1>(Pflicht)</1>"
+msgstr "Separate answers with <0/> <1>(required)</1>"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "solution"
+msgstr "solution"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Genau eine richtige Antwort <0>(Pflicht)</0>"
+msgstr "Exactly one correct answer <0>(required)</0>"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "language"
+msgstr "language"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "leer lassen"
+msgstr "leave empty"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "hint"
+msgstr "hint"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "optional"
+msgstr "optional"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "reasons"
+msgstr "reasons"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "points"
+msgstr "points"
+
+#: src/lib/import/import-dialog.svelte
+msgid "optional (Standard: 1)"
+msgstr "optional (default: 1)"
+
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+msgid "timelimit"
+msgstr "timelimit"
+
+#: src/lib/import/import-dialog.svelte
+msgid "optional (Standard: 30)"
+msgstr "optional (default: 30)"
+
+#: src/lib/import/import-dialog.svelte
+msgid "multiple"
+msgstr "multiple"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Mehrere richtige Antworten mit <0/> trennen <1>(Pflicht)</1>"
+msgstr "Separate multiple correct answers with <0/> <1>(required)</1>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "open"
+msgstr "open"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Mögliche Antworten mit <0/> trennen <1>(Pflicht)</1>"
+msgstr "Separate possible answers with <0/> <1>(required)</1>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "programming"
+msgstr "programming"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Base64-kodierter Quellcode <0>(Pflicht)</0>"
+msgstr "Base64-encoded source code <0>(required)</0>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Quellcode als normaler Text <0>(Pflicht)</0>"
+msgstr "Source code as plain text <0>(required)</0>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Zeilennummern aller fehlerhaften Codezeilen, getrennt mit <0/> <1>(Pflicht)</1>"
+msgstr "Line numbers of all incorrect code lines, separated by <0/> <1>(required)</1>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Programmiersprache <0>(Pflicht)</0>"
+msgstr "Programming language <0>(required)</0>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Nutze das Format: Codezeilennummer:Fehlerbeschreibung <0>(Pflicht)</0>"
+msgstr "Use the format: line number:error description <0>(required)</0>"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Beispiel-XLSX herunterladen"
+msgstr "Download example XLSX"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Beispiel-CSV herunterladen"
+msgstr "Download example CSV"
+
+#: src/lib/import/import-dialog.svelte
+msgid "Datei(en) auswählen"
+msgstr "Select file(s)"
