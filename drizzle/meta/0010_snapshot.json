@@ -1,5 +1,5 @@
 {
-  "id": "0d5400a3-fd4c-43b8-abed-1bb706153510",
+  "id": "656d3e2b-ca28-4fe7-9506-3b60bf383a77",
   "prevId": "799fbb74-db0a-4d0d-a9a5-6a138bce6704",
   "version": "7",
   "dialect": "postgresql",
@@ -102,12 +102,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "teacher_id": {
-          "name": "teacher_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "title": {
           "name": "title",
           "type": "text",
@@ -137,32 +131,10 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "visibility": {
-          "name": "visibility",
-          "type": "quiz_visibility",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'public'"
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "quiz_teacher_id_user_id_fk": {
-          "name": "quiz_teacher_id_user_id_fk",
-          "tableFrom": "quiz",
-          "tableTo": "user",
-          "columnsFrom": [
-            "teacher_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -212,6 +184,12 @@
         },
         "current_answers": {
           "name": "current_answers",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_reasons": {
+          "name": "current_reasons",
           "type": "text[]",
           "primaryKey": false,
           "notNull": false
@@ -922,16 +900,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.quiz_visibility": {
-      "name": "quiz_visibility",
-      "schema": "public",
-      "values": [
-        "private",
-        "public"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -56,10 +56,12 @@
 					{:else}
 						<p class="font-semibold">{live.studentPresence.length} beigetreten</p>
 					{/if}
-					<Button onclick={() => nextQuestion(live.roomId)}>
-						<Play />
-						Quiz starten
-					</Button>
+					{#if live.isRoomOwner}
+						<Button onclick={() => nextQuestion(live.roomId)}>
+							<Play />
+							Quiz starten
+						</Button>
+					{/if}
 				</div>
 
 				{#if live.roomData?.limit}

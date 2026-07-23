@@ -19,7 +19,7 @@
 
 <QuizEditorHeader />
 
-<div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10">
+<div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10 mb-10">
 	<Field.Set>
 		<Field.Group>
 			<div class="flex flex-row items-end justify-between">

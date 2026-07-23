@@ -3,13 +3,13 @@ import { quizInsertSchema, quizSelectSchema, quizUpdateSchema } from '$lib/schem
 import { db } from '$lib/server/db';
 import { quizTable } from '$lib/server/db/schema';
 import { removeNull } from '$lib/utils';
-import { eq } from 'drizzle-orm';
+import { eq, isNull } from 'drizzle-orm';
 import z from 'zod';
 
 export const findQuizById = query(z.uuid(), async (quizId: string) => {
 	const { locals } = getRequestEvent();
 	const quiz = await db.query.quizTable.findFirst({
-		where: (quiz, { eq }) => eq(quiz.id, quizId)
+		where: (quiz, { eq, and, isNull }) => and(eq(quiz.id, quizId), isNull(quiz.deleted_at))
 	});
 
 	const isOwner = locals.user?.id === quiz?.teacherId;
@@ -24,8 +24,11 @@ export const findAllQuizzes = query(async () => {
 	if (!locals.user) return [];
 
 	const quizzes = await db.query.quizTable.findMany({
-		where: (quiz, { eq, or }) =>
-			or(eq(quiz.teacherId, locals.user!.id), eq(quiz.visibility, 'public'))
+		where: (quiz, { eq, or, and }) =>
+			and(
+				isNull(quiz.deleted_at),
+				or(eq(quiz.teacherId, locals.user!.id), eq(quiz.visibility, 'public'))
+			)
 	});
 
 	const cleanedQuizzes = removeNull(quizzes);
@@ -114,7 +117,10 @@ export const deleteQuizById = command(z.uuid(), async (quizId: string) => {
 			return { success: false };
 		}
 
-		await db.delete(quizTable).where(eq(quizTable.id, quizId));
+		await db
+			.update(quizTable)
+			.set({ deleted_at: new Date().toISOString() })
+			.where(eq(quizTable.id, quizId));
 		return {
 			success: true
 		};

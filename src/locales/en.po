@@ -1,0 +1,920 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"Source-Language: de\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/lib/vitest-examples/Welcome.svelte
+msgid "SvelteKit"
+msgstr "SvelteKit"
+
+#: src/lib/vitest-examples/Welcome.svelte
+msgid "Vitest"
+msgstr "Vitest"
+
+#: src/routes/+layout.svelte
+#: src/routes/+page.svelte
+#: src/routes/accept-invitation/[id]/+page.svelte
+#: src/routes/login/+page.svelte
+msgid "Quaestio"
+msgstr "Quaestio"
+
+#: src/routes/+layout.svelte
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "<0/> Live"
+msgstr "<0/> Live"
+
+#: src/routes/+layout.svelte
+msgid "Analyse"
+msgstr "Analysis"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Passwort ändern"
+msgstr "Change password"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Link kopiert"
+msgstr "Link copied"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Einladung wurde per E-Mail versendet"
+msgstr "Invitation was sent by email"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "<0/> Neuer Benutzer"
+msgstr "<0/> New user"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Benutzer einladen"
+msgstr "Invite user"
+
+#: src/lib/components/account-settings-dialog.svelte
+#: src/lib/components/admin/invite-user-dialog.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "E-Mail"
+msgstr "Email"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Rolle"
+msgstr "Role"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+#: src/lib/components/quiz/launch-dialog.svelte
+msgid "Abbrechen"
+msgstr "Cancel"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Einladen"
+msgstr "Invite"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Einladungslink"
+msgstr "Invitation link"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Kopieren"
+msgstr "Copy"
+
+#: src/lib/components/admin/invite-user-dialog.svelte
+msgid "Per E-Mail senden"
+msgstr "Send by email"
+
+#: src/routes/+page.svelte
+msgid "Quiz beitreten"
+msgstr "Join quiz"
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+#: src/routes/+page.svelte
+msgid "Code"
+msgstr "Code"
+
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
+#: src/routes/+page.svelte
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "<0/> Zurück"
+msgstr "<0/> Back"
+
+#: src/routes/+page.svelte
+msgid "Wie heißt du?"
+msgstr "What's your name?"
+
+#: src/routes/+page.svelte
+msgid "Der Lehrer kann dir so Punkte zuordnen"
+msgstr "This lets the teacher assign points to you"
+
+#: src/routes/+page.svelte
+msgid "Tony Stark"
+msgstr "Tony Stark"
+
+#: src/routes/+page.svelte
+msgid "Dein Name"
+msgstr "Your name"
+
+#: src/routes/+page.svelte
+msgid "Quiz beitreten <0/>"
+msgstr "Join quiz <0/>"
+
+#: src/routes/+page.svelte
+msgid "Der Raum ist voll"
+msgstr "The room is full"
+
+#: src/routes/+page.svelte
+msgid "Raum nicht gefunden"
+msgstr "Room not found"
+
+#: src/routes/+page.svelte
+msgid "Die maximale Teilnehmerzahl wurde bereits erreicht."
+msgstr "The maximum number of participants has already been reached."
+
+#: src/routes/+page.svelte
+msgid "Zurück <0/>"
+msgstr "Back <0/>"
+
+#: src/routes/accept-invitation/[id]/+page.svelte
+msgid "Willkommen bei Quaestio"
+msgstr "Welcome to Quaestio"
+
+#. 0: data.invite.email
+#: src/routes/accept-invitation/[id]/+page.svelte
+msgid "Richte dein Konto für {0} ein"
+msgstr "Set up your account for {0}"
+
+#: src/routes/accept-invitation/[id]/+page.svelte
+msgid "Link ungültig"
+msgstr "Invalid link"
+
+#: src/routes/accept-invitation/[id]/+page.svelte
+msgid "Dieser Einladungslink ist ungültig oder abgelaufen."
+msgstr "This invitation link is invalid or has expired."
+
+#: src/lib/components/account-settings-dialog.svelte
+#: src/routes/accept-invitation/[id]/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Name"
+msgstr "Name"
+
+#: src/routes/accept-invitation/[id]/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Passwort"
+msgstr "Password"
+
+#: src/routes/accept-invitation/[id]/+page.svelte
+msgid "Konto erstellen"
+msgstr "Create account"
+
+#: src/routes/accept-invitation/[id]/+page.svelte
+msgid "Zum Login"
+msgstr "Go to login"
+
+#: src/routes/teacher/live/+page.svelte
+msgid "Fehler beim Schließen des Raums"
+msgstr "Error closing the room"
+
+#: src/routes/teacher/live/+page.svelte
+msgid "Noch keine Räume"
+msgstr "No rooms yet"
+
+#: src/routes/teacher/live/+page.svelte
+msgid "Es sind aktuell keine Räume aktiv. Starte ein Quiz, um einen Raum zu erstellen."
+msgstr "There are currently no active rooms. Start a quiz to create a room."
+
+#: src/routes/teacher/live/+page.svelte
+msgid "Starte ein Quiz"
+msgstr "Start a quiz"
+
+#. 0: room.id
+#: src/routes/teacher/live/+page.svelte
+msgid "Raum {0}"
+msgstr "Room {0}"
+
+#: src/lib/components/ui/dialog/dialog-content.svelte
+#: src/lib/components/ui/dialog/dialog-footer.svelte
+#: src/routes/teacher/live/+page.svelte
+msgid "Schließen"
+msgstr "Close"
+
+#: src/routes/teacher/live/+page.svelte
+msgid "Beitreten"
+msgstr "Join"
+
+#: src/routes/teacher/live/+page.svelte
+msgid "Live Räume"
+msgstr "Live rooms"
+
+#: src/routes/teacher/analysis/+page.svelte
+msgid "Test"
+msgstr "Test"
+
+#: src/routes/login/+page.svelte
+msgid "Ungültige E-Mail oder Passwort."
+msgstr "Invalid email or password."
+
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+msgid "Verbindung zum Server fehlgeschlagen. Bitte versuchen Sie es erneut."
+msgstr "Connection to the server failed. Please try again."
+
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+msgid "Admin-Konto erstellen"
+msgstr "Create admin account"
+
+#: src/routes/login/+page.svelte
+msgid "Es existiert noch kein Konto. Lege den ersten Admin an."
+msgstr "No account exists yet. Create the first admin."
+
+#: src/routes/login/+page.svelte
+msgid "E-Mail und Passwort eingeben"
+msgstr "Enter email and password"
+
+#: src/routes/login/+page.svelte
+msgid "Zurück"
+msgstr "Back"
+
+#: src/lib/components/quiz/launch-dialog.svelte
+msgid "Fehler beim Erstellen des Raums. Bitte versuche es erneut."
+msgstr "Error creating the room. Please try again."
+
+#. 0: quiz.title
+#: src/lib/components/quiz/launch-dialog.svelte
+msgid "{0} starten"
+msgstr "Start {0}"
+
+#: src/lib/components/quiz/launch-dialog.svelte
+msgid "Raum ID"
+msgstr "Room ID"
+
+#: src/lib/components/quiz/launch-dialog.svelte
+msgid "Limitiere Raumgröße"
+msgstr "Limit room size"
+
+#: src/lib/components/quiz/launch-dialog.svelte
+msgid "Wenn die Raumgröße limitiert ist, muss eine maximale Anzahl von Teilnehmern angegeben werden."
+msgstr "If the room size is limited, a maximum number of participants must be specified."
+
+#: src/lib/components/quiz/launch-dialog.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Starten"
+msgstr "Start"
+
+#: src/lib/components/quiz/editor/editor-empty.svelte
+msgid "Noch keine Fragen hinzugefügt"
+msgstr "No questions added yet"
+
+#: src/lib/components/quiz/editor/editor-empty.svelte
+msgid "Füge eine neue Frage hinzu, um zu beginnen."
+msgstr "Add a new question to get started."
+
+#: src/lib/components/quiz/editor/editor-empty.svelte
+#: src/lib/components/quiz/editor/editor-question-list.svelte
+msgid "<0/> Frage hinzufügen"
+msgstr "<0/> Add question"
+
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Importiere CSV"
+msgstr "Import CSV"
+
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Importiere XLSX"
+msgstr "Import XLSX"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "<0/> Neues Quiz"
+msgstr "<0/> New quiz"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Deine Quizze"
+msgstr "Your quizzes"
+
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Titel"
+msgstr "Title"
+
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Tags"
+msgstr "Tags"
+
+#: src/lib/components/quiz/editor/editor-question-list.svelte
+#: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Fragen"
+msgstr "Questions"
+
+#: src/routes/teacher/quizzes/+page.svelte
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Letzter Lauf"
+msgstr "Last run"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Noch keine Quizze"
+msgstr "No quizzes yet"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Es sind aktuell keine Quizze vorhanden. Erstelle dein erstes Quiz, um loszulegen."
+msgstr "There are currently no quizzes. Create your first quiz to get started."
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "<0/> Quiz importieren"
+msgstr "<0/> Import quiz"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "<0/> Quiz erstellen"
+msgstr "<0/> Create quiz"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Keine Tags"
+msgstr "No tags"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Noch nicht gestartet"
+msgstr "Not started yet"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Bearbeiten"
+msgstr "Edit"
+
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Fragenstellung"
+msgstr "Question"
+
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "Antworten"
+msgstr "Answers"
+
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "<0/> Antwort hinzufügen"
+msgstr "<0/> Add answer"
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Sprache auswählen..."
+msgstr "Select language..."
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Keine Sprache gefunden."
+msgstr "No language found."
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Sprache"
+msgstr "Language"
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Code hier eingeben..."
+msgstr "Enter code here..."
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
+msgstr "Choose a language and enter code to see the preview."
+
+#. 0: answers.join(', ')
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Zeile {0}"
+msgstr "Line {0}"
+
+#: src/lib/components/quiz/editor/editor-question.svelte
+msgid "Optionaler Hinweis..."
+msgstr "Optional hint..."
+
+#: src/lib/components/quiz/editor/editor-question.svelte
+msgid "Hinweis (optional)"
+msgstr "Hint (optional)"
+
+#. 0: index + 1
+#: src/lib/components/quiz/editor/editor-question-list.svelte
+msgid "Q{0}"
+msgstr "Q{0}"
+
+#: src/lib/components/quiz/editor/editor-question-list.svelte
+msgid "Keine Frage eingetragen"
+msgstr "No question entered"
+
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Enter"
+msgstr "Enter"
+
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Keyword eingeben und mit Enter bestätigen..."
+msgstr "Enter keyword and confirm with Enter..."
+
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Keywords"
+msgstr "Keywords"
+
+#. 0: selectedQuestion.position + 1; 1: state.quiz.questions.length
+#. 0: question.position + 1; 1: room.quiz.questions_length
+#: src/lib/components/quiz/editor/editor-question.svelte
+#: src/lib/components/quiz/live/live-question-header.svelte
+msgid "Frage {0} von {1}"
+msgstr "Question {0} of {1}"
+
+#: src/lib/components/quiz/editor/editor-question.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
+msgid "<0/> Löschen"
+msgstr "<0/> Delete"
+
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+msgid "Zeit"
+msgstr "Time"
+
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+msgid "Numerisch"
+msgstr "Numeric"
+
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+msgid "Römisch"
+msgstr "Roman"
+
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+msgid "Alphabetisch"
+msgstr "Alphabetical"
+
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+msgid "Sequenzierung"
+msgstr "Sequencing"
+
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+#: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+msgid "Punkte"
+msgstr "Points"
+
+#. 0: typeToBadge(selectedQuestion.type)
+#: src/lib/components/quiz/editor/editor-question-settings.svelte
+msgid "Einstellungen | {0}"
+msgstr "Settings | {0}"
+
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
+msgid "Starte Quiz"
+msgstr "Start quiz"
+
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
+msgid "<0/> Übersicht"
+msgstr "<0/> Overview"
+
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
+msgid "<0/> Speichern"
+msgstr "<0/> Save"
+
+#: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+msgid "Gesch. Zeit"
+msgstr "Est. time"
+
+#: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+msgid "Übersicht"
+msgstr "Overview"
+
+#: src/lib/components/ui/combobox/combobox.svelte
+msgid "Auswählen..."
+msgstr "Select..."
+
+#: src/lib/components/ui/combobox/combobox.svelte
+msgid "Nichts gefunden."
+msgstr "Nothing found."
+
+#. 0: hiddenCount
+#: src/lib/components/ui/honeycomb-grid/honeycomb-grid.svelte
+msgid "+{0} weitere"
+msgstr "+{0} more"
+
+#: src/routes/student/r/[id]/+page.svelte
+msgid "Das Quiz wurde beendet. Du wirst nun zurück zur Übersicht geleitet."
+msgstr "The quiz has ended. You will now be redirected back to the overview."
+
+#: src/routes/student/r/[id]/+page.svelte
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "Raum wird geladen…"
+msgstr "Loading room…"
+
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Nutzer konnte nicht gelöscht werden."
+msgstr "User could not be deleted."
+
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Rolle konnte nicht geändert werden."
+msgstr "Role could not be changed."
+
+#: src/routes/teacher/admin/+layout.svelte
+msgid "Benutzer"
+msgstr "Users"
+
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Status"
+msgstr "Status"
+
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Einladung zurückziehen"
+msgstr "Withdraw invitation"
+
+#: src/routes/teacher/admin/users/+page.svelte
+msgid "Löschen"
+msgstr "Delete"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Passwort wurde geändert."
+msgstr "Password was changed."
+
+#. 0: live.name
+#: src/lib/components/quiz/live/student/live-student-waiting-room.svelte
+msgid "Du bist dabei, {0}!"
+msgstr "You're in, {0}!"
+
+#: src/lib/components/quiz/live/student/live-student-waiting-room.svelte
+msgid "Warte, bis deine Lehrkraft das Quiz startet."
+msgstr "Wait until your teacher starts the quiz."
+
+#. 0: live.studentPresence.length; 1: live.roomData.limit
+#. 0: live.studentPresence.length; 1: live.roomData.limit
+#: src/lib/components/quiz/live/student/live-student-waiting-room.svelte
+#: src/lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte
+msgid "{0} von {1} beigetreten"
+msgstr "{0} of {1} joined"
+
+#. 0: live.studentPresence.length
+#. 0: live.studentPresence.length
+#: src/lib/components/quiz/live/student/live-student-waiting-room.svelte
+#: src/lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte
+msgid "{0} beigetreten"
+msgstr "{0} joined"
+
+#: src/lib/components/quiz/live/student/live-student-waiting-room.svelte
+msgid "Verlassen"
+msgstr "Leave"
+
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "Quiz beendet"
+msgstr "Quiz ended"
+
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "Die Antworten wurden gespeichert und können in der Analyse ausgewertet werden."
+msgstr "The answers have been saved and can be reviewed in the analysis."
+
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "Zurück zur Übersicht"
+msgstr "Back to overview"
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Titel des Quiz"
+msgstr "Quiz title"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte
+msgid "Raum Code"
+msgstr "Room code"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte
+msgid "<0/> Quiz starten"
+msgstr "<0/> Start quiz"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Antwort konnte nicht gesendet werden."
+msgstr "Answer could not be sent."
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "<0/> Pausiert"
+msgstr "<0/> Paused"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "<0/> Zeit abgelaufen"
+msgstr "<0/> Time's up"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Deine Antwort…"
+msgstr "Your answer…"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "<0/> Senden"
+msgstr "<0/> Send"
+
+#. 0: openText.length
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "{0} Zeichen"
+msgstr "{0} characters"
+
+#. 0: selected[0]
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Gesendet: {0}"
+msgstr "Sent: {0}"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "<0/> Richtige Antwort!"
+msgstr "<0/> Correct answer!"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Teilweise richtig"
+msgstr "Partially correct"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Falsche Antwort"
+msgstr "Wrong answer"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Keine"
+msgstr "None"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Richtig"
+msgstr "Correct"
+
+#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Deine Antwort: {0} | {1}: {2}"
+msgstr "Your answer: {0} | {1}: {2}"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "Aktion fehlgeschlagen."
+msgstr "Action failed."
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "<0/> Quiz beenden"
+msgstr "<0/> End quiz"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "<0/> Nächste Frage"
+msgstr "<0/> Next question"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "<0/> Ergebnisse anzeigen"
+msgstr "<0/> Show results"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "<0/> Fortsetzen"
+msgstr "<0/> Resume"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "<0/> Pause"
+msgstr "<0/> Pause"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "<0/> Zu den Ergebnissen springen"
+msgstr "<0/> Jump to results"
+
+#. 0: answeredCount; 1: live.studentPresence.length
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "{0} von {1} haben geantwortet"
+msgstr "{0} of {1} have answered"
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "Noch keine Antworten."
+msgstr "No answers yet."
+
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "Studenten"
+msgstr "Students"
+
+#. 0: live.studentPresence.length
+#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+msgid "{0} im Raum"
+msgstr "{0} in the room"
+
+#: src/routes/student/r/[id]/+page.server.ts
+#: src/routes/student/r/[id]/+page.server.ts
+msgid "Unbekannt"
+msgstr "Unknown"
+
+#: src/routes/+page.svelte
+msgid "Gib den Raumcode ein, den dein Lehrer geteilt hat"
+msgstr "Enter the room code your teacher shared"
+
+#: src/routes/+page.svelte
+msgid "ODER"
+msgstr "OR"
+
+#: src/routes/+page.svelte
+msgid "Weiter <0/>"
+msgstr "Continue <0/>"
+
+#: src/routes/+page.svelte
+msgid "Üben <0/>"
+msgstr "Practice <0/>"
+
+#: src/routes/+page.svelte
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+msgid "Anmelden"
+msgstr "Log in"
+
+#: src/routes/+layout.svelte
+msgid "Logo"
+msgstr "Logo"
+
+#: src/routes/+layout.svelte
+msgid "Quizze"
+msgstr "Quizzes"
+
+#: src/routes/+layout.svelte
+msgid "Design wechseln"
+msgstr "Toggle theme"
+
+#: src/routes/student/+page.svelte
+msgid "Hallo"
+msgstr "Hello"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Befehlspalette"
+msgstr "Command palette"
+
+#: src/lib/components/ui/command/command-dialog.svelte
+msgid "Suche nach einem Befehl zum Ausführen..."
+msgstr "Search for a command to run..."
+
+#: src/lib/components/quiz/editor/editor-question-dropdown.svelte
+msgid "Multiple Choice"
+msgstr "Multiple Choice"
+
+#: src/lib/components/quiz/editor/editor-question-dropdown.svelte
+msgid "Single Choice"
+msgstr "Single Choice"
+
+#: src/lib/components/quiz/editor/editor-question-dropdown.svelte
+msgid "Open Text"
+msgstr "Open Text"
+
+#: src/lib/components/quiz/editor/editor-question-dropdown.svelte
+msgid "Coding"
+msgstr "Coding"
+
+#: src/routes/+layout.svelte
+msgid "Deutsch"
+msgstr "German"
+
+#: src/routes/+layout.svelte
+msgid "Englisch"
+msgstr "English"
+
+#. 0: COOKIE_NAME; 1: value; 2: 60 * 60 * 24 * 365
+#: src/lib/state/locale.state.svelte.ts
+msgid "{0}={1}; path=/; max-age={2}; samesite=lax"
+msgstr ""
+
+#: src/routes/+layout.svelte
+#: src/routes/teacher/admin/+layout.svelte
+msgid "Admin"
+msgstr "Admin"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Konto"
+msgstr "Account"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Name konnte nicht geändert werden."
+msgstr "Name could not be changed."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Name wurde geändert."
+msgstr "Name was changed."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "E-Mail konnte nicht geändert werden."
+msgstr "Email could not be changed."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Bestätigungslink wurde an die neue E-Mail-Adresse gesendet."
+msgstr "A confirmation link was sent to the new email address."
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Ungültiges Passwort"
+msgstr "Invalid password"
+
+#: src/lib/components/account-settings-dialog.svelte
+#: src/lib/components/account-settings-dialog.svelte
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Speichern"
+msgstr "Save"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Aktuelles Passwort"
+msgstr "Current password"
+
+#: src/lib/components/account-settings-dialog.svelte
+msgid "Neues Passwort"
+msgstr "New password"
+
+#: src/routes/teacher/admin/+layout.svelte
+msgid "Einstellungen"
+msgstr "Settings"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "SMTP-Einstellungen gespeichert."
+msgstr "SMTP settings saved."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "SMTP-Einstellungen konnten nicht gespeichert werden."
+msgstr "SMTP settings could not be saved."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Test-E-Mail wurde versendet."
+msgstr "Test email was sent."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Test-E-Mail konnte nicht versendet werden."
+msgstr "Test email could not be sent."
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Host"
+msgstr "Host"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Port"
+msgstr "Port"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Benutzername"
+msgstr "Username"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Quaestio <noreply@example.com>"
+msgstr "Quaestio <noreply@example.com>"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Absender"
+msgstr "Sender"
+
+#: src/routes/teacher/admin/settings/+page.svelte
+msgid "Testen"
+msgstr "Test"
+
+#: src/routes/+layout.svelte
+msgid "<0/> Konto"
+msgstr "<0/> Account"
+
+#: src/routes/+layout.svelte
+msgid "<0/> Abmelden"
+msgstr "<0/> Sign out"
+
+#. 0: answer.text
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "Warum ist {0} richtig?"
+msgstr "Why is {0} correct?"
+
+#. 0: Object.values(selectedQuestion.correct)[0]
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+msgid "Warum ist \"{0}\" die richtige Antwort?"
+msgstr "Why is \"{0}\" the correct answer?"
+
+#: src/lib/components/quiz/editor/editor-choice-question.svelte
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Begründung (optional)"
+msgstr "Explanation (optional)"
+
+#. 0: lineNumber
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Warum ist Zeile {0} falsch?"
+msgstr "Why is line {0} wrong?"
+
+#: src/lib/components/quiz/editor/editor-programming-question.svelte
+msgid "Begründungen (optional)"
+msgstr "Explanations (optional)"
+
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum ist die Antwort korrekt?"
+msgstr "Why is the answer correct?"
+
+#. 0: selectedQuestion.correct[0]
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum ist \"{0}\" das richtige Keyword?"
+msgstr "Why is \"{0}\" the correct keyword?"
+
+#. 0: selectedQuestion.correct.join(', ')
+#: src/lib/components/quiz/editor/editor-open-question.svelte
+msgid "Warum sind \"{0}\" die richtigen Keywords?"
+msgstr "Why are \"{0}\" the correct keywords?"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Hinweis"
+msgstr "Hint"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Gesuchte Keywords"
+msgstr "Expected keywords"
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Begründung"
+msgstr "Explanation"
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Öffentlich"
+msgstr ""
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Privat"
+msgstr ""

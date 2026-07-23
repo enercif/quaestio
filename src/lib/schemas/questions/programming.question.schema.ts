@@ -1,28 +1,25 @@
 import z from 'zod';
-import { baseQuestionShape } from './shared.question.schema';
+import { allOrNothingReasons, questionBaseSchema } from './shared.question.schema';
 
 const type = 'programming';
-const programmingQuestionShape = baseQuestionShape.omit({ correct: true }).extend({
+const programmingQuestionBaseSchema = questionBaseSchema.extend({
 	type: z.literal(type),
-	code_snippet: z.string().min(1, 'Der Code darf nicht leer sein.'),
+	code: z.string().min(1, 'Der Code darf nicht leer sein.'),
 	language: z.string().min(1, 'Die Sprache darf nicht leer sein.'),
-	correct_lines: z
-		.array(z.number())
-		.min(1, 'Es muss mindestens eine Zeile als Lösung markiert sein.'),
-	reasons: z.record(z.coerce.number(), z.string()),
-	hint: z.string().optional()
+	correct: z.array(z.string()).min(1, 'Es muss mindestens eine Zeile als Lösung markiert sein.'),
+	reasons: z.record(z.string(), z.string())
 });
 
-export const programmingQuestionSchema = programmingQuestionShape.refine(
-	(question) => question.correct_lines.every((line) => question.reasons[line]?.trim()),
+export const programmingQuestionSchema = programmingQuestionBaseSchema.refine(
+	(question) => allOrNothingReasons(question.correct, question.reasons),
 	{
-		message: 'Für jede markierte Fehler-Zeile muss eine Begründung angegeben werden.',
+		message: 'Begründungen müssen für jede korrekte Zeile angegeben werden oder für gar keine',
 		path: ['reasons']
 	}
 );
 
-export const liveProgrammingQuestionSchema = programmingQuestionShape.omit({
-	correct_lines: true,
+export const liveProgrammingQuestionSchema = programmingQuestionBaseSchema.omit({
+	correct: true,
 	reasons: true
 });
 

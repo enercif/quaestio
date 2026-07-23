@@ -16,6 +16,17 @@ import type { User } from '$lib/types/user.type';
 import { eq } from 'drizzle-orm/sql/expressions/conditions';
 import { live, LiveError, type LiveContext } from 'svelte-realtime';
 
+function reasonList(reason: string | undefined): string[] {
+	return reason ? [reason] : [];
+}
+
+function reasonEntries(
+	reasons: Record<string, string>,
+	format: (key: string, value: string) => string
+): string[] {
+	return Object.entries(reasons).map(([key, value]) => format(key, value));
+}
+
 export async function getRooms(): Promise<Room[]> {
 	const rooms = await db.query.roomTable.findMany({
 		with: {
@@ -26,7 +37,8 @@ export async function getRooms(): Promise<Room[]> {
 					id: true
 				}
 			}
-		}
+		},
+		where: (room, { isNull }) => isNull(room.deleted_at)
 	});
 	return roomSelectSchema.array().parse(rooms);
 }
@@ -42,7 +54,7 @@ export async function getRoomById(roomId: string): Promise<Room | undefined> {
 				}
 			}
 		},
-		where: (room, { eq }) => eq(room.id, roomId)
+		where: (room, { eq, and, isNull }) => and(eq(room.id, roomId), isNull(room.deleted_at))
 	});
 	return room ? roomSelectSchema.parse(room) : undefined;
 }
@@ -80,20 +92,24 @@ export const insertRoom = live.validated(
 );
 
 export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) => {
-	if (!ctx.user) throw new LiveError('UNAUTHORIZED', 'User not authenticated');
 	try {
 		const room = await getRoomById(roomId);
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
+		requireRoomOwner(ctx, room);
 		room.state = RoomState.Finished;
 
-		await db.delete(roomTable).where(eq(roomTable.id, roomId)).returning();
+		await db
+			.update(roomTable)
+			.set({ deleted_at: new Date().toISOString() })
+			.where(eq(roomTable.id, roomId));
 		ctx.publish(TOPICS.rooms, 'deleted', { id: roomId });
 		ctx.publish(TOPICS.room(roomId), 'set', room);
 
 		return true;
 	} catch (error) {
+		if (error instanceof LiveError) throw error;
 		console.error('Fehler beim Löschen des Raums:', error);
 		throw new LiveError('DB', 'Error occurred while deleting room');
 	}
@@ -101,6 +117,13 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) =>
 
 function requireTeacher(ctx: LiveContext<User>) {
 	if (ctx.user?.type !== 'teacher') throw new LiveError('UNAUTHORIZED', 'Teacher only');
+}
+
+function requireRoomOwner(ctx: LiveContext<User>, room: Room) {
+	requireTeacher(ctx);
+	if (ctx.user.id !== room.teacherId) {
+		throw new LiveError('UNAUTHORIZED', 'Room owner only');
+	}
 }
 
 async function updateRoom(
@@ -115,13 +138,12 @@ async function updateRoom(
 }
 
 export const nextQuestion = live(async (ctx: LiveContext<User>, roomId: string) => {
-	requireTeacher(ctx);
-
 	try {
 		const room = await getRoomById(roomId);
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
+		requireRoomOwner(ctx, room);
 
 		const nextIndex = room.current_question ? room.current_question.position + 1 : 0;
 
@@ -157,16 +179,17 @@ export const nextQuestion = live(async (ctx: LiveContext<User>, roomId: string) 
 			paused_remaining: null
 		});
 	} catch (error) {
+		if (error instanceof LiveError) throw error;
 		console.error('Fehler beim Starten des Raums:', error);
 		throw new LiveError('DB', 'Error occurred while starting room');
 	}
 });
 
 export const pauseTimer = live(async (ctx: LiveContext<User>, roomId: string) => {
-	requireTeacher(ctx);
-
 	const room = await getRoomById(roomId);
-	if (room?.state !== RoomState.Question) throw new LiveError('NOT_FOUND', 'No running question');
+	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+	requireRoomOwner(ctx, room);
+	if (room.state !== RoomState.Question) throw new LiveError('NOT_FOUND', 'No running question');
 	if (room.paused_remaining != null) throw new LiveError('NOT_FOUND', 'Already paused');
 
 	await updateRoom(ctx, room, {
@@ -177,10 +200,10 @@ export const pauseTimer = live(async (ctx: LiveContext<User>, roomId: string) =>
 });
 
 export const resumeTimer = live(async (ctx: LiveContext<User>, roomId: string) => {
-	requireTeacher(ctx);
-
 	const room = await getRoomById(roomId);
-	if (room?.paused_remaining == null) throw new LiveError('NOT_FOUND', 'Timer is not paused');
+	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+	requireRoomOwner(ctx, room);
+	if (room.paused_remaining == null) throw new LiveError('NOT_FOUND', 'Timer is not paused');
 
 	await updateRoom(ctx, room, {
 		question_ends_at: room.paused_remaining >= 0 ? Date.now() + room.paused_remaining : null,
@@ -189,10 +212,10 @@ export const resumeTimer = live(async (ctx: LiveContext<User>, roomId: string) =
 });
 
 export const showResults = live(async (ctx: LiveContext<User>, roomId: string) => {
-	requireTeacher(ctx);
-
 	const room = await getRoomById(roomId);
-	if (!room?.current_question) throw new LiveError('NOT_FOUND', 'No active question');
+	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+	requireRoomOwner(ctx, room);
+	if (!room.current_question) throw new LiveError('NOT_FOUND', 'No active question');
 
 	const quizQuestions = await db.query.quizTable.findFirst({
 		where: (quiz, { eq }) => eq(quiz.id, room.quiz.id),
@@ -203,13 +226,49 @@ export const showResults = live(async (ctx: LiveContext<User>, roomId: string) =
 		.find((q) => q.id === room.current_question!.id);
 	if (!question) throw new LiveError('NOT_FOUND', 'Question not found');
 
-	await updateRoom(ctx, room, {
+	let update: Partial<Omit<Room, 'id' | 'quiz'>> = {
 		state: RoomState.Answer,
-		current_answers:
-			question.type === 'programming' ? question.correct_lines.map(String) : question.correct,
 		question_ends_at: null,
 		paused_remaining: null
-	});
+	};
+
+	switch (question.type) {
+		case 'open':
+			update = {
+				...update,
+				current_answers: question.correct,
+				current_reasons: reasonList(question.reasons)
+			};
+			break;
+		case 'single':
+			update = {
+				...update,
+				current_answers: Object.values(question.correct),
+				current_reasons: reasonList(question.reasons)
+			};
+			break;
+		case 'multiple':
+			update = {
+				...update,
+				current_answers: Object.values(question.correct),
+				current_reasons: reasonEntries(
+					question.reasons,
+					(key, value) => `${question.answers.find((answer) => answer.id === key)!.text}: ${value}`
+				)
+			};
+			break;
+		case 'programming':
+			update = {
+				...update,
+				current_answers: question.correct.map(String),
+				current_reasons: reasonEntries(question.reasons, (key, value) => `Zeile ${key}: ${value}`)
+			};
+			break;
+		default:
+			throw new LiveError('NOT_FOUND', 'Unsupported question type');
+	}
+
+	await updateRoom(ctx, room, update);
 });
 
 export const submitAnswer = live(

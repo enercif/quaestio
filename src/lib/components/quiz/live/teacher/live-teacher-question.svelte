@@ -46,7 +46,7 @@
 	let codeContainer: HTMLDivElement | undefined = $state();
 	const programmingHtml = $derived.by(async () => {
 		if (currentQuestion.type !== 'programming') return '';
-		return highlightCode(currentQuestion.code_snippet, currentQuestion.language);
+		return highlightCode(currentQuestion.code, currentQuestion.language);
 	});
 
 	watch(
@@ -63,8 +63,8 @@
 		}
 	);
 
-	function pctFor(answerId: string) {
-		return answeredCount ? Math.round(((counts.get(answerId) ?? 0) / answeredCount) * 100) : 0;
+	function pctFor(answer: string) {
+		return answeredCount ? Math.round(((counts.get(answer) ?? 0) / answeredCount) * 100) : 0;
 	}
 
 	function studentClass(selected: string[]) {
@@ -81,37 +81,39 @@
 <div class="flex flex-col">
 	<LiveQuestionHeader room={roomData}>
 		{#snippet actions()}
-			{#if revealed}
-				<Button onclick={() => run(nextQuestion(live.roomId))}>
-					{#if isLast}
-						<FlagIcon />
-						Quiz beenden
-					{:else}
-						<ArrowRightIcon />
-						Nächste Frage
-					{/if}
-				</Button>
-			{:else if timeUp}
-				<Button onclick={() => run(showResults(live.roomId))}>
-					<EyeIcon />
-					Ergebnisse anzeigen
-				</Button>
-			{:else}
-				{#if paused}
-					<Button variant="outline" onclick={() => run(resumeTimer(live.roomId))}>
-						<PlayIcon />
-						Fortsetzen
+			{#if live.isRoomOwner}
+				{#if revealed}
+					<Button onclick={() => run(nextQuestion(live.roomId))}>
+						{#if isLast}
+							<FlagIcon />
+							Quiz beenden
+						{:else}
+							<ArrowRightIcon />
+							Nächste Frage
+						{/if}
+					</Button>
+				{:else if timeUp}
+					<Button onclick={() => run(showResults(live.roomId))}>
+						<EyeIcon />
+						Ergebnisse anzeigen
 					</Button>
 				{:else}
-					<Button variant="outline" onclick={() => run(pauseTimer(live.roomId))}>
-						<PauseIcon />
-						Pause
+					{#if paused}
+						<Button variant="outline" onclick={() => run(resumeTimer(live.roomId))}>
+							<PlayIcon />
+							Fortsetzen
+						</Button>
+					{:else}
+						<Button variant="outline" onclick={() => run(pauseTimer(live.roomId))}>
+							<PauseIcon />
+							Pause
+						</Button>
+					{/if}
+					<Button onclick={() => run(showResults(live.roomId))}>
+						<SkipForwardIcon />
+						Zu den Ergebnissen springen
 					</Button>
 				{/if}
-				<Button onclick={() => run(showResults(live.roomId))}>
-					<SkipForwardIcon />
-					Zu den Ergebnissen springen
-				</Button>
 			{/if}
 		{/snippet}
 	</LiveQuestionHeader>
@@ -150,8 +152,8 @@
 						{@html await programmingHtml}
 					</div>
 				{:else}
-					{#each currentQuestion.answers as answer, index (answer.id)}
-						{@const isCorrect = revealed && correct.includes(answer.id)}
+					{#each currentQuestion.answers as answer, index (answer.text)}
+						{@const isCorrect = revealed && correct.includes(answer.text)}
 						<div
 							class={[
 								'relative overflow-hidden rounded-lg border px-4 py-3',
@@ -163,7 +165,7 @@
 									'absolute inset-y-0 left-0 transition-[width] duration-300',
 									isCorrect ? 'bg-green-500/15' : 'bg-primary/10'
 								]}
-								style:width="{pctFor(answer.id)}%"
+								style:width="{pctFor(answer.text)}%"
 							></div>
 
 							<div class="relative flex flex-row items-center gap-3">
@@ -175,7 +177,7 @@
 									<CheckIcon class="size-5 shrink-0 text-green-500" />
 								{/if}
 								<span class="shrink-0 text-sm text-muted-foreground tabular-nums">
-									{counts.get(answer.id) ?? 0} · {pctFor(answer.id)}%
+									{counts.get(answer.text) ?? 0} · {pctFor(answer.text)}%
 								</span>
 							</div>
 						</div>

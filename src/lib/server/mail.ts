@@ -1,34 +1,60 @@
 import { env } from '$env/dynamic/private';
 import nodemailer from 'nodemailer';
+import { db } from './db';
+import { smtpSettingsTable } from './db/schema';
 
-let transporter: ReturnType<typeof nodemailer.createTransport> | undefined;
+export type SmtpConfig = {
+	host: string;
+	port: number;
+	user?: string | null;
+	pass?: string | null;
+	from?: string | null;
+};
 
-function getTransporter() {
+export async function getSmtpConfig(): Promise<SmtpConfig | undefined> {
+	const [row] = await db.select().from(smtpSettingsTable).limit(1);
+	if (row) return row;
 	if (!env.SMTP_HOST) return undefined;
-	transporter ??= nodemailer.createTransport({
+	return {
 		host: env.SMTP_HOST,
 		port: Number(env.SMTP_PORT ?? 587),
-		auth: env.SMTP_USER ? { user: env.SMTP_USER, pass: env.SMTP_PASS } : undefined
+		user: env.SMTP_USER,
+		pass: env.SMTP_PASS,
+		from: env.SMTP_FROM
+	};
+}
+
+function transportFor(config: SmtpConfig) {
+	return nodemailer.createTransport({
+		host: config.host,
+		port: config.port,
+		auth: config.user ? { user: config.user, pass: config.pass ?? undefined } : undefined
 	});
-	return transporter;
 }
 
 export async function sendMail({
 	to,
 	subject,
-	html
+	html,
+	override
 }: {
 	to: string;
 	subject: string;
 	html: string;
+	override?: SmtpConfig;
 }) {
-	const transport = getTransporter();
-	if (!transport) {
+	const config = override ?? (await getSmtpConfig());
+	if (!config) {
 		return { success: false as const, error: 'E-Mail-Versand ist nicht konfiguriert.' };
 	}
 
 	try {
-		await transport.sendMail({ from: env.SMTP_FROM || env.SMTP_USER, to, subject, html });
+		await transportFor(config).sendMail({
+			from: config.from || config.user || undefined,
+			to,
+			subject,
+			html
+		});
 		return { success: true as const };
 	} catch (error) {
 		console.error('Fehler beim Versenden der E-Mail:', error);
