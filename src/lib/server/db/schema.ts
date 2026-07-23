@@ -12,12 +12,10 @@ import {
 } from 'drizzle-orm/pg-core';
 import { user } from './auth.schema';
 
-// Add enum
 export const quizVisibilityEnum = pgEnum('quiz_visibility', ['private', 'public']);
 
 export const quizTable = pgTable('quiz', {
 	id: uuid('id').defaultRandom().primaryKey(),
-	// add teacher Id
 	teacherId: text('teacher_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
@@ -26,7 +24,6 @@ export const quizTable = pgTable('quiz', {
 	tags: text('tags').array().notNull(),
 	questions: jsonb('questions').notNull(),
 	questions_length: integer('questions_length').notNull(),
-	// add visibility
 	visibility: quizVisibilityEnum('visibility').notNull().default('public')
 });
 
