@@ -910,3 +910,11 @@ msgstr "Expected keywords"
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 msgid "Begründung"
 msgstr "Explanation"
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Öffentlich"
+msgstr ""
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Privat"
+msgstr ""

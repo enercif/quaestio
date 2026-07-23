@@ -35,7 +35,8 @@ function returnInsertQuiz(): {
 		title: '',
 		tags: [],
 		questions: [],
-		questions_length: 0
+		questions_length: 0,
+		visibility: 'public'
 	};
 
 	return {
