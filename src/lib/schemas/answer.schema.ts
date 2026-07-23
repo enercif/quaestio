@@ -7,7 +7,8 @@ export const answerSelectSchema = z.object({
 	question_id: z.uuid(),
 	student_id: z.string(),
 	student_name: z.string(),
-	selected: z.array(z.string())
+	selected: z.array(z.string()),
+	points_override: z.number().nullable()
 });
 
 export const answerSubmitSchema = z.array(z.string().min(1)).max(50);

@@ -76,13 +76,18 @@ export const answerTable = pgTable(
 		question_id: uuid('question_id').notNull(),
 		student_id: text('student_id').notNull(),
 		student_name: text('student_name').notNull(),
-		selected: text('selected').array().notNull()
+		selected: text('selected').array().notNull(),
+		points_override: integer('points_override')
 	},
 	(table) => [unique().on(table.room_id, table.question_id, table.student_id)]
 );
 
 export const roomRelations = relations(roomTable, ({ one }) => ({
 	quiz: one(quizTable, { fields: [roomTable.quiz], references: [quizTable.id] })
+}));
+
+export const answerRelations = relations(answerTable, ({ one }) => ({
+	room: one(roomTable, { fields: [answerTable.room_id], references: [roomTable.id] })
 }));
 
 export * from './auth.schema';

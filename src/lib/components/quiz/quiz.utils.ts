@@ -44,13 +44,11 @@ const subscribeNow = createSubscriber((update) => {
 	return () => clearInterval(interval);
 });
 
-/** Reaktive aktuelle Zeit — tickt nur, solange sie in einem Effect/Template gelesen wird. */
-export function liveNow() {
+function liveNow() {
 	subscribeNow();
 	return now;
 }
 
-/** Restzeit der aktuellen Frage in ms; eingefroren bei Pause, null ohne Timer. */
 export function remainingMs(room: Room): number | null {
 	// paused_remaining -1 = pausiert ohne Timelimit
 	if (room.paused_remaining != null)
@@ -91,7 +89,6 @@ export function evaluateAnswer(
 	return 'partial';
 }
 
-/** Die als richtig hinterlegten Werte einer Frage, vergleichbar mit `selected`. */
 export function correctAnswersFor(question: Question): string[] {
 	switch (question.type) {
 		case 'open':
@@ -104,7 +101,16 @@ export function correctAnswersFor(question: Question): string[] {
 	}
 }
 
-/** Maximal erreichbare Punkte einer Frage (Summe der Teilpunkte im partial-Modus). */
+export function answerAccuracy(question: Question, selected: string[]): number {
+	const correct = correctAnswersFor(question);
+	if (correct.length === 0) return 0;
+	if (question.type === 'open') {
+		return evaluateAnswer('open', correct, selected) === 'correct' ? 1 : 0;
+	}
+	const hits = selected.filter((value) => correct.includes(value)).length;
+	return hits / correct.length;
+}
+
 export function questionMaxPoints(question: Question): number {
 	if (hasPartialScoring(question)) {
 		return Object.values(question.partial_points).reduce((sum, p) => sum + p, 0);
@@ -112,10 +118,12 @@ export function questionMaxPoints(question: Question): number {
 	return question.points;
 }
 
-/** Erreichte Punkte für eine Antwort. */
 export function computedPoints(question: Question, selected: string[]): number {
 	if (hasPartialScoring(question)) {
-		const keys = question.type === 'multiple' ? question.correct : keyedByValue(question.correct);
+		const keys =
+			question.type === 'multiple'
+				? question.correct
+				: Object.fromEntries(question.correct.map((line) => [line, line]));
 		return Object.entries(keys).reduce(
 			(sum, [key, value]) =>
 				sum + (selected.includes(value) ? (question.partial_points[key] ?? 0) : 0),
@@ -133,10 +141,6 @@ function hasPartialScoring(
 		(question.type === 'multiple' || question.type === 'programming') &&
 		question.scoring === 'partial'
 	);
-}
-
-function keyedByValue(lines: string[]): Record<string, string> {
-	return Object.fromEntries(lines.map((line) => [line, line]));
 }
 
 export function typeToBadge(type: QuestionType) {
