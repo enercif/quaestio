@@ -1060,12 +1060,6 @@ msgstr "hint"
 #: src/lib/import/import-dialog.svelte
 #: src/lib/import/import-dialog.svelte
 #: src/lib/import/import-dialog.svelte
-#: src/lib/import/import-dialog.svelte
-#: src/lib/import/import-dialog.svelte
-#: src/lib/import/import-dialog.svelte
-#: src/lib/import/import-dialog.svelte
-#: src/lib/import/import-dialog.svelte
-#: src/lib/import/import-dialog.svelte
 msgid "optional"
 msgstr "optional"
 
@@ -1084,6 +1078,9 @@ msgid "points"
 msgstr "points"
 
 #: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
 msgid "optional (Standard: 1)"
 msgstr "optional (Standard: 1)"
 
@@ -1094,6 +1091,9 @@ msgstr "optional (Standard: 1)"
 msgid "timelimit"
 msgstr "timelimit"
 
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
+#: src/lib/import/import-dialog.svelte
 #: src/lib/import/import-dialog.svelte
 msgid "optional (Standard: 30)"
 msgstr "optional (Standard: 30)"

@@ -223,13 +223,13 @@
 									<tr class="border-b">
 										<td class="px-4 py-2 font-mono">points</td>
 
-										<td class="px-4 py-2">optional</td>
+										<td class="px-4 py-2">optional (Standard: 1)</td>
 									</tr>
 
 									<tr>
 										<td class="px-4 py-2 font-mono">timelimit</td>
 
-										<td class="px-4 py-2">optional</td>
+										<td class="px-4 py-2">optional (Standard: 30)</td>
 									</tr>
 								</tbody>
 							</table>
@@ -303,13 +303,13 @@
 									<tr class="border-b">
 										<td class="px-4 py-2 font-mono">points</td>
 
-										<td class="px-4 py-2">optional</td>
+										<td class="px-4 py-2">optional (Standard: 1)</td>
 									</tr>
 
 									<tr>
 										<td class="px-4 py-2 font-mono">timelimit</td>
 
-										<td class="px-4 py-2">optional</td>
+										<td class="px-4 py-2">optional (Standard: 30)</td>
 									</tr>
 								</tbody>
 							</table>
@@ -391,13 +391,13 @@
 									<tr class="border-b">
 										<td class="px-4 py-2 font-mono">points</td>
 
-										<td class="px-4 py-2">optional</td>
+										<td class="px-4 py-2">optional (Standard: 1)</td>
 									</tr>
 
 									<tr>
 										<td class="px-4 py-2 font-mono">timelimit</td>
 
-										<td class="px-4 py-2">optional</td>
+										<td class="px-4 py-2">optional (Standard: 30)</td>
 									</tr>
 								</tbody>
 							</table>
