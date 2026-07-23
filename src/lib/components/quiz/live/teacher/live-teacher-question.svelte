@@ -81,37 +81,39 @@
 <div class="flex flex-col">
 	<LiveQuestionHeader room={roomData}>
 		{#snippet actions()}
-			{#if revealed}
-				<Button onclick={() => run(nextQuestion(live.roomId))}>
-					{#if isLast}
-						<FlagIcon />
-						Quiz beenden
-					{:else}
-						<ArrowRightIcon />
-						Nächste Frage
-					{/if}
-				</Button>
-			{:else if timeUp}
-				<Button onclick={() => run(showResults(live.roomId))}>
-					<EyeIcon />
-					Ergebnisse anzeigen
-				</Button>
-			{:else}
-				{#if paused}
-					<Button variant="outline" onclick={() => run(resumeTimer(live.roomId))}>
-						<PlayIcon />
-						Fortsetzen
+			{#if live.isRoomOwner}
+				{#if revealed}
+					<Button onclick={() => run(nextQuestion(live.roomId))}>
+						{#if isLast}
+							<FlagIcon />
+							Quiz beenden
+						{:else}
+							<ArrowRightIcon />
+							Nächste Frage
+						{/if}
+					</Button>
+				{:else if timeUp}
+					<Button onclick={() => run(showResults(live.roomId))}>
+						<EyeIcon />
+						Ergebnisse anzeigen
 					</Button>
 				{:else}
-					<Button variant="outline" onclick={() => run(pauseTimer(live.roomId))}>
-						<PauseIcon />
-						Pause
+					{#if paused}
+						<Button variant="outline" onclick={() => run(resumeTimer(live.roomId))}>
+							<PlayIcon />
+							Fortsetzen
+						</Button>
+					{:else}
+						<Button variant="outline" onclick={() => run(pauseTimer(live.roomId))}>
+							<PauseIcon />
+							Pause
+						</Button>
+					{/if}
+					<Button onclick={() => run(showResults(live.roomId))}>
+						<SkipForwardIcon />
+						Zu den Ergebnissen springen
 					</Button>
 				{/if}
-				<Button onclick={() => run(showResults(live.roomId))}>
-					<SkipForwardIcon />
-					Zu den Ergebnissen springen
-				</Button>
 			{/if}
 		{/snippet}
 	</LiveQuestionHeader>

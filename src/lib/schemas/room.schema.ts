@@ -16,6 +16,7 @@ const roomBaseSchema = z.object({
 });
 
 export const roomSelectSchema = roomBaseSchema.extend({
+	teacherId: z.string(),
 	quiz: quizSelectSchema.pick({
 		title: true,
 		questions_length: true,
