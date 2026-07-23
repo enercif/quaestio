@@ -1,1 +1,0 @@
-ALTER TABLE "answer" ADD COLUMN "points_override" integer;

@@ -924,9 +924,8 @@ msgstr "Hint"
 msgid "Gesuchte Keywords"
 msgstr "Expected keywords"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-msgid "Begründung"
-msgstr "Explanation"
+#~ msgid "Begründung<<<<<<< HEAD"
+#~ msgstr "Explanation<<<<<<< HEAD"
 
 #: src/routes/teacher/analytics/(list)/+layout.svelte
 msgid "Räume"
@@ -1121,7 +1120,25 @@ msgstr "Quiz history"
 #~ msgid "{0} Punkte"
 #~ msgstr "{0} Points"
 
+#~ msgid "Gesucht: {0}======="
+#~ msgstr "Expected: {0}======="
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Öffentlich"
+msgstr ""
+
+#~ msgid "Privat>>>>>>> dev"
+#~ msgstr ">>>>>>> dev"
+
 #. 0: q.correct.length > 0 ? q.correct.join(', ') \\: '—'
 #: src/lib/components/analytics/analytics-question-answer-row.svelte
 msgid "Gesucht: {0}"
-msgstr "Expected: {0}"
+msgstr ""
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Privat"
+msgstr ""
+
+#: src/lib/components/quiz/live/student/live-student-question.svelte
+msgid "Begründung"
+msgstr ""

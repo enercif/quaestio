@@ -1,6 +1,6 @@
 {
-  "id": "835acc45-f7de-447a-9342-79577609a2e1",
-  "prevId": "46abc85a-adde-4791-bc7b-1eb9ebd57dec",
+  "id": "7f517922-b3bb-406a-ba9e-f94d41c8cd5d",
+  "prevId": "da20b388-9c65-452b-99aa-85391332e83d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -56,6 +56,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "answered_at": {
+          "name": "answered_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -114,6 +121,12 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "teacher_id": {
+          "name": "teacher_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "title": {
           "name": "title",
           "type": "text",
@@ -144,6 +157,14 @@
           "primaryKey": false,
           "notNull": true
         },
+        "visibility": {
+          "name": "visibility",
+          "type": "quiz_visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'public'"
+        },
         "deleted_at": {
           "name": "deleted_at",
           "type": "timestamp with time zone",
@@ -152,7 +173,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "quiz_teacher_id_user_id_fk": {
+          "name": "quiz_teacher_id_user_id_fk",
+          "tableFrom": "quiz",
+          "tableTo": "user",
+          "columnsFrom": [
+            "teacher_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -1012,7 +1047,16 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.quiz_visibility": {
+      "name": "quiz_visibility",
+      "schema": "public",
+      "values": [
+        "private",
+        "public"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

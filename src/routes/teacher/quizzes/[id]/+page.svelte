@@ -8,6 +8,7 @@
 	import { EditorState } from '$lib/components/quiz/editor/editor.state.svelte';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -21,19 +22,34 @@
 <div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10 mb-10">
 	<Field.Set>
 		<Field.Group>
-			<Field.Field aria-invalid={!!state.getQuizError('title')}>
-				<Field.Label for="title">Titel</Field.Label>
-				<Input
-					type="text"
-					bind:value={state.quiz.title}
-					placeholder="Titel des Quiz"
-					class="w-100! font-semibold"
-					aria-invalid={!!state.getQuizError('title')}
-				/>
-				{#each state.getQuizError('title') as error, i (i)}
-					<Field.Error>{error}</Field.Error>
-				{/each}
-			</Field.Field>
+			<div class="flex flex-row items-end justify-between">
+				<Field.Field aria-invalid={!!state.getQuizError('title')}>
+					<Field.Label for="title">Titel</Field.Label>
+					<Input
+						type="text"
+						bind:value={state.quiz.title}
+						placeholder="Titel des Quiz"
+						class="w-100! font-semibold"
+						aria-invalid={!!state.getQuizError('title')}
+					/>
+					{#each state.getQuizError('title') as error, i (i)}
+						<Field.Error>{error}</Field.Error>
+					{/each}
+				</Field.Field>
+				<Field.Field class="w-fit">
+					<div class="flex item-center gap-2">
+						<span class="text-sm text-muted-foreground">
+							{state.quiz.visibility === 'public' ? 'Öffentlich' : 'Privat'}
+						</span>
+						<Switch
+							id="visibility"
+							checked={state.quiz.visibility === 'public'}
+							onCheckedChange={(checked) =>
+								(state.quiz.visibility = checked ? 'public' : 'private')}
+						/>
+					</div>
+				</Field.Field>
+			</div>
 		</Field.Group>
 
 		<div class="grid grid-cols-4 gap-4">

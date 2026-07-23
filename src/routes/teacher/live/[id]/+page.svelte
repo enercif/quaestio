@@ -12,7 +12,7 @@
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	const live = LiveTeacherState.init(data.id);
+	const live = LiveTeacherState.init(data.id, data.user.id);
 
 	async function onLeaveClick() {
 		goto(resolve('/teacher/live'));

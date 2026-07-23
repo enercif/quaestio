@@ -88,10 +88,12 @@
 						<Card.Description>{room.quiz.title} | {room.state}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
-						<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.code)}>
-							Schließen
-						</Button>
-						<Button class="grow" onclick={() => onJoinClick(room.code)}>Beitreten</Button>
+						{#if room.teacherId === data.user.id}
+							<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
+								Schließen
+							</Button>
+						{/if}
+						<Button class="grow" onclick={() => onJoinClick(room.id)}>Beitreten</Button>
 					</Card.Footer>
 				</Card.Root>
 			{/each}

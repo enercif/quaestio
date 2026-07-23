@@ -104,6 +104,7 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, code: string) => {
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
+		requireRoomOwner(ctx, room);
 		room.state = RoomState.Finished;
 
 		await db
@@ -115,6 +116,7 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, code: string) => {
 
 		return true;
 	} catch (error) {
+		if (error instanceof LiveError) throw error;
 		console.error('Fehler beim Löschen des Raums:', error);
 		throw new LiveError('DB', 'Error occurred while deleting room');
 	}
@@ -122,6 +124,13 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, code: string) => {
 
 function requireTeacher(ctx: LiveContext<User>) {
 	if (ctx.user?.type !== 'teacher') throw new LiveError('UNAUTHORIZED', 'Teacher only');
+}
+
+function requireRoomOwner(ctx: LiveContext<User>, room: Room) {
+	requireTeacher(ctx);
+	if (ctx.user.id !== room.teacherId) {
+		throw new LiveError('UNAUTHORIZED', 'Room owner only');
+	}
 }
 
 async function updateRoom(
@@ -143,6 +152,7 @@ export const nextQuestion = live(async (ctx: LiveContext<User>, code: string) =>
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
+		requireRoomOwner(ctx, room);
 
 		const nextIndex = room.current_question ? room.current_question.position + 1 : 0;
 
@@ -178,16 +188,17 @@ export const nextQuestion = live(async (ctx: LiveContext<User>, code: string) =>
 			paused_remaining: null
 		});
 	} catch (error) {
+		if (error instanceof LiveError) throw error;
 		console.error('Fehler beim Starten des Raums:', error);
 		throw new LiveError('DB', 'Error occurred while starting room');
 	}
 });
 
 export const pauseTimer = live(async (ctx: LiveContext<User>, code: string) => {
-	requireTeacher(ctx);
-
 	const room = await getRoomByCode(code);
-	if (room?.state !== RoomState.Question) throw new LiveError('NOT_FOUND', 'No running question');
+	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+	requireRoomOwner(ctx, room);
+	if (room.state !== RoomState.Question) throw new LiveError('NOT_FOUND', 'No running question');
 	if (room.paused_remaining != null) throw new LiveError('NOT_FOUND', 'Already paused');
 
 	await updateRoom(ctx, room, {
@@ -198,10 +209,10 @@ export const pauseTimer = live(async (ctx: LiveContext<User>, code: string) => {
 });
 
 export const resumeTimer = live(async (ctx: LiveContext<User>, code: string) => {
-	requireTeacher(ctx);
-
 	const room = await getRoomByCode(code);
-	if (room?.paused_remaining == null) throw new LiveError('NOT_FOUND', 'Timer is not paused');
+	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+	requireRoomOwner(ctx, room);
+	if (room.paused_remaining == null) throw new LiveError('NOT_FOUND', 'Timer is not paused');
 
 	await updateRoom(ctx, room, {
 		question_ends_at: room.paused_remaining >= 0 ? Date.now() + room.paused_remaining : null,
@@ -210,10 +221,10 @@ export const resumeTimer = live(async (ctx: LiveContext<User>, code: string) => 
 });
 
 export const showResults = live(async (ctx: LiveContext<User>, code: string) => {
-	requireTeacher(ctx);
-
 	const room = await getRoomByCode(code);
-	if (!room?.current_question) throw new LiveError('NOT_FOUND', 'No active question');
+	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+	requireRoomOwner(ctx, room);
+	if (!room.current_question) throw new LiveError('NOT_FOUND', 'No active question');
 
 	const quizQuestions = await db.query.quizTable.findFirst({
 		where: (quiz, { eq }) => eq(quiz.id, room.quiz.id),
