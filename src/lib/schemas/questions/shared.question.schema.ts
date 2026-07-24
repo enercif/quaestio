@@ -5,6 +5,12 @@ export const sequenceTypeEnum = z.enum(['numeric', 'roman', 'alphabetic']);
 export const scoringModeEnum = z.enum(['binary', 'partial']);
 export const partialPointsSchema = z.record(z.string(), z.number().min(0));
 
+export const questionResourceSchema = z.object({
+	id: z.uuid(),
+	label: z.string().min(1, 'Der Linktext darf nicht leer sein.'),
+	href: z.url('Der Link muss eine gültige URL sein.')
+});
+
 export const questionBaseSchema = z.object({
 	id: z.uuid(),
 	position: z.number(),
@@ -13,7 +19,8 @@ export const questionBaseSchema = z.object({
 		.number('Punkte dürfen nicht leer sein.')
 		.min(0, 'Punkte müssen größer oder gleich 0 sein.'),
 	question: z.string().min(1, 'Die Fragenstellung darf nicht leer sein.'),
-	hint: z.string().optional()
+	hint: z.string().optional(),
+	resources: z.array(questionResourceSchema).default([])
 });
 
 export const choiceQuestionAnswerBaseSchema = z.object({
@@ -40,3 +47,4 @@ export function allOrNothingReasons(keys: string[], reasons: Record<string, stri
 export type SequenceType = z.infer<typeof sequenceTypeEnum>;
 export type ScoringMode = z.infer<typeof scoringModeEnum>;
 export type ChoiceQuestionAnswer = z.infer<typeof choiceQuestionAnswerBaseSchema>;
+export type QuestionResource = z.infer<typeof questionResourceSchema>;

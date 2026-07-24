@@ -5,7 +5,7 @@ import type {
 	QuestionType,
 	SequenceType
 } from '$lib/schemas/question.schema';
-import type { Room } from '$lib/schemas/room.schema';
+import type { PracticeRoom } from '$lib/types/practice-room.type';
 import { createSubscriber } from 'svelte/reactivity';
 
 export function indexToSequence(index: number, type: SequenceType) {
@@ -49,7 +49,7 @@ function liveNow() {
 	return now;
 }
 
-export function remainingMs(room: Room): number | null {
+export function remainingMs(room: PracticeRoom): number | null {
 	// paused_remaining -1 = pausiert ohne Timelimit
 	if (room.paused_remaining != null)
 		return room.paused_remaining >= 0 ? room.paused_remaining : null;
@@ -115,6 +115,45 @@ export function typeToBadge(type: QuestionType) {
 			return 'Open Text';
 		case 'programming':
 			return 'Coding';
+	}
+}
+
+function reasonList(reason: string | undefined): string[] {
+	return reason ? [reason] : [];
+}
+
+function reasonEntries(
+	reasons: Record<string, string>,
+	format: (key: string, value: string) => string
+): string[] {
+	return Object.entries(reasons).map(([key, value]) => format(key, value));
+}
+
+export function revealAnswer(question: Question): {
+	current_answers: string[];
+	current_reasons: string[];
+} {
+	switch (question.type) {
+		case 'open':
+			return { current_answers: question.correct, current_reasons: reasonList(question.reasons) };
+		case 'single':
+			return {
+				current_answers: Object.values(question.correct),
+				current_reasons: reasonList(question.reasons)
+			};
+		case 'multiple':
+			return {
+				current_answers: Object.values(question.correct),
+				current_reasons: reasonEntries(
+					question.reasons,
+					(key, value) => `${question.answers.find((answer) => answer.id === key)!.text}: ${value}`
+				)
+			};
+		case 'programming':
+			return {
+				current_answers: question.correct.map(String),
+				current_reasons: reasonEntries(question.reasons, (key, value) => `Zeile ${key}: ${value}`)
+			};
 	}
 }
 

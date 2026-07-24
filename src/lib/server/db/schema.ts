@@ -1,6 +1,7 @@
 import { relations, sql } from 'drizzle-orm';
 import {
 	bigint,
+	boolean,
 	integer,
 	jsonb,
 	pgEnum,
@@ -36,6 +37,7 @@ export const quizTable = pgTable('quiz', {
 	questions: jsonb('questions').notNull(),
 	questions_length: integer('questions_length').notNull(),
 	visibility: quizVisibilityEnum('visibility').notNull().default('public'),
+	practice_room: boolean('practice_room').notNull().default(false),
 	deleted_at: timestamp('deleted_at', { mode: 'string', withTimezone: true })
 });
 

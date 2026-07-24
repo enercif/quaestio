@@ -16,7 +16,7 @@
 	import { slide } from 'svelte/transition';
 
 	interface Props {
-		quiz: Quiz;
+		quiz: Pick<Quiz, 'id' | 'title'>;
 		label?: string;
 		preOpenCallback?: () => Promise<boolean>;
 		hidden?: boolean;

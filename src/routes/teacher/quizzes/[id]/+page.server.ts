@@ -36,7 +36,8 @@ function returnInsertQuiz(): {
 		tags: [],
 		questions: [],
 		questions_length: 0,
-		visibility: 'public'
+		visibility: 'public',
+		practice_room: false
 	};
 
 	return {

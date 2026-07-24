@@ -1,7 +1,7 @@
 <script lang="ts">
 	import AnalyticsQuestionAnswerRow from '$lib/components/analytics/analytics-question-answer-row.svelte';
-	import type { QuestionResult } from '$lib/components/analytics/analytics.utils';
 	import { Progress } from '$lib/components/ui/progress/index.js';
+	import type { QuestionResult } from '$lib/types/analytics.type';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { slide } from 'svelte/transition';

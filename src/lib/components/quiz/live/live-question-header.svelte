@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { formatRemaining, remainingMs } from '$lib/components/quiz/quiz.utils';
-	import type { Room } from '$lib/schemas/room.schema';
+	import type { PracticeRoom } from '$lib/types/practice-room.type';
 	import ClockIcon from '@lucide/svelte/icons/clock';
 	import type { Snippet } from 'svelte';
 
-	let { room, actions }: { room: Room; actions?: Snippet } = $props();
+	let { room, actions }: { room: PracticeRoom; actions?: Snippet } = $props();
 
 	const question = $derived(room.current_question!);
 	const remaining = $derived(remainingMs(room));
