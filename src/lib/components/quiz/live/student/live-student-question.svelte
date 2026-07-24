@@ -1,5 +1,6 @@
 <script lang="ts">
-	import QuestionView from '$lib/components/quiz/question-view.svelte';
+	import { questionRunnerContext } from '$lib/components/quiz/question-runner/question-runner.state.svelte';
+	import QuestionRunner from '$lib/components/quiz/question-runner/question-runner.svelte';
 	import { submitAnswer } from '$live/rooms';
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
@@ -9,7 +10,6 @@
 
 	const roomData = $derived(live.roomData!);
 	const currentQuestion = $derived(roomData.current_question!);
-	const selected = $derived(studentAnswersPersistedState.current.selected);
 
 	watch(
 		() => currentQuestion.id,
@@ -21,14 +21,23 @@
 		}
 	);
 
-	async function onSubmit(newSelected: string[]) {
-		studentAnswersPersistedState.current.selected = newSelected;
+	async function submit(selected: string[]) {
+		studentAnswersPersistedState.current.selected = selected;
 		try {
-			await submitAnswer(live.code, newSelected);
+			await submitAnswer(live.code, selected);
 		} catch {
 			toast.error('Antwort konnte nicht gesendet werden.');
 		}
 	}
+
+	questionRunnerContext.set({
+		type: 'live',
+		live,
+		get selected() {
+			return studentAnswersPersistedState.current.selected;
+		},
+		submit
+	});
 </script>
 
-<QuestionView room={roomData} {selected} {onSubmit} />
+<QuestionRunner />

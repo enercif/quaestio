@@ -613,82 +613,112 @@ msgstr "Answer could not be sent."
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view.svelte
 msgid "<0/> Pausiert"
 msgstr "<0/> Paused"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view.svelte
 msgid "<0/> Zeit abgelaufen"
 msgstr "<0/> Time's up"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-open.svelte
 msgid "Deine Antwort…"
 msgstr "Your answer…"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-open.svelte
 msgid "<0/> Senden"
 msgstr "<0/> Send"
 
 #. 0: openText.length
 #. 0: openText.length
 #. 0: openText.length
+#. 0: openText.length
+#. 0: openText.length
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-open.svelte
 msgid "{0} Zeichen"
 msgstr "{0} characters"
 
 #. 0: selected[0]
 #. 0: selected[0]
+#. 0: runner.selected[0]
+#. 0: selected[0]
 #. 0: selected[0]
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-open.svelte
 msgid "Gesendet: {0}"
 msgstr "Sent: {0}"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "<0/> Richtige Antwort!"
 msgstr "<0/> Correct answer!"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Teilweise richtig"
 msgstr "Partially correct"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Falsche Antwort"
 msgstr "Wrong answer"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Keine"
 msgstr "None"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Richtig"
 msgstr "Correct"
 
 #. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
 #. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
+#. 0: answerTexts(runner.currentQuestion.type, runner.selected) || 'Keine'; 1: runner .currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(runner.currentQuestion.type, runner.correct)
 #. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
+#. 0: answerTexts(type, selected) || 'Keine'; 1: type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(type, correct)
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Deine Antwort: {0} | {1}: {2}"
 msgstr "Your answer: {0} | {1}: {2}"
 
@@ -961,13 +991,17 @@ msgstr "Why are \"{0}\" the correct keywords?"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view.svelte
 msgid "Hinweis"
 msgstr "Hint"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Gesuchte Keywords"
 msgstr "Expected keywords"
 
@@ -1147,7 +1181,9 @@ msgstr "Private"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
 #: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 #: src/lib/components/quiz/question-view.svelte
+#: src/lib/components/quiz/question-view/question-view-result.svelte
 msgid "Begründung"
 msgstr "Explanation"
 

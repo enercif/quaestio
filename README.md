@@ -51,11 +51,17 @@ src/
 └── lib/
     ├── components/
     │   ├── quiz/
-    │   │   ├── editor/   Quiz editor UI (question list, per-type editors, settings)
-    │   │   ├── live/      Live-room UI, split into teacher/ and student/ views
-    │   │   ├── practice/  Practice-room UI + PracticeState (local, no server round-trip)
-    │   │   ├── question-view.svelte   Shared question renderer used by both live and practice
-    │   │   └── quiz.utils.ts          Shared scoring/answer/timer helpers — reuse this before adding new logic
+    │   │   ├── editor/         Quiz editor UI — one editor-<type>-question.svelte per question type
+    │   │   ├── live/            Live-room UI, split into teacher/ and student/ views
+    │   │   ├── practice/        Practice-room UI + PracticeState (local, no server round-trip)
+    │   │   ├── question-runner/ Shared question renderer (live + practice) — reads a QuestionRunnerState
+    │   │   │                    from context (question-runner.state.svelte.ts: a { type: 'live' | 'practice' }
+    │   │   │                    union, set by whichever of PracticeState/live student state is active).
+    │   │   │                    deriveRunner() there is the one place that branches on the type; only
+    │   │   │                    question-runner.svelte reads the context, then dispatches to one
+    │   │   │                    question-runner-<type>.svelte per question type (choice/open/programming)
+    │   │   │                    plus question-runner-result.svelte for the revealed-answer view
+    │   │   └── quiz.utils.ts    Shared scoring/answer/timer helpers — reuse this before adding new logic
     │   ├── analytics/     Teacher-facing analytics components + analytics.utils.ts
     │   ├── admin/         Org admin UI (users, SMTP settings)
     │   └── ui/            Generated shadcn-svelte primitives — don't hand-edit, regenerate via `pnpm dlx shadcn-svelte`
@@ -85,7 +91,7 @@ Most routes load data via `+page.server.ts` `load()`; several newer feature area
 
 ## Where to make common changes
 
-- **Add/change a question type** — schema in `src/lib/schemas/questions/`, editor UI in `src/lib/components/quiz/editor/`, rendering in `src/lib/components/quiz/question-view.svelte`, scoring/reveal logic in `src/lib/components/quiz/quiz.utils.ts`.
+- **Add a new question type** — schema in `src/lib/schemas/questions/`; editor UI as a new `editor-<type>-question.svelte` wired into the `{#if}` chain in `editor/editor-question.svelte`; how it's played/answered as a new `question-runner-<type>.svelte` wired into the `{#if}` chain in `question-runner/question-runner.svelte`; scoring/reveal logic in `src/lib/components/quiz/quiz.utils.ts` (`evaluateAnswer`, `revealAnswer`).
 - **Change live-room behavior** (timer, pause, reveal, join rules) — `src/live/rooms.ts`.
 - **Change quiz CRUD or authorization** — `src/lib/remote/quiz.remote.ts`.
 - **Add a UI primitive** — check `src/lib/components/ui/` first (shadcn-svelte); only hand-write a component if nothing there fits.

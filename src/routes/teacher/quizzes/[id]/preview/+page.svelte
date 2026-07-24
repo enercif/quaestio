@@ -3,7 +3,8 @@
 	import { resolve } from '$app/paths';
 	import PracticeControlsPanel from '$lib/components/quiz/practice/practice-controls-panel.svelte';
 	import { PracticeState } from '$lib/components/quiz/practice/practice.state.svelte';
-	import QuestionView from '$lib/components/quiz/question-view.svelte';
+	import { questionRunnerContext } from '$lib/components/quiz/question-runner/question-runner.state.svelte';
+	import QuestionRunner from '$lib/components/quiz/question-runner/question-runner.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
@@ -15,7 +16,14 @@
 	const practice = new PracticeState(data.quiz.questions);
 
 	let tabValue = $state('practice');
-	const showResources = $derived(tabValue === 'practice');
+
+	questionRunnerContext.set({
+		type: 'practice',
+		practice,
+		get showResources() {
+			return tabValue === 'practice';
+		}
+	});
 
 	function onLeaveClick() {
 		goto(resolve('/teacher/quizzes/[id]', { id: data.quiz.id }));
@@ -49,12 +57,7 @@
 			<Button onclick={onLeaveClick}>Zurück zum Editor</Button>
 		</div>
 	{:else}
-		<QuestionView
-			room={practice.roomView}
-			selected={practice.selected}
-			onSubmit={practice.submit}
-			{showResources}
-		/>
+		<QuestionRunner />
 
 		<PracticeControlsPanel {practice} />
 	{/if}

@@ -164,6 +164,13 @@ export function canEditQuiz(
 	return !!userId && quiz?.teacherId === userId;
 }
 
+export function answerTexts(type: QuestionType, answers: string[]) {
+	if (type === 'programming') {
+		return answers.length ? `Zeile ${answers.join(', ')}` : '';
+	}
+	return answers.join(', ');
+}
+
 export function typeToDescription(type: QuestionType) {
 	switch (type) {
 		case 'multiple':
