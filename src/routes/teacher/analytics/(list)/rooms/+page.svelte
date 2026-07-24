@@ -9,7 +9,7 @@
 </script>
 
 <div class="rounded-lg border">
-	<table class="size-full">
+	<table class="size-full h-fit">
 		<thead>
 			<tr class="border-b text-sm text-secondary-foreground/75">
 				<th class="w-2/5 py-2 pl-4 text-left font-semibold">Quiz</th>
