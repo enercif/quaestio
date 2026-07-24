@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { questionRunnerContext } from '$lib/components/quiz/question-runner/question-runner.state.svelte';
+	import { RunnerState } from '$lib/components/quiz/question-runner/question-runner.state.svelte';
 	import QuestionRunner from '$lib/components/quiz/question-runner/question-runner.svelte';
 	import { submitAnswer } from '$live/rooms';
 	import { watch } from 'runed';
@@ -30,7 +30,7 @@
 		}
 	}
 
-	questionRunnerContext.set({
+	RunnerState.init({
 		type: 'live',
 		live,
 		get selected() {

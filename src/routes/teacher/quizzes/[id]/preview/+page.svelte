@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	import PracticeControlsPanel from '$lib/components/quiz/practice/practice-controls-panel.svelte';
 	import { PracticeState } from '$lib/components/quiz/practice/practice.state.svelte';
-	import { questionRunnerContext } from '$lib/components/quiz/question-runner/question-runner.state.svelte';
+	import { RunnerState } from '$lib/components/quiz/question-runner/question-runner.state.svelte';
 	import QuestionRunner from '$lib/components/quiz/question-runner/question-runner.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
@@ -17,7 +17,7 @@
 
 	let tabValue = $state('practice');
 
-	questionRunnerContext.set({
+	RunnerState.init({
 		type: 'practice',
 		practice,
 		get showResources() {

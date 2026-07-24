@@ -4,9 +4,9 @@
 	import type { LiveOpenTextQuestion } from '$lib/schemas/question.schema';
 	import SendIcon from '@lucide/svelte/icons/send';
 	import { watch } from 'runed';
-	import { deriveRunner, questionRunnerContext } from './question-runner.state.svelte';
+	import { RunnerState } from './question-runner.state.svelte';
 
-	const runner = $derived(deriveRunner(questionRunnerContext.get()));
+	const runner = RunnerState.get();
 	const question = $derived(runner.currentQuestion as LiveOpenTextQuestion);
 
 	let openText = $state('');

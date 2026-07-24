@@ -4,42 +4,51 @@ import { Context } from 'runed';
 import type { LiveStudentState } from '../live/student/live-student.state.svelte';
 import type { PracticeState } from '../practice/practice.state.svelte';
 
-export type QuestionRunnerState =
-	| { type: 'practice'; practice: PracticeState; showResources: boolean }
+/** Woher der Runner Frage, Auswahl und Submit bezieht. */
+export type RunnerSource =
+	| { type: 'practice'; practice: PracticeState; readonly showResources: boolean }
 	| {
 			type: 'live';
 			live: LiveStudentState;
-			selected: string[];
+			readonly selected: string[];
 			submit: (selected: string[]) => void;
 	  };
 
-export const questionRunnerContext = new Context<QuestionRunnerState>('question-runner');
+const questionRunnerContext = new Context<RunnerState>('question-runner');
 
-export function deriveRunner(ctx: QuestionRunnerState) {
-	const room: QuestionRoomView =
-		ctx.type === 'practice' ? ctx.practice.roomView : ctx.live.roomData!;
-	const selected = ctx.type === 'practice' ? ctx.practice.selected : ctx.selected;
-	const submit = ctx.type === 'practice' ? ctx.practice.submit : ctx.submit;
-	const showResources = ctx.type === 'practice' ? ctx.showResources : false;
-	const currentQuestion = room.current_question!;
-	const revealed = room.state === 'answer';
-	const correct = room.current_answers ?? [];
-	const reasons = room.current_reasons ?? [];
-	const paused = room.paused_remaining != null;
-	const timeUp = remainingMs(room) === 0;
-	const locked = revealed || paused || timeUp;
+export class RunnerState {
+	_source!: RunnerSource;
 
-	return {
-		room,
-		selected,
-		submit,
-		showResources,
-		currentQuestion,
-		revealed,
-		correct,
-		reasons,
-		paused,
-		timeUp,
-		locked
+	room: QuestionRoomView = $derived(
+		this._source.type === 'practice' ? this._source.practice.roomView : this._source.live.roomData!
+	);
+	currentQuestion = $derived(this.room.current_question!);
+	revealed = $derived(this.room.state === 'answer');
+	correct = $derived(this.room.current_answers ?? []);
+	reasons = $derived(this.room.current_reasons ?? []);
+	paused = $derived(this.room.paused_remaining != null);
+	timeUp = $derived(remainingMs(this.room) === 0);
+	locked = $derived(this.revealed || this.paused || this.timeUp);
+
+	selected = $derived(
+		this._source.type === 'practice' ? this._source.practice.selected : this._source.selected
+	);
+	showResources = $derived(this._source.type === 'practice' ? this._source.showResources : false);
+
+	constructor(source: RunnerSource) {
+		this._source = source;
+	}
+
+	submit = (selected: string[]) => {
+		if (this._source.type === 'practice') this._source.practice.submit(selected);
+		else this._source.submit(selected);
 	};
+
+	static init(source: RunnerSource) {
+		return questionRunnerContext.set(new RunnerState(source));
+	}
+
+	static get() {
+		return questionRunnerContext.get();
+	}
 }

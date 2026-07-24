@@ -12,9 +12,9 @@
 	import QuestionRunnerOpen from './question-runner-open.svelte';
 	import QuestionRunnerProgramming from './question-runner-programming.svelte';
 	import QuestionRunnerResult from './question-runner-result.svelte';
-	import { deriveRunner, questionRunnerContext } from './question-runner.state.svelte';
+	import { RunnerState } from './question-runner.state.svelte';
 
-	const runner = $derived(deriveRunner(questionRunnerContext.get()));
+	const runner = RunnerState.get();
 </script>
 
 <div class="px-10 mt-5 flex flex-col size-full max-w-6xl justify-start pb-24">

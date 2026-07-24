@@ -4,9 +4,9 @@
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { slide } from 'svelte/transition';
-	import { deriveRunner, questionRunnerContext } from './question-runner.state.svelte';
+	import { RunnerState } from './question-runner.state.svelte';
 
-	const runner = $derived(deriveRunner(questionRunnerContext.get()));
+	const runner = RunnerState.get();
 	const result = $derived(
 		evaluateAnswer(runner.currentQuestion.type, runner.correct, runner.selected)
 	);

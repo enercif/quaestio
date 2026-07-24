@@ -2,9 +2,9 @@
 	import type { LiveProgrammingQuestion } from '$lib/schemas/question.schema';
 	import { highlightCode } from '$lib/shiki';
 	import { watch } from 'runed';
-	import { deriveRunner, questionRunnerContext } from './question-runner.state.svelte';
+	import { RunnerState } from './question-runner.state.svelte';
 
-	const runner = $derived(deriveRunner(questionRunnerContext.get()));
+	const runner = RunnerState.get();
 	const question = $derived(runner.currentQuestion as LiveProgrammingQuestion);
 
 	let codeContainer: HTMLDivElement | undefined = $state();

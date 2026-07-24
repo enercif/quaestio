@@ -6,9 +6,9 @@
 	} from '$lib/schemas/question.schema';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import XIcon from '@lucide/svelte/icons/x';
-	import { deriveRunner, questionRunnerContext } from './question-runner.state.svelte';
+	import { RunnerState } from './question-runner.state.svelte';
 
-	const runner = $derived(deriveRunner(questionRunnerContext.get()));
+	const runner = RunnerState.get();
 	const question = $derived(
 		runner.currentQuestion as LiveMultipleChoiceQuestion | LiveSingleChoiceQuestion
 	);
