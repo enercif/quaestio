@@ -21,6 +21,14 @@
 	const answersError = $derived(state.getSelectedQuestionError('answers'));
 	const correctError = $derived(state.getSelectedQuestionError('correct'));
 	const reasonsError = $derived(state.getSelectedQuestionError('reasons'));
+
+	$effect(() => {
+		for (const answer of selectedQuestion.answers) {
+			if (selectedQuestion.correct[answer.id] !== undefined) {
+				selectedQuestion.correct[answer.id] = answer.text;
+			}
+		}
+	});
 </script>
 
 <Field.Field aria-invalid={!!promptError}>
