@@ -49,7 +49,8 @@ export class EditorState {
 			timelimit: 30,
 			points: 1,
 			question: '',
-			position: this.quiz.questions.length
+			position: this.quiz.questions.length,
+			resources: []
 		};
 
 		let question: Question;
@@ -136,6 +137,18 @@ export class EditorState {
 		if (question.type === 'multiple') delete question.partial_points[answerId];
 	};
 
+	addResource = () => {
+		const question = this.selectedQuestion;
+		if (!question) return;
+		question.resources.push({ id: crypto.randomUUID(), label: '', href: '' });
+	};
+
+	removeResource = (resourceId: string) => {
+		const question = this.selectedQuestion;
+		if (!question) return;
+		question.resources = question.resources.filter((r) => r.id !== resourceId);
+	};
+
 	removeQuestion = (questionId: string) => {
 		this.quiz.questions = this.quiz.questions.filter((q) => q.id !== questionId);
 		this.quiz.questions.forEach((q, index) => (q.position = index));
@@ -165,7 +178,6 @@ export class EditorState {
 		}
 	};
 
-	/** Validiert und speichert (Insert oder Update). Gibt zurück, ob es geklappt hat. */
 	upsert = async (): Promise<boolean> => {
 		this.quiz.questions_length = this.quiz.questions.length;
 

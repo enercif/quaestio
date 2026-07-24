@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import LaunchDialog from '$lib/components/quiz/launch-dialog.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -30,7 +31,14 @@
 				</Button>
 			{/if}
 
-			<Button variant="ghost">
+			<Button
+				variant="ghost"
+				onclick={async () => {
+					if (await state.upsert()) {
+						goto(resolve('/teacher/quizzes/[id]/preview', { id: state.quizId! }));
+					}
+				}}
+			>
 				<EyeIcon />
 				Übersicht
 			</Button>

@@ -4,7 +4,8 @@ import {
 	questionMaxPoints
 } from '$lib/components/quiz/quiz.utils';
 import type { Answer } from '$lib/schemas/answer.schema';
-import type { Question, QuestionType } from '$lib/schemas/question.schema';
+import type { Question } from '$lib/schemas/question.schema';
+import type { QuestionResult } from '$lib/types/analytics.type';
 
 export function correctAnswersFor(question: Question): string[] {
 	switch (question.type) {
@@ -54,20 +55,6 @@ export function computedPoints(question: Question, selected: string[]): number {
 	return result === 'correct' ? question.points : 0;
 }
 
-export interface QuestionResult {
-	answerId: string | undefined;
-	questionId: string;
-	question: string;
-	type: QuestionType;
-	correct: string[];
-	maxPoints: number;
-	selected: string[];
-	points: number;
-	overridden: boolean;
-	accuracy: number;
-}
-
-/** Baut das Ergebnis jeder Frage aus einem Antwort-Set (ein Student/ein Raum) zusammen. */
 export function questionResultsFor(questions: Question[], answers: Answer[]): QuestionResult[] {
 	return questions.map((question) => {
 		const answer = answers.find((a) => a.question_id === question.id);

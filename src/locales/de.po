@@ -89,6 +89,7 @@ msgstr "Kopieren"
 msgid "Per E-Mail senden"
 msgstr "Per E-Mail senden"
 
+#: src/routes/+layout.svelte
 #: src/routes/+page.svelte
 msgid "Quiz beitreten"
 msgstr "Quiz beitreten"
@@ -101,6 +102,7 @@ msgstr "Code"
 
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
 #: src/routes/+page.svelte
+#: src/routes/student/practice/[id]/+page.svelte
 #: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 #: src/routes/teacher/analytics/students/[id]/+page.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
@@ -304,12 +306,15 @@ msgstr "<0/> Neues Quiz"
 msgid "Deine Quizze"
 msgstr "Deine Quizze"
 
+#: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 #: src/routes/teacher/quizzes/[id]/+page.svelte
 msgid "Titel"
 msgstr "Titel"
 
+#: src/routes/student/+page.svelte
+#: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Tags"
@@ -317,6 +322,8 @@ msgstr "Tags"
 
 #: src/lib/components/quiz/editor/editor-question-list.svelte
 #: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+#: src/routes/student/+page.svelte
+#: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Fragen"
@@ -327,6 +334,7 @@ msgstr "Fragen"
 msgid "Letzter Lauf"
 msgstr "Letzter Lauf"
 
+#: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Noch keine Quizze"
 msgstr "Noch keine Quizze"
@@ -343,6 +351,7 @@ msgstr "<0/> Quiz importieren"
 msgid "<0/> Quiz erstellen"
 msgstr "<0/> Quiz erstellen"
 
+#: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Keine Tags"
 msgstr "Keine Tags"
@@ -393,8 +402,10 @@ msgstr "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 
 #. 0: line
 #. 0: answers.join(', ')
+#. 0: answers.join(', ')
 #: src/lib/components/analytics/analytics-question-stats.svelte
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Zeile {0}"
 msgstr "Zeile {0}"
 
@@ -570,6 +581,7 @@ msgid "Verlassen"
 msgstr "Verlassen"
 
 #: src/routes/teacher/live/[id]/+page.svelte
+#: src/routes/teacher/quizzes/[id]/preview/+page.svelte
 msgid "Quiz beendet"
 msgstr "Quiz beendet"
 
@@ -598,53 +610,68 @@ msgid "Antwort konnte nicht gesendet werden."
 msgstr "Antwort konnte nicht gesendet werden."
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "<0/> Pausiert"
 msgstr "<0/> Pausiert"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "<0/> Zeit abgelaufen"
 msgstr "<0/> Zeit abgelaufen"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Deine Antwort…"
 msgstr "Deine Antwort…"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "<0/> Senden"
 msgstr "<0/> Senden"
 
 #. 0: openText.length
+#. 0: openText.length
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "{0} Zeichen"
 msgstr "{0} Zeichen"
 
 #. 0: selected[0]
+#. 0: selected[0]
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Gesendet: {0}"
 msgstr "Gesendet: {0}"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "<0/> Richtige Antwort!"
 msgstr "<0/> Richtige Antwort!"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Teilweise richtig"
 msgstr "Teilweise richtig"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Falsche Antwort"
 msgstr "Falsche Antwort"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Keine"
 msgstr "Keine"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Richtig"
 msgstr "Richtig"
 
 #. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
+#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Deine Antwort: {0} | {1}: {2}"
 msgstr "Deine Antwort: {0} | {1}: {2}"
 
@@ -653,26 +680,32 @@ msgid "Aktion fehlgeschlagen."
 msgstr "Aktion fehlgeschlagen."
 
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/practice/practice-controls-panel.svelte
 msgid "<0/> Quiz beenden"
 msgstr "<0/> Quiz beenden"
 
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/practice/practice-controls-panel.svelte
 msgid "<0/> Nächste Frage"
 msgstr "<0/> Nächste Frage"
 
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/practice/practice-controls-panel.svelte
 msgid "<0/> Ergebnisse anzeigen"
 msgstr "<0/> Ergebnisse anzeigen"
 
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/practice/practice-controls-panel.svelte
 msgid "<0/> Fortsetzen"
 msgstr "<0/> Fortsetzen"
 
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/practice/practice-controls-panel.svelte
 msgid "<0/> Pause"
 msgstr "<0/> Pause"
 
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/practice/practice-controls-panel.svelte
 msgid "<0/> Zu den Ergebnissen springen"
 msgstr "<0/> Zu den Ergebnissen springen"
 
@@ -737,10 +770,6 @@ msgstr "Quizze"
 #: src/routes/+layout.svelte
 msgid "Design wechseln"
 msgstr "Design wechseln"
-
-#: src/routes/student/+page.svelte
-msgid "Hallo"
-msgstr "Hallo"
 
 #: src/lib/components/ui/command/command-dialog.svelte
 msgid "Befehlspalette"
@@ -914,10 +943,12 @@ msgid "Warum sind \"{0}\" die richtigen Keywords?"
 msgstr "Warum sind \"{0}\" die richtigen Keywords?"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Hinweis"
 msgstr "Hinweis"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Gesuchte Keywords"
 msgstr "Gesuchte Keywords"
 
@@ -925,6 +956,7 @@ msgstr "Gesuchte Keywords"
 msgid "Räume"
 msgstr "Räume"
 
+#: src/routes/student/+page.svelte
 #: src/routes/teacher/analytics/(list)/rooms/+page.svelte
 msgid "Quiz"
 msgstr "Quiz"
@@ -1095,6 +1127,7 @@ msgid "Privat"
 msgstr "Privat"
 
 #: src/lib/components/quiz/live/student/live-student-question.svelte
+#: src/lib/components/quiz/practice/practice-question.svelte
 msgid "Begründung"
 msgstr "Begründung"
 
@@ -1344,3 +1377,73 @@ msgstr "Exportiere als CSV"
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Exportiere als XLSX"
 msgstr "Exportiere als XLSX"
+
+#: src/routes/student/practice/[id]/+page.svelte
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+#: src/routes/teacher/quizzes/[id]/preview/+page.svelte
+msgid "Übungsraum"
+msgstr "Übungsraum"
+
+#: src/lib/components/quiz/editor/editor-question.svelte
+msgid "Linktext"
+msgstr "Linktext"
+
+#: src/lib/components/quiz/editor/editor-question.svelte
+msgid "Hilfreiche Links (nur im Übungsraum sichtbar)"
+msgstr "Hilfreiche Links (nur im Übungsraum sichtbar)"
+
+#: src/lib/components/quiz/editor/editor-question.svelte
+msgid "<0/> Link hinzufügen"
+msgstr "<0/> Link hinzufügen"
+
+#: src/routes/teacher/quizzes/[id]/preview/+page.server.ts
+msgid "Quiz nicht gefunden."
+msgstr "Quiz nicht gefunden."
+
+#: src/routes/teacher/quizzes/[id]/preview/+page.svelte
+msgid "<0/> Zurück zum Editor"
+msgstr "<0/> Zurück zum Editor"
+
+#: src/routes/teacher/quizzes/[id]/preview/+page.svelte
+msgid "So erleben Studenten das Ende des Übungsraums."
+msgstr "So erleben Studenten das Ende des Übungsraums."
+
+#: src/routes/teacher/quizzes/[id]/preview/+page.svelte
+msgid "Zurück zum Editor"
+msgstr "Zurück zum Editor"
+
+#: src/routes/student/+page.svelte
+msgid "Übungsräume"
+msgstr "Übungsräume"
+
+#: src/routes/student/+page.svelte
+msgid "Starten <0/>"
+msgstr "Starten <0/>"
+
+#: src/routes/student/practice/[id]/+page.server.ts
+msgid "Dieser Übungsraum ist nicht verfügbar."
+msgstr "Dieser Übungsraum ist nicht verfügbar."
+
+#: src/routes/student/practice/[id]/+page.svelte
+msgid "Geschafft!"
+msgstr "Geschafft!"
+
+#: src/routes/student/practice/[id]/+page.svelte
+msgid "Du kannst diesen Übungsraum jederzeit erneut starten."
+msgstr "Du kannst diesen Übungsraum jederzeit erneut starten."
+
+#: src/routes/student/practice/[id]/+page.svelte
+msgid "Zurück zu den Übungsräumen"
+msgstr "Zurück zu den Übungsräumen"
+
+#: src/routes/teacher/quizzes/[id]/preview/+page.svelte
+msgid "Live"
+msgstr "Live"
+
+#: src/routes/+layout.svelte
+msgid "Studentenansicht"
+msgstr "Studentenansicht"
+
+#: src/routes/teacher/quizzes/[id]/+page.svelte
+msgid "Übungsräume sind nur für öffentliche Quizze verfügbar"
+msgstr "Übungsräume sind nur für öffentliche Quizze verfügbar"

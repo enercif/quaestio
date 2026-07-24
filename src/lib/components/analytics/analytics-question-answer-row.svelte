@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { QuestionResult } from '$lib/components/analytics/analytics.utils';
 	import { typeToBadge } from '$lib/components/quiz/quiz.utils';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { setPointsOverride } from '$lib/remote/analytics.remote';
+	import type { QuestionResult } from '$lib/types/analytics.type';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import RotateCcwIcon from '@lucide/svelte/icons/rotate-ccw';
 	import { toast } from 'svelte-sonner';

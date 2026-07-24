@@ -16,12 +16,12 @@
 	let selectedType: 'csv' | 'xlsx' = 'csv';
 
 	export function openCsv() {
-	    selectedType = 'csv';
+		selectedType = 'csv';
 
-        importDialog?.showImportDialog(() => {
-            csvInput?.click();
-        }, 'csv');
-}
+		importDialog?.showImportDialog(() => {
+			csvInput?.click();
+		}, 'csv');
+	}
 
 	export function openXlsx() {
 		selectedType = 'xlsx';
@@ -41,15 +41,10 @@
 
 			const quizzes =
 				selectedType === 'csv'
-					? await Promise.all(
-							files.map((file) => parseCsv(file, file.name))
-						)
-					: await Promise.all(
-							files.map((file) => parseXlsx(file))
-						);
+					? await Promise.all(files.map((file) => parseCsv(file, file.name)))
+					: await Promise.all(files.map((file) => parseXlsx(file)));
 
 			await mergeAndInsert(quizzes);
-
 		} catch (error) {
 			console.error(error);
 			alert('Import fehlgeschlagen.');
@@ -66,14 +61,13 @@
 		});
 
 		const quiz: QuizInsert = {
-			title:
-				quizzes.length === 1
-					? quizzes[0].title
-					: 'Importiertes Quiz',
+			title: quizzes.length === 1 ? quizzes[0].title : 'Importiertes Quiz',
 			last_run: null,
 			tags: [],
 			questions,
-			questions_length: questions.length
+			questions_length: questions.length,
+			visibility: 'public',
+			practice_room: false
 		};
 
 		const result = await insertQuiz(quiz);

@@ -24,7 +24,11 @@
 
 	let { data, children }: LayoutProps = $props();
 
-	const isTeacherRoute = $derived(page.route.id?.includes('teacher') ?? false);
+	const isTeacherRoute = $derived(page.route.id?.includes('teacher'));
+	const isStudentRoute = $derived(
+		page.route.id?.includes('student') && !page.route.id?.includes('/r/')
+	);
+
 	const isOrgAdmin = $derived(data.role === 'owner' || data.role === 'admin');
 	const initials = $derived(getInitials(data.user?.name));
 
@@ -39,6 +43,8 @@
 		localePersistedState.current = locale;
 		await loadLocale(locale);
 	}
+
+	console.log('layout data', page.route.id);
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -53,6 +59,12 @@
 					<img class="size-6" src={favicon} alt="Logo" />
 					<span class="text-lg font-semibold">Quaestio</span>
 				</div>
+
+				{#if isStudentRoute}
+					<div class="flex flex-row items-center gap-2">
+						<Button variant="ghost" href={resolve('/')}>Quiz beitreten</Button>
+					</div>
+				{/if}
 
 				{#if isTeacherRoute}
 					<div class="flex flex-row items-center gap-2">
@@ -92,6 +104,8 @@
 								href={resolve('/teacher/admin')}>Admin</Button
 							>
 						{/if}
+
+						<Button variant="ghost" href={resolve('/')}>Studentenansicht</Button>
 					</div>
 				{/if}
 

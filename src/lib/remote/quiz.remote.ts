@@ -17,6 +17,27 @@ export const findQuizById = query(z.uuid(), async (quizId: string) => {
 	return quiz ? quizSelectSchema.parse(quiz) : undefined;
 });
 
+export const findPracticeQuizzes = query(async () => {
+	const quizzes = await db.query.quizTable.findMany({
+		where: (quiz, { eq, and }) =>
+			and(isNull(quiz.deleted_at), eq(quiz.visibility, 'public'), eq(quiz.practice_room, true))
+	});
+	return quizSelectSchema.array().parse(quizzes);
+});
+
+export const findPracticeQuizById = query(z.uuid(), async (quizId: string) => {
+	const quiz = await db.query.quizTable.findFirst({
+		where: (quiz, { eq, and }) =>
+			and(
+				eq(quiz.id, quizId),
+				isNull(quiz.deleted_at),
+				eq(quiz.visibility, 'public'),
+				eq(quiz.practice_room, true)
+			)
+	});
+	return quiz ? quizSelectSchema.parse(quiz) : undefined;
+});
+
 export const findAllQuizzes = query(async () => {
 	const { locals } = getRequestEvent();
 	if (!locals.user) return [];
