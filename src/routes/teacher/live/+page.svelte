@@ -81,16 +81,18 @@
 		</div>
 	{:else}
 		<div class="grid grid-cols-3 gap-4">
-			{#each _rooms as room (room.id)}
+			{#each _rooms as room (room.code)}
 				<Card.Root>
 					<Card.Header>
-						<Card.Title>Raum {room.id}</Card.Title>
+						<Card.Title>Raum {room.code}</Card.Title>
 						<Card.Description>{room.quiz.title} | {room.state}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
-						<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
-							Schließen
-						</Button>
+						{#if room.teacherId === data.user.id}
+							<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
+								Schließen
+							</Button>
+						{/if}
 						<Button class="grow" onclick={() => onJoinClick(room.id)}>Beitreten</Button>
 					</Card.Footer>
 				</Card.Root>

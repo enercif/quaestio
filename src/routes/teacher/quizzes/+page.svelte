@@ -7,6 +7,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Empty from '$lib/components/ui/empty/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { localePersistedState } from '$lib/state/locale.state.svelte';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import CircleOffIcon from '@lucide/svelte/icons/circle-off';
 	import PlusIcon from '@lucide/svelte/icons/plus';
@@ -135,7 +136,14 @@
 								{/if}
 							</td>
 							<td class="py-2">{quiz.questions.length}</td>
-							<td class="py-2">{quiz.last_run ?? 'Noch nicht gestartet'}</td>
+							<td class="py-2"
+								>{quiz.last_run
+									? new Date(quiz.last_run).toLocaleString(localePersistedState.current, {
+											dateStyle: 'full',
+											timeStyle: 'short'
+										})
+									: 'Noch nicht gestartet'}</td
+							>
 							<td class="flex flex-row items-center justify-end gap-1 py-2 pr-4">
 								<Tooltip.Root>
 									<Tooltip.Trigger>

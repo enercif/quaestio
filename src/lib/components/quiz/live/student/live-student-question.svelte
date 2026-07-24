@@ -79,7 +79,7 @@
 	async function submit(newSelected: string[]) {
 		studentAnswersPersistedState.current.selected = newSelected;
 		try {
-			await submitAnswer(live.roomId, newSelected);
+			await submitAnswer(live.code, newSelected);
 		} catch {
 			toast.error('Antwort konnte nicht gesendet werden.');
 		}

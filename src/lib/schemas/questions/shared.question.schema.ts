@@ -2,6 +2,9 @@ import z from 'zod';
 
 export const sequenceTypeEnum = z.enum(['numeric', 'roman', 'alphabetic']);
 
+export const scoringModeEnum = z.enum(['binary', 'partial']);
+export const partialPointsSchema = z.record(z.string(), z.number().min(0));
+
 export const questionBaseSchema = z.object({
 	id: z.uuid(),
 	position: z.number(),
@@ -35,4 +38,5 @@ export function allOrNothingReasons(keys: string[], reasons: Record<string, stri
 }
 
 export type SequenceType = z.infer<typeof sequenceTypeEnum>;
+export type ScoringMode = z.infer<typeof scoringModeEnum>;
 export type ChoiceQuestionAnswer = z.infer<typeof choiceQuestionAnswerBaseSchema>;

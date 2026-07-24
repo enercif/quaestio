@@ -11,6 +11,7 @@ import { quizInsertSchema, type QuizInsert } from '$lib/schemas/quiz.schema';
 import { Context } from 'runed';
 import { toast } from 'svelte-sonner';
 import type { ZodError } from 'zod';
+import { questionMaxPoints } from '../quiz.utils';
 import { getTimeAsString } from './editor-utils';
 
 const quizEditorContext = new Context<EditorState>('quiz-editor');
@@ -23,7 +24,7 @@ export class EditorState {
 	selectedId: string | null = $state(null);
 
 	estTime = $derived(getTimeAsString(this.quiz.questions.reduce((acc, q) => acc + q.timelimit, 0)));
-	totalPoints = $derived(this.quiz.questions.reduce((acc, q) => acc + q.points, 0));
+	totalPoints = $derived(this.quiz.questions.reduce((acc, q) => acc + questionMaxPoints(q), 0));
 	hasChanges = $derived(JSON.stringify(this.initialQuiz) !== JSON.stringify(this.quiz));
 	selectedIndex = $derived(this.quiz.questions.findIndex((q) => q.id === this.selectedId));
 
@@ -65,7 +66,9 @@ export class EditorState {
 					correct: {},
 					answers: [],
 					sequence_type: 'numeric',
-					reasons: {}
+					reasons: {},
+					scoring: 'binary',
+					partial_points: {}
 				};
 				break;
 
@@ -81,7 +84,17 @@ export class EditorState {
 				break;
 
 			case 'programming':
-				question = { ...base, type, code: '', language: '', correct: [], reasons: {}, hint: '' };
+				question = {
+					...base,
+					type,
+					code: '',
+					language: '',
+					correct: [],
+					reasons: {},
+					hint: '',
+					scoring: 'binary',
+					partial_points: {}
+				};
 				break;
 
 			default:
@@ -105,19 +118,22 @@ export class EditorState {
 	) => {
 		if (question.type === 'single') {
 			question.correct = { [id]: text };
+			return;
+		}
+		if (question.correct[id]) {
+			delete question.reasons[id];
+			delete question.correct[id];
+			delete question.partial_points[id];
 		} else {
-			if (question.correct[id]) {
-				delete question.reasons[id];
-				delete question.correct[id];
-			} else {
-				question.correct[id] = text;
-			}
+			question.correct[id] = text;
+			question.partial_points[id] = 1;
 		}
 	};
 
 	removeAnswer = (question: MultipleChoiceQuestion | SingleChoiceQuestion, answerId: string) => {
 		question.answers = question.answers.filter((a) => a.id !== answerId);
 		delete question.correct[answerId];
+		if (question.type === 'multiple') delete question.partial_points[answerId];
 	};
 
 	removeQuestion = (questionId: string) => {

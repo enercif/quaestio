@@ -7,9 +7,9 @@ export class RoomState {
 	private _room: { readonly current: Room | undefined };
 	private _presence: { readonly current: Presence[] | undefined };
 
-	constructor(roomId: string) {
-		this._room = fromStore(room.data(roomId));
-		this._presence = fromStore(room.presence!(roomId));
+	constructor(code: string) {
+		this._room = fromStore(room.data(code));
+		this._presence = fromStore(room.presence!(code));
 	}
 
 	get roomData() {
