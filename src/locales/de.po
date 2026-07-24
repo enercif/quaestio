@@ -221,9 +221,6 @@ msgstr "Beitreten"
 msgid "Live Räume"
 msgstr "Live Räume"
 
-#~ msgid "Test"
-#~ msgstr "Test"
-
 #: src/routes/login/+page.svelte
 msgid "Ungültige E-Mail oder Passwort."
 msgstr "Ungültige E-Mail oder Passwort."
@@ -924,9 +921,6 @@ msgstr "Hinweis"
 msgid "Gesuchte Keywords"
 msgstr "Gesuchte Keywords"
 
-#~ msgid "Begründung<<<<<<< HEAD"
-#~ msgstr "Begründung<<<<<<< HEAD"
-
 #: src/routes/teacher/analytics/(list)/+layout.svelte
 msgid "Räume"
 msgstr "Räume"
@@ -948,9 +942,6 @@ msgstr "Keine Räume"
 msgid "Es liegen noch keine Antworten aus abgehaltenen Quizzen vor."
 msgstr "Es liegen noch keine Antworten aus abgehaltenen Quizzen vor."
 
-#~ msgid "Teilgenommene Räume"
-#~ msgstr "Teilgenommene Räume"
-
 #: src/routes/teacher/analytics/(list)/students/+page.svelte
 msgid "Keine Studenten"
 msgstr "Keine Studenten"
@@ -962,12 +953,6 @@ msgstr "Punkte konnten nicht gespeichert werden."
 #: src/lib/components/analytics/analytics-question-answer-row.svelte
 msgid "Punkte konnten nicht zurückgesetzt werden."
 msgstr "Punkte konnten nicht zurückgesetzt werden."
-
-#~ msgid "Raumcode {0}"
-#~ msgstr "Raumcode {0}"
-
-#~ msgid "Alle Studenten anzeigen"
-#~ msgstr "Alle Studenten anzeigen"
 
 #. 0: student.totalPoints; 1: maxPoints
 #. 0: room.totalPoints; 1: room.maxPoints
@@ -984,12 +969,6 @@ msgstr "Antwort: {0}"
 #: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 msgid "Dieser Raum wurde nicht gefunden."
 msgstr "Dieser Raum wurde nicht gefunden."
-
-#~ msgid "Datum"
-#~ msgstr "Datum"
-
-#~ msgid "Details"
-#~ msgstr "Details"
 
 #: src/routes/teacher/analytics/students/[id]/+page.svelte
 msgid "Dieser Student wurde nicht gefunden."
@@ -1021,9 +1000,6 @@ msgstr "Markiere zuerst die richtigen {0}."
 msgid "Gesamt: {0} Punkte"
 msgstr "Gesamt: {0} Punkte"
 
-#~ msgid "Genauigkeit"
-#~ msgstr "Genauigkeit"
-
 #: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 msgid "Raum"
 msgstr "Raum"
@@ -1052,18 +1028,9 @@ msgstr "Schwerste Frage"
 msgid "Genauigkeit pro Frage"
 msgstr "Genauigkeit pro Frage"
 
-#~ msgid "Anteil erreichter Punkte je Frage"
-#~ msgstr "Anteil erreichter Punkte je Frage"
-
-#~ msgid "Score Distribution"
-#~ msgstr "Score Distribution"
-
 #: src/lib/components/analytics/analytics-room-overview-tab.svelte
 msgid "Anzahl Studenten je Punktzahl"
 msgstr "Anzahl Studenten je Punktzahl"
-
-#~ msgid "F{0}: {1}"
-#~ msgstr "F{0}: {1}"
 
 #. 0: Math.round(accuracy)
 #: src/lib/components/analytics/analytics-question-stats.svelte
@@ -1077,9 +1044,6 @@ msgstr "Freitext-Antworten können unter \"Pro Student\" geprüft werden."
 #: src/lib/components/analytics/analytics-room-overview-tab.svelte
 msgid "Punkteverteilung"
 msgstr "Punkteverteilung"
-
-#~ msgid "F{0} {1}"
-#~ msgstr "F{0} {1}"
 
 #. 0: stat.index + 1
 #: src/lib/components/analytics/analytics-room-overview-tab.svelte
@@ -1117,18 +1081,9 @@ msgstr "Durchschnittliche Genauigkeit"
 msgid "Quiz Historie"
 msgstr "Quiz Historie"
 
-#~ msgid "{0} Punkte"
-#~ msgstr "{0} Punkte"
-
-#~ msgid "Gesucht: {0}======="
-#~ msgstr "Gesucht: {0}======="
-
 #: src/routes/teacher/quizzes/[id]/+page.svelte
 msgid "Öffentlich"
 msgstr "Öffentlich"
-
-#~ msgid "Privat>>>>>>> dev"
-#~ msgstr "Privat>>>>>>> dev"
 
 #. 0: q.correct.length > 0 ? q.correct.join(', ') \\: '—'
 #: src/lib/components/analytics/analytics-question-answer-row.svelte
