@@ -1,0 +1,5 @@
+type,question,code,options,solution,language,hint,reasons,points,timelimit
+single,Was ist 2+2?,,3|4|5,4,,Überlege dir die Grundrechenarten.,,1,30
+multiple,Welche Zahlen sind Primzahlen?,,2|3|4|5,2|3|5,,Es gibt drei richtige Antworten.,,2,45
+open,Nenne die Hauptstadt von Deutschland.,,,Berlin|Bonn,,Sie liegt an der Spree.,,2,30
+programming,Finde und markiere die fehlerhaften Zeilen,"cHJpbnQoIkhhbGxvIikKcHJpbnQoIldlbHQiKQppZiBUcnVlCiAgICBwcmludCgiISIp",,3,python,Denke an die Syntax.,"3:Doppelpunkt nach if fehlt",5,180

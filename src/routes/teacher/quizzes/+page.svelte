@@ -13,10 +13,17 @@
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import SquarePenIcon from '@lucide/svelte/icons/square-pen';
 	import type { PageProps } from './$types';
+	import QuizImporter from '$lib/import/quiz-importer.svelte';
+	import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
+	import { exportQuizAsCsv } from '$lib/export/csv';
+	import { exportQuizAsXlsx } from '$lib/export/xlsx';
 	let { data }: PageProps = $props();
 
 	const quizzes = $derived(data.quizzes);
+	let quizImporter = $state<QuizImporter>();
 </script>
+
+<QuizImporter bind:this={quizImporter} />
 
 <div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
 	<div class="flex flex-row items-center justify-between">
@@ -38,8 +45,12 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content side="bottom" align="end" class="w-full">
 					<DropdownMenu.Group>
-						<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
-						<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+						<DropdownMenu.Item onSelect={() => quizImporter?.openCsv()}
+							>Importiere CSV</DropdownMenu.Item
+						>
+						<DropdownMenu.Item onSelect={() => quizImporter?.openXlsx()}
+							>Importiere XLSX</DropdownMenu.Item
+						>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
@@ -88,8 +99,12 @@
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content side="bottom" align="end" class="w-full">
 								<DropdownMenu.Group>
-									<DropdownMenu.Item>Importiere CSV</DropdownMenu.Item>
-									<DropdownMenu.Item>Importiere XLSX</DropdownMenu.Item>
+									<DropdownMenu.Item onSelect={() => quizImporter?.openCsv()}
+										>Importiere CSV</DropdownMenu.Item
+									>
+									<DropdownMenu.Item onSelect={() => quizImporter?.openXlsx()}
+										>Importiere XLSX</DropdownMenu.Item
+									>
 								</DropdownMenu.Group>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
@@ -152,6 +167,25 @@
 								</Tooltip.Root>
 
 								<LaunchDialog {quiz} label="Starten" />
+								<DropdownMenu.Root>
+									<DropdownMenu.Trigger>
+										<Button size="icon" variant="ghost">
+											<EllipsisIcon />
+										</Button>
+									</DropdownMenu.Trigger>
+
+									<DropdownMenu.Content side="bottom" align="end">
+										<DropdownMenu.Group>
+											<DropdownMenu.Item onclick={() => exportQuizAsCsv(quiz)}>
+												Exportiere als CSV
+											</DropdownMenu.Item>
+
+											<DropdownMenu.Item onclick={() => exportQuizAsXlsx(quiz)}>
+												Exportiere als XLSX
+											</DropdownMenu.Item>
+										</DropdownMenu.Group>
+									</DropdownMenu.Content>
+								</DropdownMenu.Root>
 							</td>
 						</tr>
 					{/each}
