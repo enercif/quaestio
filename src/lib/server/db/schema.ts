@@ -42,8 +42,8 @@ export const quizTable = pgTable('quiz', {
 export const roomTable = pgTable(
 	'room',
 	{
-		pk: uuid('pk').defaultRandom().primaryKey(),
-		id: text('id').notNull(),
+		id: uuid('id').defaultRandom().primaryKey(),
+		code: text('code').notNull(),
 		limit: integer('limit'),
 		quiz: uuid('quiz_id')
 			.references(() => quizTable.id)
@@ -63,18 +63,19 @@ export const roomTable = pgTable(
 		deleted_at: timestamp('deleted_at', { mode: 'string', withTimezone: true })
 	},
 	(table) => [
-		uniqueIndex('room_id_active_unique')
-			.on(table.id)
+		uniqueIndex('room_code_active_unique')
+			.on(table.code)
 			.where(sql`${table.deleted_at} is null`)
 	]
 );
 
-// Bewusst kein FK auf roomTable: Antworten überleben das Löschen des Raums.
 export const answerTable = pgTable(
 	'answer',
 	{
 		id: uuid('id').defaultRandom().primaryKey(),
-		room_id: text('room_id').notNull(),
+		room_id: uuid('room_id')
+			.references(() => roomTable.id)
+			.notNull(),
 		quiz_id: uuid('quiz_id')
 			.references(() => quizTable.id)
 			.notNull(),
@@ -82,6 +83,7 @@ export const answerTable = pgTable(
 		student_id: text('student_id').notNull(),
 		student_name: text('student_name').notNull(),
 		selected: text('selected').array().notNull(),
+		points_override: integer('points_override'),
 		answered_at: timestamp('answered_at', { mode: 'string', withTimezone: true })
 			.defaultNow()
 			.notNull()
@@ -91,6 +93,10 @@ export const answerTable = pgTable(
 
 export const roomRelations = relations(roomTable, ({ one }) => ({
 	quiz: one(quizTable, { fields: [roomTable.quiz], references: [quizTable.id] })
+}));
+
+export const answerRelations = relations(answerTable, ({ one }) => ({
+	room: one(roomTable, { fields: [answerTable.room_id], references: [roomTable.id] })
 }));
 
 export * from './auth.schema';

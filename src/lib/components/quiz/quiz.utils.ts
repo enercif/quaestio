@@ -1,4 +1,10 @@
-import type { QuestionType, SequenceType } from '$lib/schemas/question.schema';
+import type {
+	MultipleChoiceQuestion,
+	ProgrammingQuestion,
+	Question,
+	QuestionType,
+	SequenceType
+} from '$lib/schemas/question.schema';
 import type { Room } from '$lib/schemas/room.schema';
 import { createSubscriber } from 'svelte/reactivity';
 
@@ -38,13 +44,11 @@ const subscribeNow = createSubscriber((update) => {
 	return () => clearInterval(interval);
 });
 
-/** Reaktive aktuelle Zeit — tickt nur, solange sie in einem Effect/Template gelesen wird. */
-export function liveNow() {
+function liveNow() {
 	subscribeNow();
 	return now;
 }
 
-/** Restzeit der aktuellen Frage in ms; eingefroren bei Pause, null ohne Timer. */
 export function remainingMs(room: Room): number | null {
 	// paused_remaining -1 = pausiert ohne Timelimit
 	if (room.paused_remaining != null)
@@ -83,6 +87,22 @@ export function evaluateAnswer(
 	if (hits === correct.length && selected.length === correct.length) return 'correct';
 	if (hits === 0) return 'wrong';
 	return 'partial';
+}
+
+export function questionMaxPoints(question: Question): number {
+	if (hasPartialScoring(question)) {
+		return Object.values(question.partial_points).reduce((sum, p) => sum + p, 0);
+	}
+	return question.points;
+}
+
+export function hasPartialScoring(
+	question: Question
+): question is (MultipleChoiceQuestion | ProgrammingQuestion) & { scoring: 'partial' } {
+	return (
+		(question.type === 'multiple' || question.type === 'programming') &&
+		question.scoring === 'partial'
+	);
 }
 
 export function typeToBadge(type: QuestionType) {

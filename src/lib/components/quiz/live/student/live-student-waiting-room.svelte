@@ -20,7 +20,7 @@
 			<div class="flex flex-col items-center gap-4 pt-4 pb-10 text-center">
 				<HoneycombGrid presence={live.studentPresence} selfId={live.id} />
 				<div class="my-2 rounded-xl bg-muted px-3 py-1 text-base text-muted-foreground">
-					<p>{live.roomId}</p>
+					<p>{live.code}</p>
 				</div>
 				<h1 class="text-2xl font-bold">Du bist dabei, {live.name}!</h1>
 				<p class="text-muted-foreground">Warte, bis deine Lehrkraft das Quiz startet.</p>

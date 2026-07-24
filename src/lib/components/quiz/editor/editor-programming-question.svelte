@@ -39,11 +39,13 @@
 		if (selectedQuestion.correct.includes(lineNumber)) {
 			selectedQuestion.correct = selectedQuestion.correct.filter((line) => line !== lineNumber);
 			delete selectedQuestion.reasons[lineNumber];
+			delete selectedQuestion.partial_points[lineNumber];
 			lineSpan.classList.remove('wrong-line');
 		} else {
 			selectedQuestion.correct.push(lineNumber);
 			selectedQuestion.correct.sort((a, b) => parseInt(a) - parseInt(b));
 			selectedQuestion.reasons[lineNumber] = '';
+			selectedQuestion.partial_points[lineNumber] = 1;
 			lineSpan.classList.add('wrong-line');
 		}
 	}

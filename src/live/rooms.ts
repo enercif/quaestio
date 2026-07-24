@@ -8,7 +8,7 @@ import {
 	type RoomInsert
 } from '$lib/schemas/room.schema';
 import { db } from '$lib/server/db';
-import { answerTable, roomTable } from '$lib/server/db/schema';
+import { answerTable, quizTable, roomTable } from '$lib/server/db/schema';
 import { addStudent, hasStudent, removeStudent, studentCount } from '$lib/server/occupancy';
 import { TOPICS } from '$lib/server/topics';
 import type { PresenceUser } from '$lib/types/presence.type';
@@ -43,7 +43,7 @@ export async function getRooms(): Promise<Room[]> {
 	return roomSelectSchema.array().parse(rooms);
 }
 
-export async function getRoomById(roomId: string): Promise<Room | undefined> {
+export async function getRoomByCode(code: string): Promise<Room | undefined> {
 	const room = await db.query.roomTable.findFirst({
 		with: {
 			quiz: {
@@ -54,7 +54,7 @@ export async function getRoomById(roomId: string): Promise<Room | undefined> {
 				}
 			}
 		},
-		where: (room, { eq, and, isNull }) => and(eq(room.id, roomId), isNull(room.deleted_at))
+		where: (room, { eq, and, isNull }) => and(eq(room.code, code), isNull(room.deleted_at))
 	});
 	return room ? roomSelectSchema.parse(room) : undefined;
 }
@@ -72,15 +72,21 @@ export const insertRoom = live.validated(
 	async (ctx: LiveContext<User>, roomInsert: RoomInsert) => {
 		requireTeacher(ctx);
 		try {
-			const [{ id }] = await db
+			const [{ code }] = await db
 				.insert(roomTable)
 				.values({ ...roomInsert, teacherId: ctx.user!.id })
-				.returning({ id: roomTable.id });
+				.returning({ code: roomTable.code });
 
-			const room = await getRoomById(id);
+			const room = await getRoomByCode(code);
 			if (!room) {
 				throw new LiveError('NOT_FOUND', 'Room not found');
 			}
+
+			await db
+				.update(quizTable)
+				.set({ last_run: room.created_at })
+				.where(eq(quizTable.id, room.quiz.id))
+				.returning();
 
 			ctx.publish(TOPICS.rooms, 'created', room);
 			return true;
@@ -91,9 +97,10 @@ export const insertRoom = live.validated(
 	}
 );
 
-export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) => {
+export const deleteRoom = live(async (ctx: LiveContext<User>, code: string) => {
+	if (!ctx.user) throw new LiveError('UNAUTHORIZED', 'User not authenticated');
 	try {
-		const room = await getRoomById(roomId);
+		const room = await getRoomByCode(code);
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
@@ -103,9 +110,9 @@ export const deleteRoom = live(async (ctx: LiveContext<User>, roomId: string) =>
 		await db
 			.update(roomTable)
 			.set({ deleted_at: new Date().toISOString() })
-			.where(eq(roomTable.id, roomId));
-		ctx.publish(TOPICS.rooms, 'deleted', { id: roomId });
-		ctx.publish(TOPICS.room(roomId), 'set', room);
+			.where(eq(roomTable.id, room.id));
+		ctx.publish(TOPICS.rooms, 'deleted', { id: room.id });
+		ctx.publish(TOPICS.room(code), 'set', room);
 
 		return true;
 	} catch (error) {
@@ -133,13 +140,15 @@ async function updateRoom(
 ) {
 	Object.assign(room, changes);
 	await db.update(roomTable).set(changes).where(eq(roomTable.id, room.id));
-	ctx.publish(TOPICS.room(room.id), 'set', room);
+	ctx.publish(TOPICS.room(room.code), 'set', room);
 	ctx.publish(TOPICS.rooms, 'updated', room);
 }
 
-export const nextQuestion = live(async (ctx: LiveContext<User>, roomId: string) => {
+export const nextQuestion = live(async (ctx: LiveContext<User>, code: string) => {
+	requireTeacher(ctx);
+
 	try {
-		const room = await getRoomById(roomId);
+		const room = await getRoomByCode(code);
 		if (!room) {
 			throw new LiveError('NOT_FOUND', 'Room not found');
 		}
@@ -185,8 +194,8 @@ export const nextQuestion = live(async (ctx: LiveContext<User>, roomId: string) 
 	}
 });
 
-export const pauseTimer = live(async (ctx: LiveContext<User>, roomId: string) => {
-	const room = await getRoomById(roomId);
+export const pauseTimer = live(async (ctx: LiveContext<User>, code: string) => {
+	const room = await getRoomByCode(code);
 	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
 	requireRoomOwner(ctx, room);
 	if (room.state !== RoomState.Question) throw new LiveError('NOT_FOUND', 'No running question');
@@ -199,8 +208,8 @@ export const pauseTimer = live(async (ctx: LiveContext<User>, roomId: string) =>
 	});
 });
 
-export const resumeTimer = live(async (ctx: LiveContext<User>, roomId: string) => {
-	const room = await getRoomById(roomId);
+export const resumeTimer = live(async (ctx: LiveContext<User>, code: string) => {
+	const room = await getRoomByCode(code);
 	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
 	requireRoomOwner(ctx, room);
 	if (room.paused_remaining == null) throw new LiveError('NOT_FOUND', 'Timer is not paused');
@@ -211,8 +220,8 @@ export const resumeTimer = live(async (ctx: LiveContext<User>, roomId: string) =
 	});
 });
 
-export const showResults = live(async (ctx: LiveContext<User>, roomId: string) => {
-	const room = await getRoomById(roomId);
+export const showResults = live(async (ctx: LiveContext<User>, code: string) => {
+	const room = await getRoomByCode(code);
 	if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
 	requireRoomOwner(ctx, room);
 	if (!room.current_question) throw new LiveError('NOT_FOUND', 'No active question');
@@ -272,13 +281,13 @@ export const showResults = live(async (ctx: LiveContext<User>, roomId: string) =
 });
 
 export const submitAnswer = live(
-	async (ctx: LiveContext<User>, roomId: string, selected: string[]) => {
+	async (ctx: LiveContext<User>, code: string, selected: string[]) => {
 		if (ctx.user?.type !== 'student') throw new LiveError('UNAUTHORIZED', 'Student only');
 
 		const parsed = answerSubmitSchema.safeParse(selected);
 		if (!parsed.success) throw new LiveError('VALIDATION', 'Invalid answer selection');
 
-		const room = await getRoomById(roomId);
+		const room = await getRoomByCode(code);
 		if (!room?.current_question) throw new LiveError('NOT_FOUND', 'No active question');
 		if (room.state !== RoomState.Question) throw new LiveError('CLOSED', 'Question is closed');
 		if (room.paused_remaining != null) throw new LiveError('PAUSED', 'Quiz is paused');
@@ -290,7 +299,7 @@ export const submitAnswer = live(
 		const [answer] = await db
 			.insert(answerTable)
 			.values({
-				room_id: roomId,
+				room_id: room.id,
 				quiz_id: room.quiz.id,
 				question_id: room.current_question.id,
 				student_id: ctx.user.id,
@@ -301,21 +310,23 @@ export const submitAnswer = live(
 				target: [answerTable.room_id, answerTable.question_id, answerTable.student_id],
 				set: {
 					selected: parsed.data,
-					student_name: ctx.user.name,
-					answered_at: new Date().toISOString()
+					student_name: ctx.user.name
 				}
 			})
 			.returning();
 
-		ctx.publish(TOPICS.roomAnswers(roomId), 'created', answerSelectSchema.parse(answer));
+		ctx.publish(TOPICS.roomAnswers(code), 'created', answerSelectSchema.parse(answer));
 	}
 );
 
 export const roomAnswers = live.stream(
-	(_ctx, roomId: string) => TOPICS.roomAnswers(roomId),
-	async (_ctx, roomId: string) => {
+	(_ctx, code: string) => TOPICS.roomAnswers(code),
+	async (_ctx, code: string) => {
+		const room = await getRoomByCode(code);
+		if (!room) throw new LiveError('NOT_FOUND', 'Room not found');
+
 		const answers = await db.query.answerTable.findMany({
-			where: (answer, { eq }) => eq(answer.room_id, roomId)
+			where: (answer, { eq }) => eq(answer.room_id, room.id)
 		});
 		return answerSelectSchema.array().parse(answers);
 	},
@@ -327,27 +338,27 @@ export const roomAnswers = live.stream(
 );
 
 export const room = live.room({
-	topic: (_, roomId: string) => TOPICS.room(roomId),
+	topic: (_, code: string) => TOPICS.room(code),
 	merge: 'set',
-	guard: async (ctx: LiveContext<User>, roomId: string) => {
+	guard: async (ctx: LiveContext<User>, code: string) => {
 		if (ctx.user?.type !== 'student') return;
 
-		const topic = TOPICS.room(roomId);
+		const topic = TOPICS.room(code);
 		if (hasStudent(topic, ctx.user.id)) return;
 
-		const room = await getRoomById(roomId);
+		const room = await getRoomByCode(code);
 		if (room?.limit && studentCount(topic) >= room.limit) {
 			throw new LiveError('ROOM_FULL', 'Room has reached its student limit');
 		}
 	},
-	onJoin: (ctx: LiveContext<User>, roomId: string) => {
-		if (ctx.user?.type === 'student') addStudent(TOPICS.room(roomId), ctx.user.id);
+	onJoin: (ctx: LiveContext<User>, code: string) => {
+		if (ctx.user?.type === 'student') addStudent(TOPICS.room(code), ctx.user.id);
 	},
 	onLeave: (ctx: LiveContext<User>, topic: string) => {
 		if (ctx.user?.type === 'student') removeStudent(topic, ctx.user.id);
 	},
-	init: async (_, roomId: string) => {
-		const room = await getRoomById(roomId);
+	init: async (_, code: string) => {
+		const room = await getRoomByCode(code);
 		return room ?? { state: 'ended' };
 	},
 	presence: (ctx: LiveContext<User>): PresenceUser => ({

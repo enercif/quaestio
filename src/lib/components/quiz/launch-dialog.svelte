@@ -39,7 +39,7 @@
 		}
 
 		const roomInsert: RoomInsert = {
-			id: roomId,
+			code: roomId,
 			limit: isLimited ? parseInt(limit) : undefined,
 			quiz: quiz.id,
 			state: 'waiting'

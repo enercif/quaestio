@@ -2,13 +2,17 @@ import z from 'zod';
 import {
 	allOrNothingReasons,
 	choiceQuestionBaseSchema,
-	liveChoiceQuestionAnswerSchema
+	liveChoiceQuestionAnswerSchema,
+	partialPointsSchema,
+	scoringModeEnum
 } from './shared.question.schema';
 
 const type = 'multiple';
 const multipleChoiceQuestionBaseSchema = choiceQuestionBaseSchema.extend({
 	type: z.literal(type),
-	reasons: z.record(z.string(), z.string())
+	reasons: z.record(z.string(), z.string()),
+	scoring: scoringModeEnum.default('binary'),
+	partial_points: partialPointsSchema.default({})
 });
 
 export const multipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
@@ -22,10 +26,21 @@ export const multipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
 				question.answers.some((answer) => answer.id === key)
 			),
 		{ message: 'Jede korrekte Antwort muss eine gültige Antwort-ID sein.', path: ['correct'] }
+	)
+	.refine(
+		(question) =>
+			question.scoring !== 'partial' ||
+			Object.keys(question.correct).every(
+				(key) => typeof question.partial_points[key] === 'number'
+			),
+		{
+			message: 'Jede korrekte Antwort benötigt eine Punktzahl.',
+			path: ['partial_points']
+		}
 	);
 
 export const liveMultipleChoiceQuestionSchema = multipleChoiceQuestionBaseSchema
-	.omit({ correct: true, reasons: true })
+	.omit({ correct: true, reasons: true, scoring: true, partial_points: true })
 	.extend({ answers: z.array(liveChoiceQuestionAnswerSchema) });
 
 export type MultipleChoiceQuestionType = typeof type;

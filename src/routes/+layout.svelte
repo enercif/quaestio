@@ -80,6 +80,7 @@
 						</Button>
 						<Button
 							data-active={page.route.id?.includes('/teacher/analytics')}
+							href={resolve('/teacher/analytics')}
 							class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
 							variant="ghost">Analyse</Button
 						>
