@@ -11,7 +11,7 @@
 		ProgrammingQuestion,
 		SingleChoiceQuestion
 	} from '$lib/schemas/question.schema';
-	import { questionMaxPoints, typeToBadge } from '../quiz.utils';
+	import { indexToSequence, questionMaxPoints, typeToBadge } from '../quiz.utils';
 	import { getTimeAsString, sequenceTypeToString } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
@@ -112,10 +112,17 @@
 						{:else}
 							<div class="flex flex-col gap-2">
 								{#each entries as [key, label] (key)}
+									{@const displayLabel =
+										scoredQuestion.type === 'multiple'
+											? indexToSequence(
+													scoredQuestion.answers.findIndex((a) => a.id === key),
+													scoredQuestion.sequence_type
+												)
+											: label}
 									<div class="flex flex-row items-center gap-2">
-										<Toggle disabled class="size-9 disabled:opacity-100" variant="outline"
-											>{label}</Toggle
-										>
+										<Toggle disabled class="size-9 disabled:opacity-100" variant="outline">
+											{displayLabel}
+										</Toggle>
 										<Input
 											type="number"
 											min={0}
