@@ -2,8 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import PracticeControlsPanel from '$lib/components/quiz/practice/practice-controls-panel.svelte';
-	import PracticeQuestion from '$lib/components/quiz/practice/practice-question.svelte';
 	import { PracticeState } from '$lib/components/quiz/practice/practice.state.svelte';
+	import QuestionView from '$lib/components/quiz/question-view.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import type { PageProps } from './$types';
@@ -38,7 +38,12 @@
 			<Button onclick={onLeaveClick}>Zurück zu den Übungsräumen</Button>
 		</div>
 	{:else}
-		<PracticeQuestion {practice} />
+		<QuestionView
+			room={practice.roomView}
+			selected={practice.selected}
+			onSubmit={practice.submit}
+			showResources
+		/>
 		<PracticeControlsPanel {practice} />
 	{/if}
 </div>

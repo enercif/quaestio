@@ -1,3 +1,4 @@
+import { getRequestEvent } from '$app/server';
 import type { OrgRole } from '$lib/types/org-role.type';
 import { and, eq } from 'drizzle-orm';
 import { db } from './db';
@@ -42,4 +43,14 @@ export async function getMemberRoleById(memberId: string): Promise<OrgRole | und
 
 export function isOrgAdmin(role: OrgRole | undefined) {
 	return role === 'owner' || role === 'admin';
+}
+
+export async function requireOrgAdmin() {
+	const event = getRequestEvent();
+	const userId = event.locals.user?.id;
+	const role = userId ? await getMemberRole(userId) : undefined;
+	if (!isOrgAdmin(role)) {
+		throw new Error('Forbidden');
+	}
+	return { event, role: role! };
 }

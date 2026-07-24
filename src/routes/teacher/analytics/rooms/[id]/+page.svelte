@@ -10,7 +10,6 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { getRoomAnalysis } from '$lib/remote/analytics.remote';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
-	import DownloadIcon from '@lucide/svelte/icons/download';
 	import type { PageProps } from './$types';
 
 	let { params }: PageProps = $props();
@@ -61,13 +60,6 @@
 		<h1 class="text-center leading-none font-semibold">
 			{analysis?.quiz.title ?? 'Raum'}
 		</h1>
-
-		<div class="ml-auto flex flex-row items-center gap-3">
-			<Button variant="outline" disabled>
-				<DownloadIcon />
-				Export CSV
-			</Button>
-		</div>
 	</div>
 </div>
 

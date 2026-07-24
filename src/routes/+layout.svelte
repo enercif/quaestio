@@ -43,8 +43,6 @@
 		localePersistedState.current = locale;
 		await loadLocale(locale);
 	}
-
-	console.log('layout data', page.route.id);
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

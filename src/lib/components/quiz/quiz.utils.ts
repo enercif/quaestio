@@ -157,6 +157,13 @@ export function revealAnswer(question: Question): {
 	}
 }
 
+export function canEditQuiz(
+	userId: string | undefined,
+	quiz: { teacherId: string } | undefined | null
+): boolean {
+	return !!userId && quiz?.teacherId === userId;
+}
+
 export function typeToDescription(type: QuestionType) {
 	switch (type) {
 		case 'multiple':

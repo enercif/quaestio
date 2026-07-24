@@ -1,6 +1,5 @@
 <script lang="ts">
 	import LiveQuestionHeader from '$lib/components/quiz/live/live-question-header.svelte';
-	import type { PracticeState } from '$lib/components/quiz/practice/practice.state.svelte';
 	import {
 		evaluateAnswer,
 		indexToSequence,
@@ -14,6 +13,7 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { highlightCode } from '$lib/shiki';
+	import type { QuestionRoomView } from '$lib/types/practice-room.type';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import ClockIcon from '@lucide/svelte/icons/clock';
 	import LinkIcon from '@lucide/svelte/icons/link';
@@ -24,17 +24,25 @@
 	import { watch } from 'runed';
 	import { fade, slide } from 'svelte/transition';
 
-	let { practice }: { practice: PracticeState } = $props();
+	let {
+		room,
+		selected,
+		onSubmit,
+		showResources = false
+	}: {
+		room: QuestionRoomView;
+		selected: string[];
+		onSubmit: (selected: string[]) => void;
+		showResources?: boolean;
+	} = $props();
 
-	const previewState = $derived(practice.preview_state);
-	const currentQuestion = $derived(practice.currentQuestion);
-	const revealed = $derived(practice.roomState === 'answer');
-	const correct = $derived(practice.current_answers);
-	const reasons = $derived(practice.current_reasons);
-	const paused = $derived(practice.paused_remaining != null);
-	const timeUp = $derived(remainingMs(practice.roomView) === 0);
+	const currentQuestion = $derived(room.current_question!);
+	const revealed = $derived(room.state === 'answer');
+	const correct = $derived(room.current_answers ?? []);
+	const reasons = $derived(room.current_reasons ?? []);
+	const paused = $derived(room.paused_remaining != null);
+	const timeUp = $derived(remainingMs(room) === 0);
 	const locked = $derived(revealed || paused || timeUp);
-	const selected = $derived(practice.selected);
 	const result = $derived(
 		revealed ? evaluateAnswer(currentQuestion.type, correct, selected) : null
 	);
@@ -67,15 +75,15 @@
 	watch(
 		() => currentQuestion.id,
 		() => {
-			openText = '';
+			openText = selected[0] ?? '';
 		}
 	);
 
 	function choose(text: string) {
 		if (currentQuestion.type === 'single') {
-			practice.submit([text]);
+			onSubmit([text]);
 		} else {
-			practice.submit(
+			onSubmit(
 				selected.includes(text) ? selected.filter((select) => select !== text) : [...selected, text]
 			);
 		}
@@ -93,7 +101,7 @@
 		const line = (event.target as HTMLElement).closest<HTMLElement>('.line');
 		const lineNumber = line?.dataset.line;
 		if (!lineNumber) return;
-		practice.submit(
+		onSubmit(
 			selected.includes(lineNumber)
 				? selected.filter((id) => id !== lineNumber)
 				: [...selected, lineNumber]
@@ -110,7 +118,7 @@
 </script>
 
 <div class="px-10 mt-5 flex flex-col size-full max-w-6xl justify-start pb-24">
-	<LiveQuestionHeader room={practice.roomView} />
+	<LiveQuestionHeader {room} />
 
 	<div class="flex flex-row items-center gap-4">
 		<Tooltip.Root>
@@ -136,7 +144,7 @@
 
 	<h1 class="text-3xl font-semibold mt-2">{currentQuestion.question}</h1>
 
-	{#if previewState === 'practice' && currentQuestion.resources.length > 0}
+	{#if showResources && currentQuestion.resources.length > 0}
 		<div class="flex flex-row flex-wrap gap-2 mt-4">
 			{#each currentQuestion.resources as resource (resource.id)}
 				<!-- eslint-disable svelte/no-navigation-without-resolve -->
@@ -172,7 +180,7 @@
 				class="flex flex-col items-end gap-3 w-full mt-5"
 				onsubmit={(event) => {
 					event.preventDefault();
-					if (openText.trim()) practice.submit([openText.trim()]);
+					if (openText.trim()) onSubmit([openText.trim()]);
 				}}
 			>
 				<Textarea

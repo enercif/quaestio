@@ -1,19 +1,9 @@
-import { command, getRequestEvent, query } from '$app/server';
+import { command, query } from '$app/server';
 import { db } from '$lib/server/db';
 import { smtpSettingsTable } from '$lib/server/db/schema';
 import { getSmtpConfig, sendMail, type SmtpConfig } from '$lib/server/mail';
-import { getMemberRole, isOrgAdmin } from '$lib/server/org';
+import { requireOrgAdmin } from '$lib/server/org';
 import z from 'zod';
-
-async function requireOrgAdmin() {
-	const event = getRequestEvent();
-	const userId = event.locals.user?.id;
-	const role = userId ? await getMemberRole(userId) : undefined;
-	if (!isOrgAdmin(role)) {
-		throw new Error('Forbidden');
-	}
-	return event;
-}
 
 const smtpConfigSchema = z.object({
 	host: z.string().min(1),
@@ -48,7 +38,7 @@ export const saveSmtpSettings = command(smtpConfigSchema, async (input) => {
 });
 
 export const testSmtpSettings = command(smtpConfigSchema, async (input) => {
-	const event = await requireOrgAdmin();
+	const { event } = await requireOrgAdmin();
 	const to = event.locals.user!.email;
 
 	const [existing] = await db.select().from(smtpSettingsTable).limit(1);
