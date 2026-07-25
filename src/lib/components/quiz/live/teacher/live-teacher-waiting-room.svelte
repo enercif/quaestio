@@ -5,7 +5,6 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Progress } from '$lib/components/ui/progress/index.js';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { nextQuestion } from '$live/rooms';
 	import Play from '@lucide/svelte/icons/play';
 	import QR from '@svelte-put/qr/svg/QR.svelte';
 	import { LiveTeacherState } from './live-teacher.state.svelte';
@@ -57,7 +56,7 @@
 						<p class="font-semibold">{live.studentPresence.length} beigetreten</p>
 					{/if}
 					{#if live.isRoomOwner}
-						<Button onclick={() => nextQuestion(live.roomId)}>
+						<Button onclick={live.next}>
 							<Play />
 							Quiz starten
 						</Button>

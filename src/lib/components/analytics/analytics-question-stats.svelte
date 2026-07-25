@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { correctAnswersFor, questionAccuracy } from '$lib/components/analytics/analytics.utils';
+	import CodeLines from '$lib/components/quiz/code-lines.svelte';
 	import { typeToBadge } from '$lib/components/quiz/quiz.utils';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import type { Question } from '$lib/schemas/question.schema';
-	import { highlightCode } from '$lib/shiki';
-	import { watch } from 'runed';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { slide } from 'svelte/transition';
 
@@ -45,23 +44,6 @@
 	});
 	const sortedLines = $derived([...lineCounts].sort(([a], [b]) => Number(a) - Number(b)));
 
-	let codeContainer: HTMLDivElement | undefined = $state();
-	const programmingHtml = $derived.by(async () => {
-		if (question.type !== 'programming') return '';
-		return highlightCode(question.code, question.language);
-	});
-
-	watch([() => lineCounts, () => correct, () => isOpen], ([counts, correctLines]) => {
-		if (!codeContainer) return;
-		for (const line of codeContainer.querySelectorAll<HTMLElement>('.line')) {
-			const lineNumber = line.dataset.line;
-			if (!lineNumber) continue;
-			const voteCount = counts.get(lineNumber) ?? 0;
-			line.dataset.votes = voteCount ? `${voteCount}×` : '';
-			line.classList.toggle('correct-line', correctLines.includes(lineNumber));
-		}
-	});
-
 	let isOpen = $state(false);
 </script>
 
@@ -90,13 +72,12 @@
 					</p>
 				{:else if question.type === 'programming'}
 					<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-						<div
-							bind:this={codeContainer}
-							class="programming-code-preview overflow-x-auto rounded-md border text-sm [&_code]:py-3"
-						>
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							{@html await programmingHtml}
-						</div>
+						<CodeLines
+							code={question.code}
+							language={question.language}
+							votes={lineCounts}
+							lineState={(line) => (correct.includes(line) ? 'correct' : undefined)}
+						/>
 						<div class="flex flex-col gap-2">
 							{#each sortedLines as [line, count] (line)}
 								<div
@@ -143,12 +124,3 @@
 		</div>
 	{/if}
 </Card.Root>
-
-<style>
-	.programming-code-preview :global(.line::after) {
-		content: attr(data-votes);
-		color: var(--muted-foreground);
-		padding-inline: 0.75rem;
-		font-size: 0.75rem;
-	}
-</style>

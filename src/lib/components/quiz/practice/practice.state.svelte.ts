@@ -1,8 +1,9 @@
-import { revealAnswer } from '$lib/components/quiz/quiz.utils';
+import { remainingMs, revealAnswer } from '$lib/components/quiz/quiz.utils';
 import type { Question } from '$lib/schemas/question.schema';
 import type { PracticeRoomState, QuestionRoomView } from '$lib/types/practice-room.type';
+import type { QuizFlow } from '$lib/types/quiz-flow.type';
 
-export class PracticeState {
+export class PracticeState implements QuizFlow {
 	questions: Question[] = $state([]);
 	index = $state(0);
 	roomState: PracticeRoomState = $state('question');
@@ -24,6 +25,10 @@ export class PracticeState {
 	get isLast() {
 		return this.index + 1 >= this.questions.length;
 	}
+
+	revealed = $derived(this.roomState === 'answer');
+	paused = $derived(this.paused_remaining != null);
+	timeUp = $derived(remainingMs(this.roomView) === 0);
 
 	get roomView(): QuestionRoomView {
 		return {

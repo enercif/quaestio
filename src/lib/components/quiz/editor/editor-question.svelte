@@ -10,6 +10,7 @@
 	import XIcon from '@lucide/svelte/icons/x';
 	import { fade } from 'svelte/transition';
 	import EditorChoiceQuestion from './editor-choice-question.svelte';
+	import FieldErrors from './editor-field-errors.svelte';
 	import EditorOpenQuestion from './editor-open-question.svelte';
 	import EditorProgrammingQuestion from './editor-programming-question.svelte';
 	import { EditorState } from './editor.state.svelte';
@@ -66,9 +67,7 @@
 											bind:value={resource.label}
 											aria-invalid={!!labelError}
 										/>
-										{#each labelError as error, i (i)}
-											<Field.Error>{error}</Field.Error>
-										{/each}
+										<FieldErrors errors={labelError} />
 									</Field.Field>
 									<Field.Field aria-invalid={!!hrefError}>
 										<Input
@@ -77,9 +76,7 @@
 											bind:value={resource.href}
 											aria-invalid={!!hrefError}
 										/>
-										{#each hrefError as error, i (i)}
-											<Field.Error>{error}</Field.Error>
-										{/each}
+										<FieldErrors errors={hrefError} />
 									</Field.Field>
 								</div>
 

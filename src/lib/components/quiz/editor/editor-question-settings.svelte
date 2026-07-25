@@ -12,6 +12,7 @@
 		SingleChoiceQuestion
 	} from '$lib/schemas/question.schema';
 	import { indexToSequence, questionMaxPoints, typeToBadge } from '../quiz.utils';
+	import FieldErrors from './editor-field-errors.svelte';
 	import { getTimeAsString, sequenceTypeToString } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
@@ -100,9 +101,7 @@
 								bind:value={scoredQuestion.points}
 								aria-invalid={!!pointErrors}
 							/>
-							{#each pointErrors as error, i (i)}
-								<Field.Error>{error}</Field.Error>
-							{/each}
+							<FieldErrors errors={pointErrors} />
 						{:else if entries.length === 0}
 							<p class="text-sm text-muted-foreground">
 								Markiere zuerst die richtigen {scoredQuestion.type === 'multiple'
@@ -132,9 +131,7 @@
 									</div>
 								{/each}
 							</div>
-							{#each partialPointsErrors as error, i (i)}
-								<Field.Error>{error}</Field.Error>
-							{/each}
+							<FieldErrors errors={partialPointsErrors} />
 							<p class="text-sm text-muted-foreground">
 								Gesamt: {questionMaxPoints(scoredQuestion)} Punkte
 							</p>
@@ -152,9 +149,7 @@
 							bind:value={selectedQuestion.points}
 							aria-invalid={!!pointErrors}
 						/>
-						{#each pointErrors as error, i (i)}
-							<Field.Error>{error}</Field.Error>
-						{/each}
+						<FieldErrors errors={pointErrors} />
 					</Field.Field>
 				{/if}
 			</div>
