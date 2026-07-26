@@ -4,9 +4,9 @@
 	import { submitAnswer } from '$live/rooms';
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
-	import { LiveStudentState, studentAnswersPersistedState } from './live-student.state.svelte';
+	import { liveStudentContext, studentAnswersPersistedState } from './live-student.state.svelte';
 
-	const live = LiveStudentState.get();
+	const live = liveStudentContext.get();
 
 	const roomData = $derived(live.roomData!);
 	const currentQuestion = $derived(roomData.current_question!);
