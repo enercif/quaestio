@@ -1,4 +1,5 @@
 import { command, getRequestEvent, query } from '$app/server';
+import { canEditQuiz } from '$lib/components/quiz/quiz.utils';
 import { quizInsertSchema, quizSelectSchema, quizUpdateSchema } from '$lib/schemas/quiz.schema';
 import { db } from '$lib/server/db';
 import { quizTable } from '$lib/server/db/schema';
@@ -90,10 +91,7 @@ export const updateQuiz = command(quizUpdateSchema, async (quiz) => {
 			where: (q, { eq }) => eq(q.id, quiz.id)
 		});
 
-		const isOwner = quizToUpdate?.teacherId === locals.user.id;
-		const isPublicQuiz = quizToUpdate?.visibility === 'public';
-
-		if (!quizToUpdate || (!isOwner && !isPublicQuiz)) {
+		if (!canEditQuiz(locals.user.id, quizToUpdate)) {
 			return { success: false, quiz: undefined };
 		}
 
@@ -126,9 +124,7 @@ export const deleteQuizById = command(z.uuid(), async (quizId: string) => {
 			where: (q, { eq }) => eq(q.id, quizId)
 		});
 
-		const isOwner = quizToDelete?.teacherId === locals.user.id;
-		const isPublicQuiz = quizToDelete?.visibility === 'public';
-		if (!quizToDelete || (!isOwner && !isPublicQuiz)) {
+		if (!canEditQuiz(locals.user.id, quizToDelete)) {
 			return { success: false };
 		}
 

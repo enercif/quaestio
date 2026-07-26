@@ -1,39 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
-import { playwright } from '@vitest/browser-playwright';
 import uws from 'svelte-adapter-uws/vite';
 import realtime from 'svelte-realtime/vite';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 import { wuchale } from 'wuchale/vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), wuchale(), sveltekit(), uws(), realtime()],
-	test: {
-		expect: { requireAssertions: true },
-		projects: [
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'client',
-					browser: {
-						enabled: true,
-						provider: playwright(),
-						instances: [{ browser: 'chromium', headless: true }]
-					},
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
-				}
-			},
-
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
-				}
-			}
-		]
-	}
+	plugins: [tailwindcss(), wuchale(), sveltekit(), uws(), realtime()]
 });

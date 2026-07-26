@@ -24,7 +24,7 @@
 					<tr class="border-b transition-colors duration-200 hover:bg-secondary">
 						<td class="py-2 pl-4">
 							<a class="hover:underline" href={resolve(`/teacher/analytics/rooms/${room.id}`)}>
-								{room.quizTitle}
+								{room.title}
 							</a>
 						</td>
 						<td class="py-2 font-mono text-sm">{room.code}</td>

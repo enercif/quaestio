@@ -5,6 +5,7 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import type { OpenTextQuestion } from '$lib/schemas/question.schema';
+	import FieldErrors from './editor-field-errors.svelte';
 	import { UUIDToPromptPlaceholder } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
@@ -44,9 +45,7 @@
 		placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
 		aria-invalid={!!promptError}
 	/>
-	{#each promptError as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={promptError} />
 </Field.Field>
 
 <div class=" flex flex-col gap-3">
@@ -69,9 +68,7 @@
 		{/each}
 	</div>
 
-	{#each keywordsError as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={keywordsError} />
 </div>
 
 <Field.Field>

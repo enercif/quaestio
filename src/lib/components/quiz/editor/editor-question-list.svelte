@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import * as Field from '$lib/components/ui/field/index.js';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { fade } from 'svelte/transition';
 	import { typeToBadge } from '../quiz.utils';
+	import FieldErrors from './editor-field-errors.svelte';
 	import EditorQuestionDropdown from './editor-question-dropdown.svelte';
 	import { EditorState } from './editor.state.svelte';
 
@@ -18,9 +18,7 @@
 		<p>{state.quiz.questions.length}</p>
 	</div>
 
-	{#each state.getQuizError('questions') as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={state.getQuizError('questions')} />
 
 	<div class="my-2 flex flex-col gap-2">
 		{#each state.quiz.questions as question, index (question.id)}

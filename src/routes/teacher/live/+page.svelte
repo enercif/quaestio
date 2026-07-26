@@ -23,15 +23,15 @@
 
 	const _rooms: Room[] = $derived($rooms);
 
-	async function onCloseClick(id: string) {
-		const result = await deleteRoom(id);
+	async function onCloseClick(code: string) {
+		const result = await deleteRoom(code);
 		if (!result) {
 			toast.error('Fehler beim Schließen des Raums');
 		}
 	}
 
-	function onJoinClick(id: string) {
-		goto(resolve(`/teacher/live/${id}`));
+	function onJoinClick(code: string) {
+		goto(resolve(`/teacher/live/${code}`));
 	}
 </script>
 
@@ -88,12 +88,12 @@
 						<Card.Description>{room.quiz.title} | {room.state}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
-						{#if room.teacherId === data.user.id}
-							<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.id)}>
+						{#if room.teacher_id === data.user.id}
+							<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.code)}>
 								Schließen
 							</Button>
 						{/if}
-						<Button class="grow" onclick={() => onJoinClick(room.id)}>Beitreten</Button>
+						<Button class="grow" onclick={() => onJoinClick(room.code)}>Beitreten</Button>
 					</Card.Footer>
 				</Card.Root>
 			{/each}

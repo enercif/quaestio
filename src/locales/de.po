@@ -7,14 +7,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/lib/vitest-examples/Welcome.svelte
-msgid "SvelteKit"
-msgstr "SvelteKit"
-
-#: src/lib/vitest-examples/Welcome.svelte
-msgid "Vitest"
-msgstr "Vitest"
-
 #: src/routes/+layout.svelte
 #: src/routes/+page.svelte
 #: src/routes/accept-invitation/[id]/+page.svelte
@@ -68,7 +60,7 @@ msgid "Rolle"
 msgstr "Rolle"
 
 #: src/lib/components/admin/invite-user-dialog.svelte
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
+#: src/lib/components/analytics/analytics-student-question-row.svelte
 #: src/lib/components/quiz/launch-dialog.svelte
 msgid "Abbrechen"
 msgstr "Abbrechen"
@@ -100,11 +92,11 @@ msgstr "Quiz beitreten"
 msgid "Code"
 msgstr "Code"
 
+#: src/lib/components/analytics/room/analytics-room.svelte
+#: src/lib/components/analytics/student/analytics-student.svelte
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
 #: src/routes/+page.svelte
 #: src/routes/student/practice/[id]/+page.svelte
-#: src/routes/teacher/analytics/rooms/[id]/+page.svelte
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
 msgid "<0/> Zurück"
 msgstr "<0/> Zurück"
@@ -401,11 +393,7 @@ msgid "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 msgstr "Wähle eine Sprache und gib Code ein, um die Vorschau zu sehen."
 
 #. 0: line
-#. 0: answers.join(', ')
-#. 0: answers.join(', ')
-#: src/lib/components/analytics/analytics-question-stats.svelte
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/analytics/room/analytics-room-question-row.svelte
 msgid "Zeile {0}"
 msgstr "Zeile {0}"
 
@@ -470,10 +458,10 @@ msgstr "Alphabetisch"
 msgid "Sequenzierung"
 msgstr "Sequenzierung"
 
+#: src/lib/components/analytics/student/analytics-student.svelte
 #: src/lib/components/quiz/editor/editor-question-settings.svelte
 #: src/lib/components/quiz/editor/editor-question-settings.svelte
 #: src/lib/components/quiz/editor/editor-quiz-summary.svelte
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
 msgid "Punkte"
 msgstr "Punkte"
 
@@ -498,8 +486,8 @@ msgstr "<0/> Speichern"
 msgid "Gesch. Zeit"
 msgstr "Gesch. Zeit"
 
+#: src/lib/components/analytics/room/analytics-room.svelte
 #: src/lib/components/quiz/editor/editor-quiz-summary.svelte
-#: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 msgid "Übersicht"
 msgstr "Übersicht"
 
@@ -609,103 +597,82 @@ msgstr "<0/> Quiz starten"
 msgid "Antwort konnte nicht gesendet werden."
 msgstr "Antwort konnte nicht gesendet werden."
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner.svelte
 msgid "<0/> Pausiert"
 msgstr "<0/> Pausiert"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner.svelte
 msgid "<0/> Zeit abgelaufen"
 msgstr "<0/> Zeit abgelaufen"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 msgid "Deine Antwort…"
 msgstr "Deine Antwort…"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 msgid "<0/> Senden"
 msgstr "<0/> Senden"
 
 #. 0: openText.length
-#. 0: openText.length
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 msgid "{0} Zeichen"
 msgstr "{0} Zeichen"
 
-#. 0: selected[0]
-#. 0: selected[0]
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#. 0: runner.selected[0]
+#: src/lib/components/quiz/question-runner/question-runner-open.svelte
 msgid "Gesendet: {0}"
 msgstr "Gesendet: {0}"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "<0/> Richtige Antwort!"
 msgstr "<0/> Richtige Antwort!"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Teilweise richtig"
 msgstr "Teilweise richtig"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Falsche Antwort"
 msgstr "Falsche Antwort"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Keine"
 msgstr "Keine"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Richtig"
 msgstr "Richtig"
 
-#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
-#. 0: answerTexts(selected) || 'Keine'; 1: currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(correct)
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#. 0: answerTexts(runner.currentQuestion.type, runner.selected) || 'Keine'; 1: runner .currentQuestion.type === 'open' ? 'Gesuchte Keywords' \\: 'Richtig'; 2: answerTexts(runner.currentQuestion.type, runner.correct)
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Deine Antwort: {0} | {1}: {2}"
 msgstr "Deine Antwort: {0} | {1}: {2}"
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
+#: src/lib/components/quiz/live/teacher/live-teacher.state.svelte.ts
 msgid "Aktion fehlgeschlagen."
 msgstr "Aktion fehlgeschlagen."
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
-#: src/lib/components/quiz/practice/practice-controls-panel.svelte
+#: src/lib/components/quiz/quiz-controls.svelte
 msgid "<0/> Quiz beenden"
 msgstr "<0/> Quiz beenden"
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
-#: src/lib/components/quiz/practice/practice-controls-panel.svelte
+#: src/lib/components/quiz/quiz-controls.svelte
 msgid "<0/> Nächste Frage"
 msgstr "<0/> Nächste Frage"
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
-#: src/lib/components/quiz/practice/practice-controls-panel.svelte
+#: src/lib/components/quiz/quiz-controls.svelte
 msgid "<0/> Ergebnisse anzeigen"
 msgstr "<0/> Ergebnisse anzeigen"
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
-#: src/lib/components/quiz/practice/practice-controls-panel.svelte
+#: src/lib/components/quiz/quiz-controls.svelte
 msgid "<0/> Fortsetzen"
 msgstr "<0/> Fortsetzen"
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
-#: src/lib/components/quiz/practice/practice-controls-panel.svelte
+#: src/lib/components/quiz/quiz-controls.svelte
 msgid "<0/> Pause"
 msgstr "<0/> Pause"
 
-#: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
-#: src/lib/components/quiz/practice/practice-controls-panel.svelte
+#: src/lib/components/quiz/quiz-controls.svelte
 msgid "<0/> Zu den Ergebnissen springen"
 msgstr "<0/> Zu den Ergebnissen springen"
 
@@ -714,13 +681,13 @@ msgstr "<0/> Zu den Ergebnissen springen"
 msgid "{0} von {1} haben geantwortet"
 msgstr "{0} von {1} haben geantwortet"
 
-#: src/lib/components/analytics/analytics-question-stats.svelte
+#: src/lib/components/analytics/room/analytics-room-question-row.svelte
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
 msgid "Noch keine Antworten."
 msgstr "Noch keine Antworten."
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 #: src/lib/components/quiz/live/teacher/live-teacher-question.svelte
 #: src/routes/teacher/analytics/(list)/+layout.svelte
 #: src/routes/teacher/analytics/(list)/rooms/+page.svelte
@@ -839,7 +806,7 @@ msgstr "Ungültiges Passwort"
 
 #: src/lib/components/account-settings-dialog.svelte
 #: src/lib/components/account-settings-dialog.svelte
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
+#: src/lib/components/analytics/analytics-student-question-row.svelte
 #: src/routes/teacher/admin/settings/+page.svelte
 msgid "Speichern"
 msgstr "Speichern"
@@ -942,13 +909,11 @@ msgstr "Warum ist \"{0}\" das richtige Keyword?"
 msgid "Warum sind \"{0}\" die richtigen Keywords?"
 msgstr "Warum sind \"{0}\" die richtigen Keywords?"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner.svelte
 msgid "Hinweis"
 msgstr "Hinweis"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Gesuchte Keywords"
 msgstr "Gesuchte Keywords"
 
@@ -978,23 +943,23 @@ msgstr "Es liegen noch keine Antworten aus abgehaltenen Quizzen vor."
 msgid "Keine Studenten"
 msgstr "Keine Studenten"
 
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
+#: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Punkte konnten nicht gespeichert werden."
 msgstr "Punkte konnten nicht gespeichert werden."
 
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
+#: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Punkte konnten nicht zurückgesetzt werden."
 msgstr "Punkte konnten nicht zurückgesetzt werden."
 
-#. 0: student.totalPoints; 1: maxPoints
-#. 0: room.totalPoints; 1: room.maxPoints
-#: src/lib/components/analytics/analytics-room-students-tab.svelte
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
+#. 0: student.totalPoints; 1: ctx.maxPoints
+#. 0: achievedRoomPoints; 1: maxRoomPoints
+#: src/lib/components/analytics/room/analytics-room-student-row.svelte
+#: src/lib/components/analytics/student/analytics-student-room-row.svelte
 msgid "{0} / {1} Punkte"
 msgstr "{0} / {1} Punkte"
 
-#. 0: q.selected.length > 0 ? q.selected.join(', ') \\: '—'
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
+#. 0: question.selected.length > 0 ? question.selected.join(', ') \\: '—'
+#: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Antwort: {0}"
 msgstr "Antwort: {0}"
 
@@ -1027,89 +992,81 @@ msgstr "Zeilen"
 msgid "Markiere zuerst die richtigen {0}."
 msgstr "Markiere zuerst die richtigen {0}."
 
-#. 0: questionMaxPoints(scoredQuestion)
+#. 0: getQuestionMaxPoints(scoredQuestion)
 #: src/lib/components/quiz/editor/editor-question-settings.svelte
 msgid "Gesamt: {0} Punkte"
 msgstr "Gesamt: {0} Punkte"
 
-#: src/routes/teacher/analytics/rooms/[id]/+page.svelte
+#: src/lib/components/analytics/room/analytics-room.svelte
 msgid "Raum"
 msgstr "Raum"
 
-#: src/routes/teacher/analytics/rooms/[id]/+page.svelte
-msgid "<0/> Export CSV"
-msgstr "<0/> Export CSV"
-
-#: src/routes/teacher/analytics/rooms/[id]/+page.svelte
+#: src/lib/components/analytics/room/analytics-room.svelte
 msgid "Pro Frage"
 msgstr "Pro Frage"
 
-#: src/routes/teacher/analytics/rooms/[id]/+page.svelte
+#: src/lib/components/analytics/room/analytics-room.svelte
 msgid "Pro Student"
 msgstr "Pro Student"
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Ø Genauigkeit"
 msgstr "Ø Genauigkeit"
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Schwerste Frage"
 msgstr "Schwerste Frage"
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Genauigkeit pro Frage"
 msgstr "Genauigkeit pro Frage"
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Anzahl Studenten je Punktzahl"
 msgstr "Anzahl Studenten je Punktzahl"
 
-#. 0: Math.round(accuracy)
-#: src/lib/components/analytics/analytics-question-stats.svelte
+#. 0: Math.round(question.accuracy)
+#: src/lib/components/analytics/room/analytics-room-question-row.svelte
 msgid "{0}% Genauigkeit"
 msgstr "{0}% Genauigkeit"
 
-#: src/lib/components/analytics/analytics-question-stats.svelte
+#: src/lib/components/analytics/room/analytics-room-question-row.svelte
 msgid "Freitext-Antworten können unter \"Pro Student\" geprüft werden."
 msgstr "Freitext-Antworten können unter \"Pro Student\" geprüft werden."
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Punkteverteilung"
 msgstr "Punkteverteilung"
 
-#. 0: stat.index + 1
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#. 0: question.position
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "F{0}"
 msgstr "F{0}"
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Anteil richtiger Antworten"
 msgstr "Anteil richtiger Antworten"
 
-#: src/lib/components/analytics/analytics-room-overview-tab.svelte
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Einfachste Frage"
 msgstr "Einfachste Frage"
 
-#. 0: index + 1
-#. 0: index + 1
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
-#: src/lib/components/analytics/analytics-question-stats.svelte
+#. 0: currentQuestion.position + 1
+#. 0: currentQuestion.position + 1
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+#: src/lib/components/analytics/room/analytics-room-question-row.svelte
 msgid "Frage {0}"
 msgstr "Frage {0}"
 
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
-msgid "Student"
-msgstr "Student"
-
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
+#: src/lib/components/analytics/student/analytics-student.svelte
 msgid "An Quizzen teilgenommen"
 msgstr "An Quizzen teilgenommen"
 
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
+#: src/lib/components/analytics/student/analytics-student.svelte
 msgid "Durchschnittliche Genauigkeit"
 msgstr "Durchschnittliche Genauigkeit"
 
-#: src/routes/teacher/analytics/students/[id]/+page.svelte
+#: src/lib/components/analytics/student/analytics-student.svelte
 msgid "Quiz Historie"
 msgstr "Quiz Historie"
 
@@ -1117,8 +1074,8 @@ msgstr "Quiz Historie"
 msgid "Öffentlich"
 msgstr "Öffentlich"
 
-#. 0: q.correct.length > 0 ? q.correct.join(', ') \\: '—'
-#: src/lib/components/analytics/analytics-question-answer-row.svelte
+#. 0: correct.length > 0 ? correct.join(', ') \\: '—'
+#: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Gesucht: {0}"
 msgstr "Gesucht: {0}"
 
@@ -1126,8 +1083,7 @@ msgstr "Gesucht: {0}"
 msgid "Privat"
 msgstr "Privat"
 
-#: src/lib/components/quiz/live/student/live-student-question.svelte
-#: src/lib/components/quiz/practice/practice-question.svelte
+#: src/lib/components/quiz/question-runner/question-runner-result.svelte
 msgid "Begründung"
 msgstr "Begründung"
 
@@ -1447,3 +1403,11 @@ msgstr "Studentenansicht"
 #: src/routes/teacher/quizzes/[id]/+page.svelte
 msgid "Übungsräume sind nur für öffentliche Quizze verfügbar"
 msgstr "Übungsräume sind nur für öffentliche Quizze verfügbar"
+
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
+msgid "Schwerste Fragen"
+msgstr "Schwerste Fragen"
+
+#: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
+msgid "Einfachste Fragen"
+msgstr "Einfachste Fragen"

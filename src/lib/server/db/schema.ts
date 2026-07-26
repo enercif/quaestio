@@ -47,10 +47,10 @@ export const roomTable = pgTable(
 		id: uuid('id').defaultRandom().primaryKey(),
 		code: text('code').notNull(),
 		limit: integer('limit'),
-		quiz: uuid('quiz_id')
+		quiz_id: uuid('quiz_id')
 			.references(() => quizTable.id)
 			.notNull(),
-		teacherId: text('teacher_id')
+		teacher_id: text('teacher_id')
 			.notNull()
 			.references(() => user.id, { onDelete: 'cascade' }),
 		state: text('state').default('waiting').notNull(),
@@ -94,11 +94,12 @@ export const answerTable = pgTable(
 );
 
 export const roomRelations = relations(roomTable, ({ one }) => ({
-	quiz: one(quizTable, { fields: [roomTable.quiz], references: [quizTable.id] })
+	quiz: one(quizTable, { fields: [roomTable.quiz_id], references: [quizTable.id] })
 }));
 
 export const answerRelations = relations(answerTable, ({ one }) => ({
-	room: one(roomTable, { fields: [answerTable.room_id], references: [roomTable.id] })
+	room: one(roomTable, { fields: [answerTable.room_id], references: [roomTable.id] }),
+	quiz: one(quizTable, { fields: [answerTable.quiz_id], references: [quizTable.id] })
 }));
 
 export * from './auth.schema';

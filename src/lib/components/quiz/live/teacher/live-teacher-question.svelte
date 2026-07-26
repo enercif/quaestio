@@ -1,24 +1,10 @@
 <script lang="ts">
+	import CodeLines from '$lib/components/quiz/code-lines.svelte';
 	import LiveQuestionHeader from '$lib/components/quiz/live/live-question-header.svelte';
-	import {
-		evaluateAnswer,
-		indexToSequence,
-		remainingMs,
-		resultClass
-	} from '$lib/components/quiz/quiz.utils';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import QuizControls from '$lib/components/quiz/quiz-controls.svelte';
+	import { evaluateAnswer, indexToSequence, resultClass } from '$lib/components/quiz/quiz.utils';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import { highlightCode } from '$lib/shiki';
-	import { nextQuestion, pauseTimer, resumeTimer, showResults } from '$live/rooms';
-	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
 	import CheckIcon from '@lucide/svelte/icons/check';
-	import EyeIcon from '@lucide/svelte/icons/eye';
-	import FlagIcon from '@lucide/svelte/icons/flag';
-	import PauseIcon from '@lucide/svelte/icons/pause';
-	import PlayIcon from '@lucide/svelte/icons/play';
-	import SkipForwardIcon from '@lucide/svelte/icons/skip-forward';
-	import { watch } from 'runed';
-	import { toast } from 'svelte-sonner';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { LiveTeacherState } from './live-teacher.state.svelte';
 
@@ -26,11 +12,8 @@
 
 	const roomData = $derived(live.roomData!);
 	const currentQuestion = $derived(roomData.current_question!);
-	const revealed = $derived(roomData.state === 'answer');
+	const revealed = $derived(live.revealed);
 	const correct = $derived(roomData.current_answers ?? []);
-	const paused = $derived(roomData.paused_remaining != null);
-	const timeUp = $derived(remainingMs(roomData) === 0);
-	const isLast = $derived(currentQuestion.position + 1 >= roomData.quiz.questions_length);
 
 	const answers = $derived(live.answers.filter((a) => a.question_id === currentQuestion.id));
 	const answersByStudent = $derived(new Map(answers.map((a) => [a.student_id, a.selected])));
@@ -43,26 +26,6 @@
 	});
 	const openCounts = $derived([...counts].sort((a, b) => b[1] - a[1]));
 
-	let codeContainer: HTMLDivElement | undefined = $state();
-	const programmingHtml = $derived.by(async () => {
-		if (currentQuestion.type !== 'programming') return '';
-		return highlightCode(currentQuestion.code, currentQuestion.language);
-	});
-
-	watch(
-		() => [counts, revealed, correct] as const,
-		([counts, revealed, correct]) => {
-			if (!codeContainer) return;
-			for (const line of codeContainer.querySelectorAll<HTMLElement>('.line')) {
-				const lineNumber = line.dataset.line;
-				if (!lineNumber) continue;
-				const voteCount = counts.get(lineNumber) ?? 0;
-				line.dataset.votes = voteCount ? `${voteCount}×` : '';
-				line.classList.toggle('correct-line', revealed && correct.includes(lineNumber));
-			}
-		}
-	);
-
 	function pctFor(answer: string) {
 		return answeredCount ? Math.round(((counts.get(answer) ?? 0) / answeredCount) * 100) : 0;
 	}
@@ -73,47 +36,13 @@
 		}
 		return resultClass[evaluateAnswer(currentQuestion.type, correct, selected)];
 	}
-
-	const run = (action: Promise<unknown>) =>
-		action.catch(() => toast.error('Aktion fehlgeschlagen.'));
 </script>
 
 <div class="flex flex-col">
 	<LiveQuestionHeader room={roomData}>
 		{#snippet actions()}
 			{#if live.isRoomOwner}
-				{#if revealed}
-					<Button onclick={() => run(nextQuestion(live.roomId))}>
-						{#if isLast}
-							<FlagIcon />
-							Quiz beenden
-						{:else}
-							<ArrowRightIcon />
-							Nächste Frage
-						{/if}
-					</Button>
-				{:else if timeUp}
-					<Button onclick={() => run(showResults(live.roomId))}>
-						<EyeIcon />
-						Ergebnisse anzeigen
-					</Button>
-				{:else}
-					{#if paused}
-						<Button variant="outline" onclick={() => run(resumeTimer(live.roomId))}>
-							<PlayIcon />
-							Fortsetzen
-						</Button>
-					{:else}
-						<Button variant="outline" onclick={() => run(pauseTimer(live.roomId))}>
-							<PauseIcon />
-							Pause
-						</Button>
-					{/if}
-					<Button onclick={() => run(showResults(live.roomId))}>
-						<SkipForwardIcon />
-						Zu den Ergebnissen springen
-					</Button>
-				{/if}
+				<QuizControls flow={live} />
 			{/if}
 		{/snippet}
 	</LiveQuestionHeader>
@@ -144,13 +73,12 @@
 						<p class="text-sm text-muted-foreground">Noch keine Antworten.</p>
 					{/each}
 				{:else if currentQuestion.type === 'programming'}
-					<div
-						bind:this={codeContainer}
-						class="programming-code-preview overflow-x-auto rounded-md border text-sm [&_code]:py-3"
-					>
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						{@html await programmingHtml}
-					</div>
+					<CodeLines
+						code={currentQuestion.code}
+						language={currentQuestion.language}
+						votes={counts}
+						lineState={(line) => (revealed && correct.includes(line) ? 'correct' : undefined)}
+					/>
 				{:else}
 					{#each currentQuestion.answers as answer, index (answer.text)}
 						{@const isCorrect = revealed && correct.includes(answer.text)}
@@ -212,12 +140,3 @@
 		</Card.Root>
 	</div>
 </div>
-
-<style>
-	.programming-code-preview :global(.line::after) {
-		content: attr(data-votes);
-		color: var(--muted-foreground);
-		padding-inline: 0.75rem;
-		font-size: 0.75rem;
-	}
-</style>

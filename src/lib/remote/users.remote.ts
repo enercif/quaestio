@@ -1,24 +1,14 @@
-import { command, getRequestEvent, query } from '$app/server';
+import { command, query } from '$app/server';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/auth.schema';
 import { sendMail } from '$lib/server/mail';
-import { getMemberRole, getMemberRoleById, isOrgAdmin, type OrgRole } from '$lib/server/org';
+import { getMemberRole, getMemberRoleById, requireOrgAdmin, type OrgRole } from '$lib/server/org';
 import { APIError } from 'better-auth';
 import { eq } from 'drizzle-orm';
 import z from 'zod';
 
 const roleSchema = z.enum(['owner', 'admin', 'member']);
-
-async function requireOrgAdmin() {
-	const event = getRequestEvent();
-	const userId = event.locals.user?.id;
-	const role = userId ? await getMemberRole(userId) : undefined;
-	if (!isOrgAdmin(role)) {
-		throw new Error('Forbidden');
-	}
-	return { event, role: role! };
-}
 
 type UserRow = {
 	id: string;

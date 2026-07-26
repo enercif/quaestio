@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FieldErrors from '$lib/components/quiz/editor/editor-field-errors.svelte';
 	import EditorEmpty from '$lib/components/quiz/editor/editor-empty.svelte';
 	import EditorQuestionList from '$lib/components/quiz/editor/editor-question-list.svelte';
 	import EditorQuestionSettings from '$lib/components/quiz/editor/editor-question-settings.svelte';
@@ -34,9 +35,7 @@
 						class="w-100! font-semibold"
 						aria-invalid={!!state.getQuizError('title')}
 					/>
-					{#each state.getQuizError('title') as error, i (i)}
-						<Field.Error>{error}</Field.Error>
-					{/each}
+					<FieldErrors errors={state.getQuizError('title')} />
 				</Field.Field>
 				<div class="flex flex-row items-end gap-6">
 					<Field.Field class="w-fit">

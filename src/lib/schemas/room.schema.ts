@@ -16,7 +16,7 @@ const roomBaseSchema = z.object({
 });
 
 export const roomSelectSchema = roomBaseSchema.extend({
-	teacherId: z.string(),
+	teacher_id: z.string(),
 	quiz: quizSelectSchema.pick({
 		title: true,
 		questions_length: true,
@@ -27,7 +27,7 @@ export const roomSelectSchema = roomBaseSchema.extend({
 });
 
 export const roomInsertSchema = roomBaseSchema.extend({
-	quiz: z.uuid('Die Quiz-ID muss eine gültige UUID sein.')
+	quiz_id: z.uuid('Die Quiz-ID muss eine gültige UUID sein.')
 });
 
 export enum RoomState {

@@ -1,26 +1,19 @@
-import {
-	evaluateAnswer,
-	hasPartialScoring,
-	questionMaxPoints
-} from '$lib/components/quiz/quiz.utils';
-import type { Answer } from '$lib/schemas/answer.schema';
-import type { Question } from '$lib/schemas/question.schema';
-import type { QuestionResult } from '$lib/types/analytics.type';
+import { evaluateAnswer, hasPartialScoring } from '$lib/components/quiz/quiz.utils';
+import type { AnalyticsQuizQuestion } from '$lib/schemas/analytics.schema';
 
-export function correctAnswersFor(question: Question): string[] {
+export function correctToArray(question: AnalyticsQuizQuestion): string[] {
 	switch (question.type) {
 		case 'open':
+		case 'programming':
 			return question.correct;
 		case 'single':
 		case 'multiple':
 			return Object.values(question.correct);
-		case 'programming':
-			return question.correct.map(String);
 	}
 }
 
-export function answerAccuracy(question: Question, selected: string[]): number {
-	const correct = correctAnswersFor(question);
+export function answerAccuracy(question: AnalyticsQuizQuestion, selected: string[]): number {
+	const correct = correctToArray(question);
 	if (correct.length === 0) return 0;
 	if (question.type === 'open') {
 		return evaluateAnswer('open', correct, selected) === 'correct' ? 1 : 0;
@@ -29,8 +22,7 @@ export function answerAccuracy(question: Question, selected: string[]): number {
 	return hits / correct.length;
 }
 
-/** Ø `answerAccuracy` über mehrere Selections, in Prozent. */
-export function questionAccuracy(question: Question, selections: string[][]): number {
+export function questionAccuracy(question: AnalyticsQuizQuestion, selections: string[][]): number {
 	if (selections.length === 0) return 0;
 	return (
 		(selections.reduce((sum, selected) => sum + answerAccuracy(question, selected), 0) /
@@ -39,7 +31,7 @@ export function questionAccuracy(question: Question, selections: string[][]): nu
 	);
 }
 
-export function computedPoints(question: Question, selected: string[]): number {
+export function getAchievedPoints(question: AnalyticsQuizQuestion, selected: string[]): number {
 	if (hasPartialScoring(question)) {
 		const keys =
 			question.type === 'multiple'
@@ -51,26 +43,6 @@ export function computedPoints(question: Question, selected: string[]): number {
 			0
 		);
 	}
-	const result = evaluateAnswer(question.type, correctAnswersFor(question), selected);
+	const result = evaluateAnswer(question.type, correctToArray(question), selected);
 	return result === 'correct' ? question.points : 0;
-}
-
-export function questionResultsFor(questions: Question[], answers: Answer[]): QuestionResult[] {
-	return questions.map((question) => {
-		const answer = answers.find((a) => a.question_id === question.id);
-		const selected = answer?.selected ?? [];
-		const auto = answer ? computedPoints(question, selected) : 0;
-		return {
-			answerId: answer?.id,
-			questionId: question.id,
-			question: question.question,
-			type: question.type,
-			correct: correctAnswersFor(question),
-			maxPoints: questionMaxPoints(question),
-			selected,
-			points: answer?.points_override ?? auto,
-			overridden: answer?.points_override != null,
-			accuracy: answerAccuracy(question, selected) * 100
-		};
-	});
 }

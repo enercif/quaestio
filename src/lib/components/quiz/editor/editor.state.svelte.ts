@@ -11,7 +11,7 @@ import { quizInsertSchema, type QuizInsert } from '$lib/schemas/quiz.schema';
 import { Context } from 'runed';
 import { toast } from 'svelte-sonner';
 import type { ZodError } from 'zod';
-import { questionMaxPoints } from '../quiz.utils';
+import { getQuestionMaxPoints } from '../quiz.utils';
 import { getTimeAsString } from './editor-utils';
 
 const quizEditorContext = new Context<EditorState>('quiz-editor');
@@ -24,7 +24,7 @@ export class EditorState {
 	selectedId: string | null = $state(null);
 
 	estTime = $derived(getTimeAsString(this.quiz.questions.reduce((acc, q) => acc + q.timelimit, 0)));
-	totalPoints = $derived(this.quiz.questions.reduce((acc, q) => acc + questionMaxPoints(q), 0));
+	totalPoints = $derived(this.quiz.questions.reduce((acc, q) => acc + getQuestionMaxPoints(q), 0));
 	hasChanges = $derived(JSON.stringify(this.initialQuiz) !== JSON.stringify(this.quiz));
 	selectedIndex = $derived(this.quiz.questions.findIndex((q) => q.id === this.selectedId));
 

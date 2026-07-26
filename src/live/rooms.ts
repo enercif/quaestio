@@ -64,7 +64,7 @@ export const insertRoom = live.validated(
 		try {
 			const [{ code }] = await db
 				.insert(roomTable)
-				.values({ ...roomInsert, teacherId: ctx.user!.id })
+				.values({ ...roomInsert, teacher_id: ctx.user!.id })
 				.returning({ code: roomTable.code });
 
 			const room = await getRoomByCode(code);
@@ -118,7 +118,7 @@ function requireTeacher(ctx: LiveContext<User>) {
 
 function requireRoomOwner(ctx: LiveContext<User>, room: Room) {
 	requireTeacher(ctx);
-	if (ctx.user.id !== room.teacherId) {
+	if (ctx.user.id !== room.teacher_id) {
 		throw new LiveError('UNAUTHORIZED', 'Room owner only');
 	}
 }

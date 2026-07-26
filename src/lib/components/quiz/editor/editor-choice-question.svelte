@@ -10,6 +10,7 @@
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { fade, slide } from 'svelte/transition';
+	import FieldErrors from './editor-field-errors.svelte';
 	import { UUIDToAnswerPlaceholder, UUIDToPromptPlaceholder } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
 
@@ -39,25 +40,17 @@
 		placeholder={UUIDToPromptPlaceholder(selectedQuestion.id)}
 		aria-invalid={!!promptError}
 	/>
-	{#each promptError as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={promptError} />
 </Field.Field>
 
 <div class=" flex flex-col gap-3">
 	<Label>Antworten</Label>
 
-	{#each answersError as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={answersError} />
 
-	{#each correctError as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={correctError} />
 
-	{#each reasonsError as error, i (i)}
-		<Field.Error>{error}</Field.Error>
-	{/each}
+	<FieldErrors errors={reasonsError} />
 
 	{#each selectedQuestion.answers as answer, index (answer.id)}
 		{@const answerErrors = state.getSelectedQuestionError(`answers.${index}.text`)}
@@ -80,9 +73,7 @@
 						bind:value={answer.text}
 						aria-invalid={!!answerErrors}
 					/>
-					{#each answerErrors as error, i (i)}
-						<Field.Error>{error}</Field.Error>
-					{/each}
+					<FieldErrors errors={answerErrors} />
 				</Field.Field>
 
 				{#if selectedQuestion.type === 'multiple' && correct}
@@ -115,8 +106,6 @@
 			placeholder={`Warum ist "${Object.values(selectedQuestion.correct)[0]}" die richtige Antwort?`}
 			bind:value={selectedQuestion.reasons}
 		/>
-		{#each promptError as error, i (i)}
-			<Field.Error>{error}</Field.Error>
-		{/each}
+		<FieldErrors errors={promptError} />
 	</Field.Field>
 {/if}

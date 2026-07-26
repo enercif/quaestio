@@ -1,3 +1,4 @@
+import type { AnalyticsQuizQuestion } from '$lib/schemas/analytics.schema';
 import type {
 	MultipleChoiceQuestion,
 	ProgrammingQuestion,
@@ -89,7 +90,7 @@ export function evaluateAnswer(
 	return 'partial';
 }
 
-export function questionMaxPoints(question: Question): number {
+export function getQuestionMaxPoints(question: AnalyticsQuizQuestion): number {
 	if (hasPartialScoring(question)) {
 		return Object.values(question.partial_points).reduce((sum, p) => sum + p, 0);
 	}
@@ -97,7 +98,7 @@ export function questionMaxPoints(question: Question): number {
 }
 
 export function hasPartialScoring(
-	question: Question
+	question: AnalyticsQuizQuestion
 ): question is (MultipleChoiceQuestion | ProgrammingQuestion) & { scoring: 'partial' } {
 	return (
 		(question.type === 'multiple' || question.type === 'programming') &&
@@ -155,6 +156,20 @@ export function revealAnswer(question: Question): {
 				current_reasons: reasonEntries(question.reasons, (key, value) => `Zeile ${key}: ${value}`)
 			};
 	}
+}
+
+export function canEditQuiz(
+	userId: string | undefined,
+	quiz: { teacherId: string } | undefined | null
+): boolean {
+	return !!userId && quiz?.teacherId === userId;
+}
+
+export function answerTexts(type: QuestionType, answers: string[]) {
+	if (type === 'programming') {
+		return answers.length ? `Zeile ${answers.join(', ')}` : '';
+	}
+	return answers.join(', ');
 }
 
 export function typeToDescription(type: QuestionType) {
