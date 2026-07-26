@@ -41,6 +41,7 @@
 		/>
 
 		<span class="font-medium">{room.quiz.title}</span>
+		<span class="text-muted-foreground text-sm">{room.code}</span>
 		<span class="ml-auto shrink-0 text-sm text-muted-foreground">
 			{new Date(room.created_at).toLocaleString(localePersistedState.current, {
 				dateStyle: 'full',
