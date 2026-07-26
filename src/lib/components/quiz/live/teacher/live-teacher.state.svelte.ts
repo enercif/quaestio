@@ -37,7 +37,7 @@ export class LiveTeacherState extends RoomState implements QuizFlow {
 	}
 
 	get isRoomOwner() {
-		return this.roomData?.teacherId === this.userId;
+		return this.roomData?.teacher_id === this.userId;
 	}
 
 	get answers() {

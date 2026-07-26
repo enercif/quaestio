@@ -88,7 +88,7 @@
 						<Card.Description>{room.quiz.title} | {room.state}</Card.Description>
 					</Card.Header>
 					<Card.Footer class="flex flex-row items-center gap-2">
-						{#if room.teacherId === data.user.id}
+						{#if room.teacher_id === data.user.id}
 							<Button class="grow" variant="secondary" onclick={() => onCloseClick(room.code)}>
 								Schließen
 							</Button>

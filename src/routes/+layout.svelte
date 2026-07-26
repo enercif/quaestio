@@ -24,10 +24,8 @@
 
 	let { data, children }: LayoutProps = $props();
 
-	const isTeacherRoute = $derived(page.route.id?.includes('teacher'));
-	const isStudentRoute = $derived(
-		page.route.id?.includes('student') && !page.route.id?.includes('/r/')
-	);
+	const isTeacherRoute = $derived(page.route.id?.startsWith('/teacher'));
+	const isStudentRoute = $derived(page.route.id?.startsWith('/student'));
 
 	const isOrgAdmin = $derived(data.role === 'owner' || data.role === 'admin');
 	const initials = $derived(getInitials(data.user?.name));

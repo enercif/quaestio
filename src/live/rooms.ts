@@ -118,7 +118,7 @@ function requireTeacher(ctx: LiveContext<User>) {
 
 function requireRoomOwner(ctx: LiveContext<User>, room: Room) {
 	requireTeacher(ctx);
-	if (ctx.user.id !== room.teacherId) {
+	if (ctx.user.id !== room.teacher_id) {
 		throw new LiveError('UNAUTHORIZED', 'Room owner only');
 	}
 }
