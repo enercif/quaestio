@@ -4,35 +4,39 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { setPointsOverride } from '$lib/remote/analytics.remote';
-	import type { QuestionResult } from '$lib/types/analytics.type';
+	import type { AnalyticsQuizQuestion } from '$lib/schemas/analytics.schema';
+	import type { AnalyticsQuestion } from '$lib/types/analytics.type';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import RotateCcwIcon from '@lucide/svelte/icons/rotate-ccw';
 	import { toast } from 'svelte-sonner';
+	import { correctToArray } from './analytics.utils';
 
 	interface Props {
-		index: number;
-		question: QuestionResult;
+		question: AnalyticsQuestion;
+		currentQuestion: AnalyticsQuizQuestion;
 	}
-	let { index, question: q }: Props = $props();
+	let { question, currentQuestion }: Props = $props();
+
+	const correct = $derived(correctToArray(currentQuestion));
 
 	let editing = $state(false);
 	// draft is reset from `points` in startEdit()
 	// svelte-ignore state_referenced_locally
-	let draft = $state(q.points);
+	let draft = $state(question.achievedPoints);
 
 	function startEdit() {
-		draft = q.points;
+		draft = question.achievedPoints;
 		editing = true;
 	}
 
 	async function save() {
-		const result = await setPointsOverride({ answerId: q.answerId!, points: draft });
+		const result = await setPointsOverride({ answerId: question.answerId, points: draft });
 		if (!result.success) toast.error('Punkte konnten nicht gespeichert werden.');
 		editing = false;
 	}
 
 	async function reset() {
-		const result = await setPointsOverride({ answerId: q.answerId!, points: null });
+		const result = await setPointsOverride({ answerId: question.answerId, points: null });
 		if (!result.success) toast.error('Punkte konnten nicht zurückgesetzt werden.');
 		editing = false;
 	}
@@ -42,33 +46,33 @@
 	<div class="flex grow flex-col gap-1">
 		<div class="flex flex-col gap-2">
 			<div class="flex flex-row items-center gap-2">
-				<span class="text-sm text-muted-foreground">Frage {index + 1}</span>
-				<Badge variant="secondary">{typeToBadge(q.type)}</Badge>
+				<span class="text-sm text-muted-foreground">Frage {currentQuestion.position + 1}</span>
+				<Badge variant="secondary">{typeToBadge(currentQuestion.type)}</Badge>
 			</div>
-			<span class="text-sm font-medium">{q.question}</span>
+			<span class="text-sm font-medium">{currentQuestion.question}</span>
 		</div>
 
 		<p class="text-sm text-muted-foreground">
-			Gesucht: {q.correct.length > 0 ? q.correct.join(', ') : '—'}
+			Gesucht: {correct.length > 0 ? correct.join(', ') : '—'}
 		</p>
 
 		<p class="text-sm text-muted-foreground">
-			Antwort: {q.selected.length > 0 ? q.selected.join(', ') : '—'}
+			Antwort: {question.selected.length > 0 ? question.selected.join(', ') : '—'}
 		</p>
 	</div>
 
 	<div class="flex shrink-0 flex-row items-center gap-2">
 		{#if editing}
-			<Input type="number" min="0" max={q.maxPoints} class="w-20" bind:value={draft} />
+			<Input type="number" min="0" max={question.maxPoints} class="w-20" bind:value={draft} />
 			<Button size="sm" onclick={save}>Speichern</Button>
 			<Button size="sm" variant="ghost" onclick={() => (editing = false)}>Abbrechen</Button>
 		{:else}
-			<span class="text-sm tabular-nums">{q.points} / {q.maxPoints}</span>
-			{#if q.answerId}
+			<span class="text-sm tabular-nums">{question.achievedPoints} / {question.maxPoints}</span>
+			{#if question.answerId}
 				<Button size="icon" variant="ghost" onclick={startEdit}>
 					<PencilIcon />
 				</Button>
-				{#if q.overridden}
+				{#if question.overridden}
 					<Button size="icon" variant="ghost" onclick={reset}>
 						<RotateCcwIcon />
 					</Button>

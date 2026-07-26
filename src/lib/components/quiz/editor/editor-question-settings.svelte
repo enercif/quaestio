@@ -11,7 +11,7 @@
 		ProgrammingQuestion,
 		SingleChoiceQuestion
 	} from '$lib/schemas/question.schema';
-	import { indexToSequence, questionMaxPoints, typeToBadge } from '../quiz.utils';
+	import { getQuestionMaxPoints, indexToSequence, typeToBadge } from '../quiz.utils';
 	import FieldErrors from './editor-field-errors.svelte';
 	import { getTimeAsString, sequenceTypeToString } from './editor-utils';
 	import { EditorState } from './editor.state.svelte';
@@ -69,7 +69,10 @@
 					{@const scoredQuestion = selectedQuestion as MultipleChoiceQuestion | ProgrammingQuestion}
 					{@const pointErrors = state.getSelectedQuestionError('points')}
 					{@const partialPointsErrors = state.getSelectedQuestionError('partial_points')}
-					{@const entries = Object.entries(scoredQuestion.correct)}
+					{@const entries =
+						scoredQuestion.correct instanceof Array
+							? scoredQuestion.correct.map((line) => [line, line])
+							: Object.entries(scoredQuestion.correct)}
 
 					<Field.Field>
 						<Field.Label>Punkte</Field.Label>
@@ -133,7 +136,7 @@
 							</div>
 							<FieldErrors errors={partialPointsErrors} />
 							<p class="text-sm text-muted-foreground">
-								Gesamt: {questionMaxPoints(scoredQuestion)} Punkte
+								Gesamt: {getQuestionMaxPoints(scoredQuestion)} Punkte
 							</p>
 						{/if}
 					</Field.Field>

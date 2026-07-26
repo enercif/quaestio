@@ -1,50 +1,34 @@
 <script lang="ts">
-	import { questionAccuracy } from '$lib/components/analytics/analytics.utils';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Chart from '$lib/components/ui/chart/index.js';
 	import { Progress } from '$lib/components/ui/progress/index.js';
-	import type { Question } from '$lib/schemas/question.schema';
 	import { BarChart } from 'layerchart';
+	import { analyticsRoomContext } from './analytics-room.state.svelte';
 
-	interface Props {
-		students: { totalPoints: number }[];
-		questionStats: { question: Question; selections: string[][] }[];
-		maxPoints: number;
-	}
+	const ctx = analyticsRoomContext.get();
 
-	let { students, questionStats, maxPoints }: Props = $props();
-
-	const accuracies = $derived(
-		questionStats.map((stat, index) => ({
-			index,
-			question: stat.question.question,
-			accuracy: questionAccuracy(stat.question, stat.selections)
-		}))
-	);
-
-	const studentCount = $derived(students.length);
+	const studentCount = $derived(ctx.students.length);
 	const avgAccuracy = $derived(
-		studentCount > 0 && maxPoints > 0
-			? students.reduce((sum, s) => sum + (s.totalPoints / maxPoints) * 100, 0) / studentCount
-			: 0
+		ctx.questions.reduce((sum, q) => sum + q.accuracy, 0) / ctx.questions.length
 	);
-	const hardestQuestion = $derived(
-		accuracies.reduce<(typeof accuracies)[number] | undefined>(
-			(worst, q) => (worst === undefined || q.accuracy < worst.accuracy ? q : worst),
-			undefined
-		)
-	);
-	const easiestQuestion = $derived(
-		accuracies.reduce<(typeof accuracies)[number] | undefined>(
-			(best, q) => (best === undefined || q.accuracy > best.accuracy ? q : best),
-			undefined
-		)
-	);
+	const hardestQuestion = $derived.by(() => {
+		if (ctx.questions.length === 0) return [];
+		const minAccuracy = Math.min(...ctx.questions.map((q) => q.accuracy));
+		return ctx.questions.filter((q) => q.accuracy === minAccuracy);
+	});
+
+	const easiestQuestion = $derived.by(() => {
+		if (ctx.questions.length === 0) return [];
+		const maxAccuracy = Math.max(...ctx.questions.map((q) => q.accuracy));
+		return ctx.questions.filter((q) => q.accuracy === maxAccuracy);
+	});
 
 	const scoreDistribution = $derived(
-		Array.from({ length: Math.round(maxPoints) + 1 }, (_, points) => ({
+		Array.from({ length: Math.round(ctx.maxPoints) + 1 }, (_, points) => ({
 			points: `${points}`,
-			count: students.filter((s) => Math.round(s.totalPoints) === points).length
+			count: ctx.students.filter(
+				(s) => Math.round(s.questions.reduce((sum, q) => sum + q.achievedPoints, 0)) === points
+			).length
 		}))
 	);
 
@@ -67,18 +51,26 @@
 		</Card.Root>
 		<Card.Root>
 			<Card.Header>
-				<Card.Description>Schwerste Frage</Card.Description>
+				<Card.Description
+					>{hardestQuestion.length > 1 ? 'Schwerste Fragen' : 'Schwerste Frage'}</Card.Description
+				>
 				<Card.Title class="text-3xl font-semibold">
-					{hardestQuestion ? `F${hardestQuestion.index + 1}` : '—'}
+					{hardestQuestion.length > 0
+						? hardestQuestion.map((q) => `F${q.position + 1}`).join(', ')
+						: '—'}
 				</Card.Title>
 			</Card.Header>
 		</Card.Root>
 
 		<Card.Root>
 			<Card.Header>
-				<Card.Description>Einfachste Frage</Card.Description>
+				<Card.Description
+					>{easiestQuestion.length > 1 ? 'Einfachste Fragen' : 'Einfachste Frage'}</Card.Description
+				>
 				<Card.Title class="text-3xl font-semibold">
-					{easiestQuestion ? `F${easiestQuestion.index + 1}` : '—'}
+					{easiestQuestion.length > 0
+						? easiestQuestion.map((q) => `F${q.position + 1}`).join(', ')
+						: '—'}
 				</Card.Title>
 			</Card.Header>
 		</Card.Root>
@@ -92,17 +84,18 @@
 			</Card.Header>
 			<Card.Content>
 				<div class="flex w-full flex-col gap-8">
-					{#each accuracies as stat (stat.index)}
+					{#each ctx.questions as question (question.id)}
 						<div class="flex flex-col gap-1">
 							<div class="flex flex-row items-center justify-between gap-2">
 								<p>
-									<span class="text-sm text-muted-foreground">F{stat.index + 1}</span>
-									<span class="ml-2 text-left text-sm">{stat.question}</span>
+									<span class="text-sm text-muted-foreground">F{question.position}</span>
+									<span class="ml-2 text-left text-sm">{question.question}</span>
 								</p>
-								<span class="text-sm font-semibold tabular-nums">{Math.round(stat.accuracy)}%</span
+								<span class="text-sm font-semibold tabular-nums"
+									>{Math.round(question.accuracy)}%</span
 								>
 							</div>
-							<Progress value={stat.accuracy} class="h-2 w-full" />
+							<Progress value={question.accuracy} class="h-2 w-full" />
 						</div>
 					{/each}
 				</div>

@@ -1,60 +1,49 @@
 <script lang="ts">
-	import { correctAnswersFor, questionAccuracy } from '$lib/components/analytics/analytics.utils';
+	import { correctToArray } from '$lib/components/analytics/analytics.utils';
 	import CodeLines from '$lib/components/quiz/code-lines.svelte';
 	import { typeToBadge } from '$lib/components/quiz/quiz.utils';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import type { Question } from '$lib/schemas/question.schema';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { slide } from 'svelte/transition';
+	import type { AnalyticsRoomState } from './analytics-room.state.svelte';
 
 	interface Props {
-		index: number;
-		question: Question;
-		selections: string[][];
+		question: (typeof AnalyticsRoomState.prototype.questions)[number];
+		quiz: typeof AnalyticsRoomState.prototype.quiz;
 	}
 
-	let { index, question, selections }: Props = $props();
+	let { question, quiz }: Props = $props();
 
-	const accuracy = $derived(questionAccuracy(question, selections));
-	const correct = $derived(correctAnswersFor(question));
+	let isOpen = $state(false);
 
-	const respondents = $derived(selections.filter((s) => s.length > 0).length);
-
-	function pct(count: number) {
-		return respondents ? Math.round((count / respondents) * 100) : 0;
-	}
-
-	const optionCounts = $derived(
-		question.type === 'multiple' || question.type === 'single'
-			? question.answers.map((answer) => ({
-					...answer,
-					correct: correct.includes(answer.text),
-					count: selections.filter((s) => s.includes(answer.text)).length
-				}))
-			: []
-	);
+	const currentQuestion = $derived(quiz.questions.find((q) => q.id === question.id)!);
+	const correct = $derived(correctToArray(currentQuestion));
+	const respondents = $derived(question.selected.length);
 
 	const lineCounts = $derived.by(() => {
 		const map = new SvelteMap<string, number>();
-		for (const selected of selections) {
+		for (const selected of question.selected) {
 			for (const line of selected) map.set(line, (map.get(line) ?? 0) + 1);
 		}
 		return map;
 	});
+
 	const sortedLines = $derived([...lineCounts].sort(([a], [b]) => Number(a) - Number(b)));
 
-	let isOpen = $state(false);
+	function pct(count: number) {
+		return respondents ? Math.round((count / respondents) * 100) : 0;
+	}
 </script>
 
 <Card.Root onclick={() => (isOpen = !isOpen)} class="cursor-pointer">
 	<Card.Header>
 		<div class="flex flex-col gap-2 items-start w-full">
 			<div class="flex flex-row items-center gap-2 w-full">
-				<p class="text-muted-foreground">Frage {index + 1}</p>
-				<Badge variant="secondary">{typeToBadge(question.type)}</Badge>
+				<p class="text-muted-foreground">Frage {currentQuestion.position + 1}</p>
+				<Badge variant="secondary">{typeToBadge(currentQuestion.type)}</Badge>
 				<span class="ml-auto shrink-0 text-sm font-semibold">
-					{Math.round(accuracy)}% Genauigkeit
+					{Math.round(question.accuracy)}% Genauigkeit
 				</span>
 			</div>
 			<div class="flex flex-row items-center gap-2 w-full">
@@ -66,15 +55,15 @@
 	{#if isOpen}
 		<div transition:slide={{ duration: 150 }}>
 			<Card.Content>
-				{#if question.type === 'open'}
+				{#if currentQuestion.type === 'open'}
 					<p class="text-sm text-muted-foreground">
 						Freitext-Antworten können unter "Pro Student" geprüft werden.
 					</p>
-				{:else if question.type === 'programming'}
+				{:else if currentQuestion.type === 'programming'}
 					<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 						<CodeLines
-							code={question.code}
-							language={question.language}
+							code={currentQuestion.code}
+							language={currentQuestion.language}
 							votes={lineCounts}
 							lineState={(line) => (correct.includes(line) ? 'correct' : undefined)}
 						/>
@@ -96,24 +85,26 @@
 					</div>
 				{:else}
 					<div class="flex flex-col gap-3">
-						{#each optionCounts as answer (answer.id)}
+						{#each currentQuestion.answers as answer (answer.id)}
+							{@const isCorrect = !!currentQuestion.correct[answer.id]}
+							{@const answerCount = question.selected.filter((s) => s.includes(answer.text)).length}
 							<div
 								class={[
 									'relative overflow-hidden rounded-lg border px-4 py-3',
-									answer.correct && 'border-green-500'
+									isCorrect && 'border-green-500'
 								]}
 							>
 								<div
 									class={[
 										'absolute inset-y-0 left-0 transition-[width] duration-300',
-										answer.correct ? 'bg-green-500/15' : 'bg-primary/10'
+										isCorrect ? 'bg-green-500/15' : 'bg-primary/10'
 									]}
-									style:width="{pct(answer.count)}%"
+									style:width="{pct(answerCount)}%"
 								></div>
 								<div class="relative flex flex-row items-center justify-between">
 									<span>{answer.text}</span>
 									<span class="text-sm tabular-nums text-muted-foreground">
-										{answer.count} · {pct(answer.count)}%
+										{answerCount} · {pct(answerCount)}%
 									</span>
 								</div>
 							</div>

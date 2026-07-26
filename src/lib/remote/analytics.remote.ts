@@ -1,61 +1,27 @@
 import { command, query } from '$app/server';
-import { quizSelectSchema } from '$lib/schemas/quiz.schema';
+import { analyticsRoomSchema, analyticsStudentSchema } from '$lib/schemas/analytics.schema';
 import { db } from '$lib/server/db';
-import { answerTable } from '$lib/server/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { answerTable, quizTable, roomTable } from '$lib/server/db/schema';
+import { countDistinct, eq } from 'drizzle-orm';
 import z from 'zod';
 
 export const listAnswerRooms = query(async () => {
-	const rooms = await db
+	const list = await db
 		.select({
-			id: answerTable.room_id,
-			studentCount: sql<number>`count(distinct ${answerTable.student_id})`.mapWith(Number),
-			answerCount: sql<number>`count(*)`.mapWith(Number)
+			id: roomTable.id,
+			studentCount: countDistinct(answerTable.student_id),
+			title: quizTable.title,
+			code: roomTable.code,
+			createdAt: roomTable.created_at
 		})
 		.from(answerTable)
-		.groupBy(answerTable.room_id);
-
-	const details = await db.query.roomTable.findMany({
-		where: (room, { inArray }) =>
-			inArray(
-				room.id,
-				rooms.map((r) => r.id)
-			),
-		with: { quiz: { columns: { id: true, title: true } } }
-	});
-	const detailsById = new Map(details.map((d) => [d.id, d]));
-
-	return rooms
-		.map((r) => {
-			const room = detailsById.get(r.id);
-			if (!room) return undefined;
-			return {
-				id: room.id,
-				code: room.code,
-				createdAt: room.created_at,
-				quizTitle: room.quiz.title,
-				studentCount: r.studentCount,
-				answerCount: r.answerCount
-			};
-		})
-		.filter((r) => r !== undefined)
-		.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+		.innerJoin(roomTable, eq(answerTable.room_id, roomTable.id))
+		.innerJoin(quizTable, eq(roomTable.quiz_id, quizTable.id))
+		.groupBy(roomTable.id, quizTable.title, roomTable.code, roomTable.created_at);
+	return list.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 });
 
-export const listAnswerStudents = query(async () => {
-	const students = await db
-		.select({
-			id: answerTable.student_id,
-			name: sql<string>`min(${answerTable.student_name})`,
-			roomCount: sql<number>`count(distinct ${answerTable.room_id})`.mapWith(Number)
-		})
-		.from(answerTable)
-		.groupBy(answerTable.student_id);
-
-	return students.sort((a, b) => a.name.localeCompare(b.name));
-});
-
-export const getRoomAnalysis = query(z.uuid(), async (roomId) => {
+export const getRoomAnalytics = query(z.uuid(), async (roomId) => {
 	const room = await db.query.roomTable.findFirst({
 		where: (room, { eq }) => eq(room.id, roomId),
 		with: { quiz: true }
@@ -66,40 +32,59 @@ export const getRoomAnalysis = query(z.uuid(), async (roomId) => {
 		where: (answer, { eq }) => eq(answer.room_id, roomId)
 	});
 
-	return {
-		room: { id: room.id, code: room.code, createdAt: room.created_at },
-		quiz: quizSelectSchema.parse(room.quiz),
-		answers
-	};
+	if (answers.length === 0) return undefined;
+
+	try {
+		return analyticsRoomSchema.parse({
+			room,
+			quiz: room.quiz,
+			answers
+		});
+	} catch (error) {
+		console.error('Error parsing analyticsRoomSchema:', error);
+		return undefined;
+	}
 });
 
-export const getStudentRooms = query(z.string(), async (studentId) => {
+export const listAnswerStudents = query(async () => {
+	const students = await db
+		.select({
+			id: answerTable.student_id,
+			name: answerTable.student_name,
+			roomCount: countDistinct(answerTable.room_id)
+		})
+		.from(answerTable)
+		.groupBy(answerTable.student_id, answerTable.student_name);
+
+	return students;
+});
+
+export const getStudentAnalytics = query(z.string(), async (studentId) => {
 	const answers = await db.query.answerTable.findMany({
 		where: (answer, { eq }) => eq(answer.student_id, studentId)
 	});
 	if (answers.length === 0) return undefined;
 
-	const studentName = answers[0].student_name;
-	const roomIds = [...new Set(answers.map((a) => a.room_id))];
-
-	const roomRows = await db.query.roomTable.findMany({
-		where: (room, { inArray }) => inArray(room.id, roomIds),
-		with: { quiz: true }
+	const rooms = await db.query.roomTable.findMany({
+		where: (room, { inArray }) => inArray(room.id, [...new Set(answers.map((a) => a.room_id))]),
+		with: { quiz: true },
+		orderBy: (room, { desc }) => desc(room.created_at)
 	});
-	const roomById = new Map(roomRows.map((r) => [r.id, r]));
 
-	const rooms = roomIds
-		.map((roomId) => {
-			const room = roomById.get(roomId)!;
-			return {
-				room: { id: room.id, code: room.code, createdAt: room.created_at },
-				quiz: quizSelectSchema.parse(room.quiz),
-				answers: answers.filter((a) => a.room_id === roomId)
-			};
-		})
-		.sort((a, b) => b.room.createdAt.localeCompare(a.room.createdAt));
+	if (rooms.length === 0) return undefined;
 
-	return { studentName, rooms };
+	try {
+		return analyticsStudentSchema.parse({
+			name: answers[0].student_name,
+			rooms: rooms.map((room) => ({
+				...room,
+				answers: answers.filter((a) => a.room_id === room.id)
+			}))
+		});
+	} catch (error) {
+		console.error('Error parsing analyticsStudentSchema:', error);
+		return undefined;
+	}
 });
 
 export const setPointsOverride = command(
@@ -112,8 +97,8 @@ export const setPointsOverride = command(
 			.returning();
 		if (!answer) return { success: false as const };
 
-		void getRoomAnalysis(answer.room_id).refresh();
-		void getStudentRooms(answer.student_id).refresh();
+		void getRoomAnalytics(answer.room_id).refresh();
+		void getStudentAnalytics(answer.student_id).refresh();
 		return { success: true as const };
 	}
 );

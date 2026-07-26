@@ -64,7 +64,7 @@ export const insertRoom = live.validated(
 		try {
 			const [{ code }] = await db
 				.insert(roomTable)
-				.values({ ...roomInsert, teacherId: ctx.user!.id })
+				.values({ ...roomInsert, teacher_id: ctx.user!.id })
 				.returning({ code: roomTable.code });
 
 			const room = await getRoomByCode(code);

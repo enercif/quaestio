@@ -27,7 +27,7 @@ export const roomSelectSchema = roomBaseSchema.extend({
 });
 
 export const roomInsertSchema = roomBaseSchema.extend({
-	quiz: z.uuid('Die Quiz-ID muss eine gültige UUID sein.')
+	quiz_id: z.uuid('Die Quiz-ID muss eine gültige UUID sein.')
 });
 
 export enum RoomState {
