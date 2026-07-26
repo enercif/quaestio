@@ -2,8 +2,9 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Chart from '$lib/components/ui/chart/index.js';
 	import { Progress } from '$lib/components/ui/progress/index.js';
+	import { localePersistedState } from '$lib/state/locale.state.svelte';
 	import { BarChart } from 'layerchart';
-	import { analyticsRoomContext } from './analytics-room.state.svelte';
+	import { analyticsRoomContext, AnalyticsRoomState } from './analytics-room.state.svelte';
 
 	const ctx = analyticsRoomContext.get();
 
@@ -33,6 +34,14 @@
 	);
 
 	const distributionChartConfig = { count: { label: 'Studenten', color: 'var(--chart-1)' } };
+
+	function questionsToString(array: typeof AnalyticsRoomState.prototype.questions) {
+		return array.length > 0
+			? array
+					.map((q) => `${localePersistedState.current === 'en' ? 'Q' : 'F'}${q.position + 1}`)
+					.join(', ')
+			: '—';
+	}
 </script>
 
 <div class="flex flex-col gap-4">
@@ -55,9 +64,7 @@
 					>{hardestQuestion.length > 1 ? 'Schwerste Fragen' : 'Schwerste Frage'}</Card.Description
 				>
 				<Card.Title class="text-3xl font-semibold">
-					{hardestQuestion.length > 0
-						? hardestQuestion.map((q) => `F${q.position + 1}`).join(', ')
-						: '—'}
+					{questionsToString(hardestQuestion)}
 				</Card.Title>
 			</Card.Header>
 		</Card.Root>
@@ -68,9 +75,7 @@
 					>{easiestQuestion.length > 1 ? 'Einfachste Fragen' : 'Einfachste Frage'}</Card.Description
 				>
 				<Card.Title class="text-3xl font-semibold">
-					{easiestQuestion.length > 0
-						? easiestQuestion.map((q) => `F${q.position + 1}`).join(', ')
-						: '—'}
+					{questionsToString(easiestQuestion)}
 				</Card.Title>
 			</Card.Header>
 		</Card.Root>
