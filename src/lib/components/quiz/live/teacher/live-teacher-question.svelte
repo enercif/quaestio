@@ -47,7 +47,7 @@
 		{/snippet}
 	</LiveQuestionHeader>
 
-	<h1 class="text-3xl font-semibold mt-10">{currentQuestion.question}</h1>
+	<h1 class="text-xl font-semibold mt-5 sm:text-3xl sm:mt-10">{currentQuestion.question}</h1>
 
 	<div class="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-2">
 		<Card.Root>

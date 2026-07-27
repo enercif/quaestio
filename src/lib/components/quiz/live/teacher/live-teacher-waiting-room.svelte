@@ -15,16 +15,21 @@
 <div class="flex flex-col gap-10">
 	<Card.Root>
 		<Card.Content>
-			<div class="flex h-64 flex-row items-center gap-10 px-20">
+			<div class="flex flex-col h-64 items-center gap-6 sm:gap-10 sm:flex-row sm:px-20">
 				<div class="flex grow flex-col items-center justify-center gap-4">
-					<p class="text-xl font-semibold text-muted-foreground">Raum Code</p>
+					<p class="text-lg font-semibold text-muted-foreground sm:text-xl">Raum Code</p>
 
-					<h1 class="text-6xl font-bold tracking-widest">{live.roomId}</h1>
+					<h1 class="text-xl font-bold tracking-widest sm:text-4xl md:text-6xl">{live.roomId}</h1>
 				</div>
 
-				<Separator orientation="vertical" />
+				<!-- Desktop -->
+				<div class="hidden sm:block">
+					<Separator orientation="vertical" />
+				</div>
 
-				<div class="size-64">
+				<div
+					class="flex justify-center items-center size-32 min-w-32 min-h-32 sm:size-64 sm:min-w-48 sm:min-h-48"
+				>
 					<QR
 						data={`${env.PUBLIC_BASE_URL}/?roomId=${live.roomId}`}
 						logo={icon}
@@ -47,7 +52,7 @@
 	<Card.Root>
 		<Card.Content>
 			<div class="flex h-full flex-col gap-4.5">
-				<div class="flex flex-row items-center justify-between gap-10">
+				<div class="flex flex-col items-center justify-between gap-6 sm:gap-10 sm:flex-row">
 					{#if live.roomData?.limit}
 						<p class="font-semibold">
 							{live.studentPresence.length} von {live.roomData.limit} beigetreten

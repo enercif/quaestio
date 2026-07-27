@@ -59,7 +59,7 @@
 		</div>
 	{/if}
 
-	<div class="flex flex-col mt-5 justify-start relative">
+	<div class="flex flex-col mt-2 justify-start relative sm:mt-5">
 		{#if !runner.revealed && (runner.paused || runner.timeUp)}
 			<div
 				transition:fade={{ duration: 50 }}

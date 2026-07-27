@@ -13,7 +13,7 @@
 </script>
 
 <div class="flex flex-col gap-2 text-xs">
-	<div class="flex flex-row justify-between text-muted-foreground">
+	<div class="flex flex-row justify-between sm:text-muted-foreground">
 		<p class="tracking-wide uppercase">Fragen</p>
 		<p>{state.quiz.questions.length}</p>
 	</div>
