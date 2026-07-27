@@ -68,6 +68,23 @@ export class AnalyticsRoomState {
 			byId.set(answer.student_id, student);
 		}
 
+		for (const student of byId.values()) {
+			const unansweredQuestions = this.quiz.questions.filter(
+				(q) => !student.questions.some((a) => a.id === q.id)
+			);
+
+			for (const question of unansweredQuestions) {
+				student.questions.push({
+					id: question.id,
+					achievedPoints: 0,
+					maxPoints: getQuestionMaxPoints(question),
+					selected: [],
+					answerId: undefined,
+					overridden: false
+				});
+			}
+		}
+
 		return [...byId.values()].toSorted((a, b) => a.name.localeCompare(b.name));
 	});
 }
