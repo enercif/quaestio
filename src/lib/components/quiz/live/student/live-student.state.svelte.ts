@@ -29,7 +29,7 @@ interface StudentAnswersState {
 	selected: string[];
 }
 export const studentAnswersPersistedState = new PersistedState<StudentAnswersState>(
-	'selected-mc-answers',
+	'selected-answers',
 	{
 		questionId: '',
 		selected: []

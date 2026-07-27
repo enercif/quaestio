@@ -109,9 +109,8 @@ msgstr "What's your name?"
 msgid "Der Lehrer kann dir so Punkte zuordnen"
 msgstr "This lets the teacher assign points to you"
 
-#: src/routes/+page.svelte
-msgid "Tony Stark"
-msgstr "Tony Stark"
+#~ msgid "Tony Stark"
+#~ msgstr "Tony Stark"
 
 #: src/routes/+page.svelte
 msgid "Dein Name"
@@ -699,10 +698,8 @@ msgstr "Students"
 msgid "{0} im Raum"
 msgstr "{0} in the room"
 
-#: src/routes/student/r/[code]/+page.server.ts
-#: src/routes/student/r/[code]/+page.server.ts
-msgid "Unbekannt"
-msgstr "Unknown"
+#~ msgid "Unbekannt"
+#~ msgstr "Unknown"
 
 #: src/routes/+page.svelte
 msgid "Gib den Raumcode ein, den dein Lehrer geteilt hat"
@@ -1411,3 +1408,10 @@ msgstr "Hardest Questions"
 #: src/lib/components/analytics/room/analytics-room-overview-tab.svelte
 msgid "Einfachste Fragen"
 msgstr "Easiest Questions"
+
+#~ msgid "Deine Kennung (z. B. E-Mail)"
+#~ msgstr ""
+
+#: src/routes/+page.svelte
+msgid "Deine Kennung"
+msgstr ""

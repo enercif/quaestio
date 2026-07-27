@@ -5,6 +5,7 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import { joinPlaceholders } from '$lib/placeholders';
 	import { roomCodeForm, roomNameForm } from '$lib/remote/join.remote';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
@@ -13,7 +14,7 @@
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import X from '@lucide/svelte/icons/x';
 	import { onMount, untrack } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -23,6 +24,8 @@
 	let roomIdUpperCase = $derived(
 		String(roomCodeForm.fields.roomId.value() ?? data.roomId ?? '').toUpperCase()
 	);
+
+	const placeholder = joinPlaceholders[Math.floor(Math.random() * joinPlaceholders.length)];
 
 	onMount(() => {
 		roomCodeForm.fields.roomId.set(data.roomId ?? '');
@@ -114,7 +117,7 @@
 							<Input
 								id="name"
 								autofocus
-								placeholder="Tony Stark"
+								placeholder={placeholder.name}
 								{...roomNameForm.fields.name.as(
 									'text',
 									codeResult?.success ? (codeResult.name ?? '') : ''
@@ -124,6 +127,25 @@
 							{#each roomNameForm.fields.name.issues() as issue (issue.message)}
 								<p class="mt-3 text-sm text-destructive">{issue.message}</p>
 							{/each}
+
+							{#if roomNameForm.fields.name.value() !== undefined && roomNameForm.fields.name.value() !== ''}
+								<div transition:slide={{ duration: 150 }}>
+									<Label for="identifier" class="mt-4 mb-2 text-sm font-medium">Deine Kennung</Label
+									>
+									<Input
+										id="identifier"
+										placeholder={placeholder.email}
+										{...roomNameForm.fields.identifier.as(
+											'text',
+											codeResult?.success ? (codeResult.identifier ?? '') : ''
+										)}
+									/>
+
+									{#each roomNameForm.fields.identifier.issues() as issue (issue.message)}
+										<p class="mt-3 text-sm text-destructive">{issue.message}</p>
+									{/each}
+								</div>
+							{/if}
 
 							<input {...roomNameForm.fields.roomId.as('hidden', roomIdUpperCase)} />
 						</form>
