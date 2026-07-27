@@ -8,10 +8,11 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const topic = TOPICS.room(params.code);
 	const id = cookies.get('id');
+	const name = cookies.get('name');
 
 	const room = await getRoomByCode(params.code);
 
-	if (!room) {
+	if (!room || !id || !name) {
 		redirect(303, resolve('/'));
 	}
 
@@ -21,7 +22,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
 	return {
 		code: params.code,
-		name: cookies.get('name') ?? 'Unbekannt',
-		id: id ?? 'Unbekannt'
+		name,
+		id
 	};
 };

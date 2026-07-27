@@ -2,7 +2,10 @@
 	import { resolve } from '$app/paths';
 	import LiveStudentQuestion from '$lib/components/quiz/live/student/live-student-question.svelte';
 	import LiveStudentWaitingRoom from '$lib/components/quiz/live/student/live-student-waiting-room.svelte';
-	import { LiveStudentState } from '$lib/components/quiz/live/student/live-student.state.svelte';
+	import {
+		liveStudentContext,
+		LiveStudentState
+	} from '$lib/components/quiz/live/student/live-student.state.svelte';
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import CheckCircle2Icon from '@lucide/svelte/icons/check-circle-2';
@@ -11,7 +14,7 @@
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	const live = LiveStudentState.init(data);
+	const live = liveStudentContext.set(new LiveStudentState(() => data));
 </script>
 
 <div class="flex h-full flex-col items-center justify-center w-full">

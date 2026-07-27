@@ -5,7 +5,7 @@ export type AnalyticsQuestion = {
 	achievedPoints: number;
 	maxPoints: number;
 	selected: string[];
-	answerId: string;
+	answerId: string | undefined;
 	overridden: boolean;
 };
 

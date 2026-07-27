@@ -5,9 +5,9 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import HoneycombGrid from '$lib/components/ui/honeycomb-grid/honeycomb-grid.svelte';
 	import { Progress } from '$lib/components/ui/progress/index.js';
-	import { LiveStudentState } from './live-student.state.svelte';
+	import { liveStudentContext } from './live-student.state.svelte';
 
-	const live = LiveStudentState.get();
+	const live = liveStudentContext.get();
 
 	function onLeaveClick() {
 		goto(resolve('/'));

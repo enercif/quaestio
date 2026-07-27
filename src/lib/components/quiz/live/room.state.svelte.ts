@@ -4,19 +4,21 @@ import { room } from '$live/rooms';
 import { fromStore } from 'svelte/store';
 
 export class RoomState {
-	private _room: { readonly current: Room | undefined };
-	private _presence: { readonly current: Presence[] | undefined };
+	_code: () => string;
 
-	constructor(code: string) {
-		this._room = fromStore(room.data(code));
-		this._presence = fromStore(room.presence!(code));
+	constructor(code: () => string) {
+		this._code = code;
 	}
 
-	get roomData() {
-		return this._room.current;
-	}
+	private readonly _room: { readonly current: Room | undefined } = $derived.by(() =>
+		fromStore(room.data(this._code()))
+	);
+	private readonly _presence: { readonly current: Presence[] | undefined } = $derived.by(() =>
+		fromStore(room.presence!(this._code()))
+	);
 
-	get studentPresence() {
-		return (this._presence.current ?? []).filter((p) => p.data.type === 'student');
-	}
+	readonly roomData = $derived(this._room.current);
+	readonly studentPresence = $derived(
+		(this._presence.current ?? []).filter((p) => p.data.type === 'student')
+	);
 }

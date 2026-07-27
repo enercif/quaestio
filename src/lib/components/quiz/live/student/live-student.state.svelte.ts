@@ -1,27 +1,21 @@
 import { Context, PersistedState } from 'runed';
 import { RoomState } from '../room.state.svelte';
 
-const liveStudentContext = new Context<LiveStudentState>('live-student');
+type LiveStudentData = { code: string; name: string; id: string };
+
+export const liveStudentContext = new Context<LiveStudentState>('live-student');
 
 export class LiveStudentState extends RoomState {
-	readonly code: string;
-	readonly name: string;
-	readonly id: string;
+	_data: () => LiveStudentData;
 
-	constructor(data: { code: string; name: string; id: string }) {
-		super(data.code);
-		this.code = data.code;
-		this.name = data.name;
-		this.id = data.id;
+	constructor(data: () => LiveStudentData) {
+		super(() => data().code);
+		this._data = data;
 	}
 
-	static init(data: { code: string; name: string; id: string }) {
-		return liveStudentContext.set(new LiveStudentState(data));
-	}
-
-	static get() {
-		return liveStudentContext.get();
-	}
+	readonly code = $derived.by(() => this._data().code);
+	readonly name = $derived.by(() => this._data().name);
+	readonly id = $derived.by(() => this._data().id);
 }
 
 interface StudentAnswersState {
@@ -29,7 +23,7 @@ interface StudentAnswersState {
 	selected: string[];
 }
 export const studentAnswersPersistedState = new PersistedState<StudentAnswersState>(
-	'selected-mc-answers',
+	'selected-answers',
 	{
 		questionId: '',
 		selected: []

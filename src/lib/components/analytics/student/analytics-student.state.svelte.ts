@@ -11,7 +11,6 @@ export class AnalyticsStudentState {
 	_analytics: () => AnalyticsStudent;
 
 	constructor(analytics: () => AnalyticsStudent) {
-		console.log('AnalyticsStudentState constructor');
 		this._analytics = analytics;
 	}
 
@@ -23,17 +22,18 @@ export class AnalyticsStudentState {
 			if (byId.has(room.id)) continue;
 
 			const questions: AnalyticsQuestion[] = room.quiz.questions.map((question) => {
-				const answer = room.answers.find((a) => a.question_id === question.id)!;
-				const achievedPoints =
-					answer.points_override ?? getAchievedPoints(question, answer.selected);
+				const answer = room.answers.find((a) => a.question_id === question.id);
+				const achievedPoints = answer
+					? (answer.points_override ?? getAchievedPoints(question, answer.selected))
+					: 0;
 				const maxPoints = getQuestionMaxPoints(question);
 				return {
 					id: question.id,
 					achievedPoints,
 					maxPoints,
-					selected: answer.selected,
-					answerId: answer.id,
-					overridden: answer.points_override !== null
+					selected: answer?.selected ?? [],
+					answerId: answer?.id ?? undefined,
+					overridden: answer?.points_override !== null
 				};
 			});
 
