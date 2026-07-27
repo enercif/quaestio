@@ -55,7 +55,7 @@
 </script>
 
 <div class="flex size-full flex-col items-center justify-center gap-8">
-	<Card.Root class="w-1/2 max-w-90">
+	<Card.Root class="w-full max-w-90">
 		<Card.Header class="text-center">
 			<div
 				class="mx-auto mt-3 mb-5 flex w-fit flex-row items-center gap-1 rounded-xl bg-primary/10 px-3 py-1 text-base text-primary"

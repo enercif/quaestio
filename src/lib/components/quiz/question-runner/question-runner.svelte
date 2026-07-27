@@ -17,12 +17,12 @@
 	const runner = RunnerState.get();
 </script>
 
-<div class="px-10 mt-5 flex flex-col size-full max-w-6xl justify-start pb-24">
+<div class="px-2 mt-5 flex flex-col size-full max-w-6xl justify-start pb-24">
 	<LiveQuestionHeader room={runner.room} />
 
-	<div class="flex flex-row items-center gap-4">
+	<div class="flex flex-row items-center gap-2 sm:gap-4">
 		<Tooltip.Root>
-			<Tooltip.Trigger class="w-fit mt-10 cursor-help">
+			<Tooltip.Trigger class="mt-6 w-fit cursor-help sm:mt-10">
 				<Badge variant="default">{typeToBadge(runner.currentQuestion.type)}</Badge>
 			</Tooltip.Trigger>
 			<Tooltip.Content>
@@ -32,7 +32,7 @@
 
 		{#if runner.currentQuestion.hint}
 			<Tooltip.Root>
-				<Tooltip.Trigger class="w-fit mt-10 cursor-help">
+				<Tooltip.Trigger class="w-fit mt-6 cursor-help sm:mt-10">
 					<Badge variant="secondary">Hinweis</Badge>
 				</Tooltip.Trigger>
 				<Tooltip.Content>
@@ -42,7 +42,9 @@
 		{/if}
 	</div>
 
-	<h1 class="text-3xl font-semibold mt-2">{runner.currentQuestion.question}</h1>
+	<h1 class="text-xl font-semibold wrap-break-word mt-2 sm:text-3xl">
+		{runner.currentQuestion.question}
+	</h1>
 
 	{#if runner.showResources && runner.currentQuestion.resources.length > 0}
 		<div class="flex flex-row flex-wrap gap-2 mt-4">

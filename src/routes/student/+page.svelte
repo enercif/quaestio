@@ -10,8 +10,8 @@
 	let { data }: PageProps = $props();
 </script>
 
-<div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
-	<h1 class="text-2xl font-semibold">Übungsräume</h1>
+<div class="mt-8 flex w-full max-w-7xl flex-col gap-8 sm:gap-10 sm:mx-5 sm:mt-10">
+	<h1 class="text-xl sm:text-2xl font-semibold">Übungsräume</h1>
 
 	<div class="rounded-lg border">
 		{#if data.quizzes.length === 0}
@@ -35,7 +35,34 @@
 				</Empty.Header>
 			</Empty.Root>
 		{:else}
-			<table class="size-full">
+			<div class="flex flex-col divide-y sm:hidden">
+				{#each data.quizzes as quiz (quiz.id)}
+					<div class="flex flex-col gap-3 p-4">
+						<div class="flex items-start justify-between gap-3">
+							<h2 class="font-medium break-words">{quiz.title}</h2>
+							<span class="shrink-0 text-sm whitespace-nowrap text-secondary-foreground/75">
+								{quiz.questions.length} Fragen
+							</span>
+						</div>
+
+						{#if quiz.tags.length > 0}
+							<div class="flex flex-row flex-wrap gap-1">
+								{#each quiz.tags as tag, i (i)}
+									<Badge variant="secondary">{tag}</Badge>
+								{/each}
+							</div>
+						{:else}
+							<p class="text-sm text-muted-foreground">Keine Tags</p>
+						{/if}
+
+						<Button href={resolve('/student/practice/[id]', { id: quiz.id })} class="mt-1 w-full">
+							Starten
+							<ArrowRightIcon />
+						</Button>
+					</div>
+				{/each}
+			</div>
+			<table class="hidden sm:table size-full">
 				<thead>
 					<tr class="border-b text-sm text-secondary-foreground/75">
 						<th class="w-2/5 py-2 pl-4 text-left font-semibold">Quiz</th>

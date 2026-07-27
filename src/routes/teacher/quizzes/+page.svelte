@@ -25,9 +25,9 @@
 
 <QuizImporter bind:this={quizImporter} />
 
-<div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
+<div class="mt-8 flex w-full max-w-7xl flex-col gap-6 sm:mt-14 sm:gap-10">
 	<div class="flex flex-row items-center justify-between">
-		<h1 class="text-2xl font-semibold">Deine Quizze</h1>
+		<h1 class="text-xl font-semibold sm:text-2xl">Deine Quizze</h1>
 
 		<ButtonGroup.Root>
 			<Button href={resolve('/teacher/quizzes/new')}>

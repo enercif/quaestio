@@ -163,7 +163,7 @@
 				</div>
 			</div>
 		</nav>
-		<div class="flex w-full flex-1 flex-col items-center justify-start">
+		<div class="flex w-full flex-1 flex-col items-center justify-start px-5">
 			{@render children()}
 		</div>
 	</Tooltip.Provider>

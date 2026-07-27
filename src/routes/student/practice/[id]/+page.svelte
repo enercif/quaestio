@@ -22,14 +22,14 @@
 </script>
 
 <div class="flex w-full items-center justify-center border-b py-2">
-	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-4">
+	<div class="flex w-full max-w-7xl items-center justify-between gap-4">
 		<Button variant="ghost" onclick={onLeaveClick}>
 			<ArrowLeftIcon />
 			Zurück
 		</Button>
 
 		<h1 class="text-center leading-none font-semibold">{data.quiz.title}</h1>
-		<p class="ml-auto text-sm text-muted-foreground">Übungsraum</p>
+		<p class="text-sm text-muted-foreground">Übungsraum</p>
 	</div>
 </div>
 
