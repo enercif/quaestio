@@ -35,7 +35,7 @@
 	}
 </script>
 
-<div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-10">
+<div class="gap-6 mt-6 flex w-full max-w-7xl flex-col sm:mt-14 sm:gap-10 sm:mx-5">
 	<h1 class="text-2xl font-semibold">Live Räume</h1>
 
 	{#if _rooms !== undefined && _rooms.length === 0}
@@ -80,7 +80,7 @@
 			</Card.Root>
 		</div>
 	{:else}
-		<div class="grid grid-cols-3 gap-4">
+		<div class="flex flex-col gap-3 sm:grid sm:grid-cols-3 sm:gap-4">
 			{#each _rooms as room (room.code)}
 				<Card.Root>
 					<Card.Header>
