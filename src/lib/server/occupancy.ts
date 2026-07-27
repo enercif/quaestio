@@ -32,7 +32,10 @@ export function studentCount(topic: string): number {
 export async function checkRoomCode(
 	code: string,
 	cookies: Cookies
-): Promise<{ success: true; name?: string } | { success: false; reason: 'not_found' | 'full' }> {
+): Promise<
+	| { success: true; name?: string; identifier?: string }
+	| { success: false; reason: 'not_found' | 'full' }
+> {
 	const room = await db.query.roomTable.findFirst({
 		where: (room) => and(eq(room.code, code.toUpperCase()), isNull(room.deleted_at))
 	});
@@ -48,5 +51,5 @@ export async function checkRoomCode(
 		return { success: false, reason: 'full' };
 	}
 
-	return { success: true, name: cookies.get('name') };
+	return { success: true, name: cookies.get('name'), identifier: userId };
 }

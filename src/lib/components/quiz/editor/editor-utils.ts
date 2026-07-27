@@ -1,4 +1,4 @@
-import { placeholders } from '$lib/placeholders';
+import { questionPlaceholders } from '$lib/placeholders';
 import type { SequenceType } from '$lib/schemas/question.schema';
 
 export function sequenceTypeToString(type: SequenceType) {
@@ -25,11 +25,11 @@ export function hashUUID(uuid: string) {
 
 export function UUIDToPromptPlaceholder(uuid: string) {
 	const hash = hashUUID(uuid);
-	return placeholders[hash % placeholders.length].prompt;
+	return questionPlaceholders[hash % questionPlaceholders.length].prompt;
 }
 
 export function UUIDToAnswerPlaceholder(uuid: string) {
 	const hash = hashUUID(uuid);
-	const answers = placeholders[hash % placeholders.length].answers;
+	const answers = questionPlaceholders[hash % questionPlaceholders.length].answers;
 	return answers[Math.floor(Math.random() * answers.length)];
 }

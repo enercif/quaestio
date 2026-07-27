@@ -5,6 +5,7 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import { joinPlaceholders } from '$lib/placeholders';
 	import { roomCodeForm, roomNameForm } from '$lib/remote/join.remote';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
@@ -24,7 +25,14 @@
 		String(roomCodeForm.fields.roomId.value() ?? data.roomId ?? '').toUpperCase()
 	);
 
+	const placeholder = joinPlaceholders[Math.floor(Math.random() * joinPlaceholders.length)];
+
 	onMount(() => {
+		if (data.name && data.id) {
+			roomNameForm.fields.name.set(data.name);
+			roomNameForm.fields.identifier.set(data.id);
+		}
+
 		roomCodeForm.fields.roomId.set(data.roomId ?? '');
 	});
 </script>
@@ -114,7 +122,7 @@
 							<Input
 								id="name"
 								autofocus
-								placeholder="Tony Stark"
+								placeholder={placeholder.name}
 								{...roomNameForm.fields.name.as(
 									'text',
 									codeResult?.success ? (codeResult.name ?? '') : ''
@@ -122,6 +130,20 @@
 							/>
 
 							{#each roomNameForm.fields.name.issues() as issue (issue.message)}
+								<p class="mt-3 text-sm text-destructive">{issue.message}</p>
+							{/each}
+
+							<Label for="identifier" class="mt-4 mb-2 text-sm font-medium">Deine Kennung</Label>
+							<Input
+								id="identifier"
+								placeholder={placeholder.email}
+								{...roomNameForm.fields.identifier.as(
+									'text',
+									codeResult?.success ? (codeResult.identifier ?? '') : ''
+								)}
+							/>
+
+							{#each roomNameForm.fields.identifier.issues() as issue (issue.message)}
 								<p class="mt-3 text-sm text-destructive">{issue.message}</p>
 							{/each}
 

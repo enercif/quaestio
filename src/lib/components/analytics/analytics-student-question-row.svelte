@@ -30,12 +30,22 @@
 	}
 
 	async function save() {
+		if (question.answerId === undefined) {
+			toast.error('Antwort konnte nicht gefunden werden.');
+			editing = false;
+			return;
+		}
 		const result = await setPointsOverride({ answerId: question.answerId, points: draft });
 		if (!result.success) toast.error('Punkte konnten nicht gespeichert werden.');
 		editing = false;
 	}
 
 	async function reset() {
+		if (question.answerId === undefined) {
+			toast.error('Antwort konnte nicht gefunden werden.');
+			editing = false;
+			return;
+		}
 		const result = await setPointsOverride({ answerId: question.answerId, points: null });
 		if (!result.success) toast.error('Punkte konnten nicht zurückgesetzt werden.');
 		editing = false;
@@ -57,7 +67,12 @@
 		</p>
 
 		<p class="text-sm text-muted-foreground">
-			Antwort: {question.selected.length > 0 ? question.selected.join(', ') : '—'}
+			Antwort:
+			{#if question.selected.length > 0}
+				{question.selected.join(', ')}
+			{:else}
+				<span class="text-destructive">Keine Antwort</span>
+			{/if}
 		</p>
 	</div>
 

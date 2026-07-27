@@ -3,10 +3,14 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	const roomId = url.searchParams.get('roomId');
+	const name = url.searchParams.get('name');
+	const id = url.searchParams.get('id');
 	if (!roomId) return {};
 
 	return {
 		roomId: roomId.toUpperCase(),
-		result: await checkRoomCode(roomId, cookies)
+		result: await checkRoomCode(roomId, cookies),
+		name,
+		id
 	};
 };

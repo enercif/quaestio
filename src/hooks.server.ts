@@ -24,16 +24,9 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	return svelteKitHandler({ event, resolve, auth, building });
 };
 
-const handleAnonymousId: Handle = async ({ event, resolve }) => {
-	if (!event.cookies.get('id')) {
-		event.cookies.set('id', crypto.randomUUID(), { path: '/' });
-	}
-	return resolve(event);
-};
-
 const handleLocale: Handle = async ({ event, resolve }) => {
 	const locale = event.cookies.get('locale') ?? 'de';
 	return await runWithLocale(locale, () => resolve(event));
 };
 
-export const handle: Handle = sequence(handleAuth, handleAnonymousId, handleLocale);
+export const handle: Handle = sequence(handleAuth, handleLocale);

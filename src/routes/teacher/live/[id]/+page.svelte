@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { LiveTeacherState } from '$lib/components/quiz/live/teacher/live-teacher.state.svelte';
+	import {
+		liveTeacherContext,
+		LiveTeacherState
+	} from '$lib/components/quiz/live/teacher/live-teacher.state.svelte';
 	import LiveTeacherQuestion from '$lib/components/quiz/live/teacher/live-teacher-question.svelte';
 	import LiveTeacherWaitingRoom from '$lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -11,8 +14,9 @@
 
 	let { data } = $props();
 
-	// svelte-ignore state_referenced_locally
-	const live = LiveTeacherState.init(data.id, data.user.id);
+	const live = liveTeacherContext.set(
+		new LiveTeacherState(() => ({ roomId: data.id, userId: data.user.id }))
+	);
 
 	async function onLeaveClick() {
 		goto(resolve('/teacher/live'));

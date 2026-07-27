@@ -6,9 +6,9 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import { SvelteMap } from 'svelte/reactivity';
-	import { LiveTeacherState } from './live-teacher.state.svelte';
+	import { liveTeacherContext } from './live-teacher.state.svelte';
 
-	const live = LiveTeacherState.get();
+	const live = liveTeacherContext.get();
 
 	const roomData = $derived(live.roomData!);
 	const currentQuestion = $derived(roomData.current_question!);
