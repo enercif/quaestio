@@ -17,7 +17,7 @@
 	const runner = RunnerState.get();
 </script>
 
-<div class="px-2 mt-5 flex flex-col size-full max-w-6xl justify-start pb-24">
+<div class="px-2 mt-5 flex flex-col size-full max-w-7xl justify-start pb-24">
 	<LiveQuestionHeader room={runner.room} />
 
 	<div class="flex flex-row items-center gap-2 sm:gap-4">

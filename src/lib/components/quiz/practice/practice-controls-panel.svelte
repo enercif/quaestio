@@ -11,13 +11,20 @@
 	let showControls = $state(true);
 </script>
 
-<Card.Root class="fixed bottom-6 right-6 z-20 w-fit shadow-lg p-0">
+<Card.Root
+	class="fixed inset-x-0 bottom-0 right-6 z-20 w-full shadow-lg p-0 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-fit"
+>
 	<Card.Content
-		class="flex flex-row items-center gap-1 transition-all duration-150 {showControls
+		class="flex flex-row items-center justify-center gap-1 transition-all duration-150 sm:justify-start {showControls
 			? 'p-3'
 			: 'p-1'}"
 	>
-		<Button variant="ghost" size="icon" onclick={() => (showControls = !showControls)}>
+		<Button
+			class="hidden sm:inline-flex"
+			variant="ghost"
+			size="icon"
+			onclick={() => (showControls = !showControls)}
+		>
 			<ChevronLeftIcon
 				class={['transition-transform duration-150', showControls && 'rotate-180']}
 			/>
