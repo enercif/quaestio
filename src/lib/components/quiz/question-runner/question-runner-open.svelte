@@ -3,7 +3,7 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import type { LiveOpenTextQuestion } from '$lib/schemas/question.schema';
 	import SendIcon from '@lucide/svelte/icons/send';
-	import { watch } from 'runed';
+	import { useDebounce, watch } from 'runed';
 	import { RunnerState } from './question-runner.state.svelte';
 
 	const runner = RunnerState.get();
@@ -17,13 +17,33 @@
 			openText = runner.selected[0] ?? '';
 		}
 	);
+
+	function send() {
+		const text = openText.trim();
+		if (text && text !== runner.selected[0]) runner.submit([text]);
+	}
+
+	watch(
+		() => runner.timeUp,
+		(timeUp) => {
+			if (timeUp) send();
+		}
+	);
+
+	const sendDebounced = useDebounce(send, 800);
+	watch(
+		() => openText,
+		() => {
+			if (!runner.locked) sendDebounced();
+		}
+	);
 </script>
 
 <form
 	class="flex flex-col items-end gap-3 w-full mt-5"
 	onsubmit={(event) => {
 		event.preventDefault();
-		if (openText.trim()) runner.submit([openText.trim()]);
+		send();
 	}}
 >
 	<Textarea

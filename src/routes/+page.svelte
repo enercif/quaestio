@@ -14,7 +14,7 @@
 	import GraduationCapIcon from '@lucide/svelte/icons/graduation-cap';
 	import X from '@lucide/svelte/icons/x';
 	import { onMount, untrack } from 'svelte';
-	import { fly, slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -28,6 +28,11 @@
 	const placeholder = joinPlaceholders[Math.floor(Math.random() * joinPlaceholders.length)];
 
 	onMount(() => {
+		if (data.name && data.id) {
+			roomNameForm.fields.name.set(data.name);
+			roomNameForm.fields.identifier.set(data.id);
+		}
+
 		roomCodeForm.fields.roomId.set(data.roomId ?? '');
 	});
 </script>
@@ -128,24 +133,19 @@
 								<p class="mt-3 text-sm text-destructive">{issue.message}</p>
 							{/each}
 
-							{#if roomNameForm.fields.name.value() !== undefined && roomNameForm.fields.name.value() !== ''}
-								<div transition:slide={{ duration: 150 }}>
-									<Label for="identifier" class="mt-4 mb-2 text-sm font-medium">Deine Kennung</Label
-									>
-									<Input
-										id="identifier"
-										placeholder={placeholder.email}
-										{...roomNameForm.fields.identifier.as(
-											'text',
-											codeResult?.success ? (codeResult.identifier ?? '') : ''
-										)}
-									/>
+							<Label for="identifier" class="mt-4 mb-2 text-sm font-medium">Deine Kennung</Label>
+							<Input
+								id="identifier"
+								placeholder={placeholder.email}
+								{...roomNameForm.fields.identifier.as(
+									'text',
+									codeResult?.success ? (codeResult.identifier ?? '') : ''
+								)}
+							/>
 
-									{#each roomNameForm.fields.identifier.issues() as issue (issue.message)}
-										<p class="mt-3 text-sm text-destructive">{issue.message}</p>
-									{/each}
-								</div>
-							{/if}
+							{#each roomNameForm.fields.identifier.issues() as issue (issue.message)}
+								<p class="mt-3 text-sm text-destructive">{issue.message}</p>
+							{/each}
 
 							<input {...roomNameForm.fields.roomId.as('hidden', roomIdUpperCase)} />
 						</form>
