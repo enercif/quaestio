@@ -10,7 +10,7 @@
 	const activeTab = $derived(page.route.id?.includes('/admin/settings') ? 'settings' : 'users');
 </script>
 
-<div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-6">
+<div class="mt-6 flex w-full max-w-7xl flex-col gap-6 sm:mt-14 sm:mx-5">
 	<h1 class="text-2xl font-semibold">Admin</h1>
 
 	<Tabs.Root value={activeTab}>
