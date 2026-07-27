@@ -109,9 +109,6 @@ msgstr "What's your name?"
 msgid "Der Lehrer kann dir so Punkte zuordnen"
 msgstr "This lets the teacher assign points to you"
 
-#~ msgid "Tony Stark"
-#~ msgstr "Tony Stark"
-
 #: src/routes/+page.svelte
 msgid "Dein Name"
 msgstr "Your name"
@@ -698,9 +695,6 @@ msgstr "Students"
 msgid "{0} im Raum"
 msgstr "{0} in the room"
 
-#~ msgid "Unbekannt"
-#~ msgstr "Unknown"
-
 #: src/routes/+page.svelte
 msgid "Gib den Raumcode ein, den dein Lehrer geteilt hat"
 msgstr "Enter the room code your teacher shared"
@@ -954,9 +948,6 @@ msgstr "Points could not be reset."
 #: src/lib/components/analytics/student/analytics-student-room-row.svelte
 msgid "{0} / {1} Punkte"
 msgstr "{0} / {1} points"
-
-#~ msgid "Antwort: {0}"
-#~ msgstr "Answer: {0}"
 
 #: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 msgid "Dieser Raum wurde nicht gefunden."
@@ -1407,22 +1398,19 @@ msgstr "Hardest Questions"
 msgid "Einfachste Fragen"
 msgstr "Easiest Questions"
 
-#~ msgid "Deine Kennung (z. B. E-Mail)"
-#~ msgstr ""
-
 #: src/routes/+page.svelte
 msgid "Deine Kennung"
-msgstr ""
+msgstr "Your ID"
 
 #: src/lib/components/analytics/analytics-student-question-row.svelte
 #: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Antwort konnte nicht gefunden werden."
-msgstr ""
+msgstr "Answer could not be found."
 
 #: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Keine Antwort"
-msgstr ""
+msgstr "No answer"
 
 #: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Antwort: <0/>"
-msgstr ""
+msgstr "Answer: <0/>"
