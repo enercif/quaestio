@@ -13,13 +13,27 @@ import { toast } from 'svelte-sonner';
 import { fromStore } from 'svelte/store';
 import { RoomState } from '../room.state.svelte';
 
-const liveTeacherContext = new Context<LiveTeacherState>('live-teacher');
+type LiveTeacherData = { roomId: string; userId: string };
+
+export const liveTeacherContext = new Context<LiveTeacherState>('live-teacher');
 
 export class LiveTeacherState extends RoomState implements QuizFlow {
-	readonly roomId: string;
-	readonly userId: string;
+	_data: () => LiveTeacherData;
 
-	private _answers: { readonly current: Answer[] | undefined };
+	constructor(data: () => LiveTeacherData) {
+		super(() => data().roomId);
+		this._data = data;
+	}
+
+	readonly roomId = $derived.by(() => this._data().roomId);
+	readonly userId = $derived.by(() => this._data().userId);
+
+	private readonly _answers: { readonly current: Answer[] | undefined } = $derived.by(() =>
+		fromStore(roomAnswers(this.roomId))
+	);
+
+	readonly answers = $derived(this._answers.current ?? []);
+	readonly isRoomOwner = $derived(this.roomData?.teacher_id === this.userId);
 
 	revealed = $derived(this.roomData?.state === 'answer');
 	paused = $derived(this.roomData?.paused_remaining != null);
@@ -29,21 +43,6 @@ export class LiveTeacherState extends RoomState implements QuizFlow {
 			this.roomData.current_question.position + 1 >= this.roomData.quiz.questions_length
 	);
 
-	constructor(roomId: string, userId: string) {
-		super(roomId);
-		this.roomId = roomId;
-		this.userId = userId;
-		this._answers = fromStore(roomAnswers(roomId));
-	}
-
-	get isRoomOwner() {
-		return this.roomData?.teacher_id === this.userId;
-	}
-
-	get answers() {
-		return this._answers.current ?? [];
-	}
-
 	next = () => this._run(nextQuestion(this.roomId));
 	showResults = () => this._run(showResultsAction(this.roomId));
 	pause = () => this._run(pauseTimer(this.roomId));
@@ -51,13 +50,5 @@ export class LiveTeacherState extends RoomState implements QuizFlow {
 
 	_run(action: Promise<unknown>) {
 		action.catch(() => toast.error('Aktion fehlgeschlagen.'));
-	}
-
-	static init(roomId: string, userId: string) {
-		return liveTeacherContext.set(new LiveTeacherState(roomId, userId));
-	}
-
-	static get() {
-		return liveTeacherContext.get();
 	}
 }
