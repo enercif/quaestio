@@ -11,7 +11,6 @@ export class AnalyticsStudentState {
 	_analytics: () => AnalyticsStudent;
 
 	constructor(analytics: () => AnalyticsStudent) {
-		console.log('AnalyticsStudentState constructor');
 		this._analytics = analytics;
 	}
 

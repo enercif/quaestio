@@ -7,9 +7,9 @@
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Play from '@lucide/svelte/icons/play';
 	import QR from '@svelte-put/qr/svg/QR.svelte';
-	import { LiveTeacherState } from './live-teacher.state.svelte';
+	import { liveTeacherContext } from './live-teacher.state.svelte';
 
-	const live = LiveTeacherState.get();
+	const live = liveTeacherContext.get();
 </script>
 
 <div class="flex flex-col gap-10">
