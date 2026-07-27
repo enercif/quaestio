@@ -12,7 +12,7 @@
 	);
 </script>
 
-<div class="mx-5 mt-14 flex w-full max-w-7xl flex-col gap-6">
+<div class="mt-6 flex w-full max-w-7xl flex-col gap-6 sm:mt-14">
 	<h1 class="text-2xl font-semibold">Analyse</h1>
 
 	<Tabs.Root value={activeTab}>
