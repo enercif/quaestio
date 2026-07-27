@@ -27,7 +27,7 @@
 
 <div class="mt-8 flex w-full max-w-7xl flex-col gap-6 sm:mt-14 sm:gap-10">
 	<div class="flex flex-row items-center justify-between">
-		<h1 class="text-xl font-semibold sm:text-2xl">Deine Quizze</h1>
+		<h1 class="text-lg font-semibold sm:text-2xl">Deine Quizze</h1>
 
 		<ButtonGroup.Root>
 			<Button href={resolve('/teacher/quizzes/new')}>
@@ -116,9 +116,9 @@
 				<thead>
 					<tr class="border-b text-sm text-secondary-foreground/75">
 						<th class="w-2/5 py-2 pl-4 text-left font-semibold">Titel</th>
-						<th class="py-2 text-left font-semibold">Tags</th>
-						<th class="py-2 text-left font-semibold">Fragen</th>
-						<th class="py-2 text-left font-semibold">Letzter Lauf</th>
+						<th class="w-1/7 py-2 text-left font-semibold hidden sm:table-cell">Tags</th>
+						<th class="w-1/7 py-2 text-left font-semibold hidden sm:table-cell">Fragen</th>
+						<th class="w-1/7 py-2 text-left font-semibold hidden sm:table-cell">Letzter Lauf</th>
 						<th class="py-2 font-semibold"></th>
 					</tr>
 				</thead>
@@ -126,7 +126,7 @@
 					{#each quizzes as quiz (quiz.id)}
 						<tr class="border-b transition-colors duration-200 hover:bg-secondary">
 							<td class="py-2 pl-4">{quiz.title}</td>
-							<td class="py-2">
+							<td class="py-2 hidden sm:table-cell">
 								{#if quiz.tags.length > 0}
 									{#each quiz.tags as tag, i (i)}
 										<Badge variant="secondary">{tag}</Badge>
@@ -135,8 +135,8 @@
 									<p>Keine Tags</p>
 								{/if}
 							</td>
-							<td class="py-2">{quiz.questions.length}</td>
-							<td class="py-2"
+							<td class="py-2 hidden sm:table-cell">{quiz.questions.length}</td>
+							<td class="py-2 hidden sm:table-cell"
 								>{quiz.last_run
 									? new Date(quiz.last_run).toLocaleString(localePersistedState.current, {
 											dateStyle: 'full',
@@ -144,7 +144,7 @@
 										})
 									: 'Noch nicht gestartet'}</td
 							>
-							<td class="flex flex-row items-center justify-end gap-1 py-2 pr-4">
+							<td class="flex flex-row items-center justify-end gap-1 py-2 pr-2 sm:pr-4">
 								<Tooltip.Root>
 									<Tooltip.Trigger>
 										{#snippet child({ props })}
