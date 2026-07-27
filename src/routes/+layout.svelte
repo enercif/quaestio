@@ -19,6 +19,8 @@
 	import UserIcon from '@lucide/svelte/icons/user';
 	import { ModeWatcher, toggleMode } from 'mode-watcher';
 	import { loadLocale } from 'wuchale/load-utils';
+	import * as Sheet from '$lib/components/ui/sheet';
+	import MenuIcon from '@lucide/svelte/icons/menu';
 	import type { LayoutProps } from './$types';
 	import './layout.css';
 
@@ -31,6 +33,7 @@
 	const initials = $derived(getInitials(data.user?.name));
 
 	let accountDialogOpen = $state(false);
+	let mobileNavOpen = $state(false);
 
 	async function logout() {
 		await authClient.signOut();
@@ -57,13 +60,13 @@
 				</div>
 
 				{#if isStudentRoute}
-					<div class="flex flex-row items-center gap-2">
+					<div class="hidden flex-row items-center gap-2 md:flex">
 						<Button variant="ghost" href={resolve('/')}>Quiz beitreten</Button>
 					</div>
 				{/if}
 
 				{#if isTeacherRoute}
-					<div class="flex flex-row items-center gap-2">
+					<div class="hidden flex-row items-center gap-2 md:flex">
 						<Button
 							data-active={page.route.id?.includes('/teacher/quizzes')}
 							class="data-active:font-semibold data-active:text-primary data-active:hover:text-primary"
@@ -131,34 +134,176 @@
 					</Button>
 
 					{#if isTeacherRoute && data.user}
-						<DropdownMenu.Root>
-							<DropdownMenu.Trigger>
+						<div class="hidden md:block">
+							<DropdownMenu.Root>
+								<DropdownMenu.Trigger>
+									{#snippet child({ props })}
+										<button
+											{...props}
+											class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs cursor-pointer"
+										>
+											{initials}
+										</button>
+									{/snippet}
+								</DropdownMenu.Trigger>
+								<DropdownMenu.Content side="bottom" align="end">
+									<DropdownMenu.Group>
+										<DropdownMenu.Item onclick={() => (accountDialogOpen = true)}>
+											<UserIcon />
+
+											Konto
+										</DropdownMenu.Item>
+										<DropdownMenu.Separator />
+										<DropdownMenu.Item onclick={logout}>
+											<LogOutIcon class="text-destructive" />
+
+											Abmelden
+										</DropdownMenu.Item>
+									</DropdownMenu.Group>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+						</div>
+						<AccountSettingsDialog bind:open={accountDialogOpen} />
+					{/if}
+
+					<!-- Mobile  -->
+					{#if isTeacherRoute || isStudentRoute}
+						<Sheet.Root bind:open={mobileNavOpen}>
+							<Sheet.Trigger>
 								{#snippet child({ props })}
-									<button
-										{...props}
-										class="rounded-full border border-black/25 bg-secondary p-1.5 text-xs cursor-pointer"
-									>
-										{initials}
-									</button>
+									<Button {...props} variant="ghost" size="icon" class="md:hidden">
+										<MenuIcon />
+										<span class="sr-only">Menü</span>
+									</Button>
 								{/snippet}
-							</DropdownMenu.Trigger>
-							<DropdownMenu.Content side="bottom" align="end">
-								<DropdownMenu.Group>
-									<DropdownMenu.Item onclick={() => (accountDialogOpen = true)}>
+							</Sheet.Trigger>
+
+							<Sheet.Content side="right" class="w-72 flex flex-col p-4 gap-0">
+								{#if data.user}
+									<div class="mb-2 flex flex-row items-center gap-2 border-b pb-4">
+										<span
+											class="flex size-8 items-center justify-center rounded-full border border-black/25 bg-secondary text-xs"
+										>
+											{initials}
+										</span>
+										<span class="text-sm font-medium">{data.user.name}</span>
+									</div>
+								{/if}
+
+								{#if isStudentRoute}
+									<Button
+										variant="ghost"
+										class="justify-start"
+										href={resolve('/')}
+										onclick={() => (mobileNavOpen = false)}
+									>
+										Quiz beitreten
+									</Button>
+								{/if}
+
+								{#if isTeacherRoute}
+									<Button
+										variant="ghost"
+										class="justify-start"
+										href={resolve('/teacher/quizzes')}
+										onclick={() => (mobileNavOpen = false)}
+									>
+										Quizze
+									</Button>
+
+									<Button
+										variant="ghost"
+										class="justify-start"
+										href={resolve('/teacher/live')}
+										onclick={() => (mobileNavOpen = false)}
+									>
+										{#if ($rooms ? $rooms.length : 0) > 0}
+											<span class="relative flex size-2">
+												<span
+													class="absolute inline-flex h-full w-full animate-ping rounded-full bg-destructive opacity-75"
+												></span>
+												<span class="relative inline-flex size-2 rounded-full bg-destructive"
+												></span>
+											</span>
+										{/if}
+										Live
+									</Button>
+
+									<Button
+										variant="ghost"
+										class="justify-start"
+										href={resolve('/teacher/analytics')}
+										onclick={() => (mobileNavOpen = false)}
+									>
+										Analyse
+									</Button>
+
+									{#if isOrgAdmin}
+										<Button
+											variant="ghost"
+											class="justify-start"
+											href={resolve('/teacher/admin')}
+											onclick={() => (mobileNavOpen = false)}
+										>
+											Admin
+										</Button>
+									{/if}
+
+									<Button
+										variant="ghost"
+										class="justify-start"
+										href={resolve('/')}
+										onclick={() => (mobileNavOpen = false)}
+									>
+										Studentenansicht
+									</Button>
+								{/if}
+
+								<div class="my-2 border-t"></div>
+
+								<DropdownMenu.Root>
+									<DropdownMenu.Trigger>
+										{#snippet child({ props })}
+											<Button {...props} variant="ghost" class="justify-start">
+												<LanguagesIcon />
+												Sprache
+											</Button>
+										{/snippet}
+									</DropdownMenu.Trigger>
+									<DropdownMenu.Content side="bottom" align="start">
+										<DropdownMenu.Group>
+											<DropdownMenu.Item onclick={() => setLocale('de')}>Deutsch</DropdownMenu.Item>
+											<DropdownMenu.Item onclick={() => setLocale('en')}>Englisch</DropdownMenu.Item
+											>
+										</DropdownMenu.Group>
+									</DropdownMenu.Content>
+								</DropdownMenu.Root>
+
+								{#if isTeacherRoute && data.user}
+									<Button
+										variant="ghost"
+										class="justify-start"
+										onclick={() => {
+											mobileNavOpen = false;
+											accountDialogOpen = true;
+										}}
+									>
 										<UserIcon />
 
 										Konto
-									</DropdownMenu.Item>
-									<DropdownMenu.Separator />
-									<DropdownMenu.Item onclick={logout}>
-										<LogOutIcon class="text-destructive" />
+									</Button>
+									<Button
+										variant="ghost"
+										class="justify-start text-destructive hover:text-destructive"
+										onclick={logout}
+									>
+										<LogOutIcon />
 
 										Abmelden
-									</DropdownMenu.Item>
-								</DropdownMenu.Group>
-							</DropdownMenu.Content>
-						</DropdownMenu.Root>
-						<AccountSettingsDialog bind:open={accountDialogOpen} />
+									</Button>
+								{/if}
+							</Sheet.Content>
+						</Sheet.Root>
 					{/if}
 				</div>
 			</div>
