@@ -955,10 +955,8 @@ msgstr "Points could not be reset."
 msgid "{0} / {1} Punkte"
 msgstr "{0} / {1} points"
 
-#. 0: question.selected.length > 0 ? question.selected.join(', ') \\: '—'
-#: src/lib/components/analytics/analytics-student-question-row.svelte
-msgid "Antwort: {0}"
-msgstr "Answer: {0}"
+#~ msgid "Antwort: {0}"
+#~ msgstr "Answer: {0}"
 
 #: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 msgid "Dieser Raum wurde nicht gefunden."
@@ -1414,4 +1412,17 @@ msgstr "Easiest Questions"
 
 #: src/routes/+page.svelte
 msgid "Deine Kennung"
+msgstr ""
+
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+msgid "Antwort konnte nicht gefunden werden."
+msgstr ""
+
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+msgid "Keine Antwort"
+msgstr ""
+
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+msgid "Antwort: <0/>"
 msgstr ""

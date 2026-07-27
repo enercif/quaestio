@@ -955,10 +955,8 @@ msgstr "Punkte konnten nicht zurückgesetzt werden."
 msgid "{0} / {1} Punkte"
 msgstr "{0} / {1} Punkte"
 
-#. 0: question.selected.length > 0 ? question.selected.join(', ') \\: '—'
-#: src/lib/components/analytics/analytics-student-question-row.svelte
-msgid "Antwort: {0}"
-msgstr "Antwort: {0}"
+#~ msgid "Antwort: {0}"
+#~ msgstr "Antwort: {0}"
 
 #: src/routes/teacher/analytics/rooms/[id]/+page.svelte
 msgid "Dieser Raum wurde nicht gefunden."
@@ -1415,3 +1413,16 @@ msgstr "Einfachste Fragen"
 #: src/routes/+page.svelte
 msgid "Deine Kennung"
 msgstr "Deine Kennung"
+
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+msgid "Antwort konnte nicht gefunden werden."
+msgstr "Antwort konnte nicht gefunden werden."
+
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+msgid "Keine Antwort"
+msgstr "Keine Antwort"
+
+#: src/lib/components/analytics/analytics-student-question-row.svelte
+msgid "Antwort: <0/>"
+msgstr "Antwort: <0/>"
