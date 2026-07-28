@@ -298,6 +298,8 @@ msgstr "<0/> New quiz"
 msgid "Deine Quizze"
 msgstr "Your quizzes"
 
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -306,6 +308,8 @@ msgid "Titel"
 msgstr "Title"
 
 #: src/lib/components/quiz/editor/editor-tags-input.svelte
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -315,6 +319,8 @@ msgstr "Tags"
 
 #: src/lib/components/quiz/editor/editor-question-list.svelte
 #: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -1484,3 +1490,85 @@ msgstr ""
 #: src/routes/student/+page.svelte
 msgid "{0} Fragen"
 msgstr ""
+
+#~ msgid "Quiz suchen..."
+#~ msgstr "Search quiz..."
+
+#~ msgid "Nach Quiztiteln suchen"
+#~ msgstr "Search for quiz titles"
+
+#~ msgid "Tag"
+#~ msgstr "tag"
+
+#~ msgid "Nach Tags suchen"
+#~ msgstr "Seach for tags"
+
+#~ msgid "Frage"
+#~ msgstr "Question"
+
+#~ msgid "Nach Fragen suchen"
+#~ msgstr "Search for question"
+
+#~ msgid "Alle"
+#~ msgstr "All"
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
+msgid "Alles"
+msgstr "All"
+
+#~ msgid "Quiz durchsuchen..."
+#~ msgstr ""
+
+#~ msgid "Titel suchen..."
+#~ msgstr "Search for quiz titles ..."
+
+#~ msgid "Tags suchen..."
+#~ msgstr "Search for tags ..."
+
+#~ msgid "Fragen suchen..."
+#~ msgstr ""
+
+#~ msgid "Quiz durchsuchen ..."
+#~ msgstr "Search quizzes ..."
+
+#~ msgid "Titel suchen ..."
+#~ msgstr "Search for quiz titles ..."
+
+#~ msgid "Tags suchen ..."
+#~ msgstr "Search for tags ..."
+
+#~ msgid "Fragen suchen ..."
+#~ msgstr "Search for questions ..."
+
+#~ msgid "Nach Titel suchen..."
+#~ msgstr "Search for quiz titles ..."
+
+#~ msgid "Nach Tags suchen..."
+#~ msgstr "Search for tags ..."
+
+#~ msgid "Nach Fragen suchen..."
+#~ msgstr "Search for questions ..."
+
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
+msgid "Alle Quizinhalte durchsuchen ..."
+msgstr "Search all quiz content ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
+msgid "Nach Titel suchen ..."
+msgstr "Search for quiz titles ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
+msgid "Nach Tags suchen ..."
+msgstr "Search for quiz tags ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+#: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
+msgid "Nach Fragen suchen ..."
+msgstr "Search for questions ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+msgid "Alles durchsuchen ..."
+msgstr "Search everything ..."
