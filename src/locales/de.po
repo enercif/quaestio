@@ -15,10 +15,12 @@ msgid "Quaestio"
 msgstr "Quaestio"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
 msgid "<0/> Live"
 msgstr "<0/> Live"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 #: src/routes/teacher/analytics/(list)/+layout.svelte
 msgid "Analyse"
@@ -56,6 +58,7 @@ msgstr "E-Mail"
 
 #: src/lib/components/admin/invite-user-dialog.svelte
 #: src/routes/teacher/admin/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Rolle"
 msgstr "Rolle"
 
@@ -81,6 +84,7 @@ msgstr "Kopieren"
 msgid "Per E-Mail senden"
 msgstr "Per E-Mail senden"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 #: src/routes/+page.svelte
 msgid "Quiz beitreten"
@@ -301,6 +305,7 @@ msgstr "Deine Quizze"
 msgid "Titel"
 msgstr "Titel"
 
+#: src/lib/components/quiz/editor/editor-tags-input.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -339,6 +344,7 @@ msgstr "<0/> Quiz importieren"
 msgid "<0/> Quiz erstellen"
 msgstr "<0/> Quiz erstellen"
 
+#: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Keine Tags"
@@ -411,6 +417,7 @@ msgid "Keine Frage eingetragen"
 msgstr "Keine Frage eingetragen"
 
 #: src/lib/components/quiz/editor/editor-open-question.svelte
+#: src/lib/components/ui/tags-input/tags-input.svelte
 msgid "Enter"
 msgstr "Enter"
 
@@ -430,6 +437,7 @@ msgid "Frage {0} von {1}"
 msgstr "Frage {0} von {1}"
 
 #: src/lib/components/quiz/editor/editor-question.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "<0/> Löschen"
 msgstr "<0/> Löschen"
@@ -467,13 +475,16 @@ msgid "Einstellungen | {0}"
 msgstr "Einstellungen | {0}"
 
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "Starte Quiz"
 msgstr "Starte Quiz"
 
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "<0/> Übersicht"
 msgstr "<0/> Übersicht"
 
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "<0/> Speichern"
 msgstr "<0/> Speichern"
@@ -526,9 +537,11 @@ msgid "Status"
 msgstr "Status"
 
 #: src/routes/teacher/admin/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Einladung zurückziehen"
 msgstr "Einladung zurückziehen"
 
+#: src/routes/teacher/admin/users/+page.svelte
 #: src/routes/teacher/admin/users/+page.svelte
 msgid "Löschen"
 msgstr "Löschen"
@@ -722,6 +735,7 @@ msgid "Logo"
 msgstr "Logo"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 msgid "Quizze"
 msgstr "Quizze"
 
@@ -754,9 +768,11 @@ msgid "Coding"
 msgstr "Coding"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 msgid "Deutsch"
 msgstr "Deutsch"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 msgid "Englisch"
 msgstr "Englisch"
@@ -766,6 +782,7 @@ msgstr "Englisch"
 msgid "{0}={1}; path=/; max-age={2}; samesite=lax"
 msgstr "{0}={1}; path=/; max-age={2}; samesite=lax"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 #: src/routes/teacher/admin/+layout.svelte
 msgid "Admin"
@@ -855,9 +872,11 @@ msgid "Testen"
 msgstr "Testen"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 msgid "<0/> Konto"
 msgstr "<0/> Konto"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 msgid "<0/> Abmelden"
 msgstr "<0/> Abmelden"
@@ -1359,6 +1378,7 @@ msgid "Übungsräume"
 msgstr "Übungsräume"
 
 #: src/routes/student/+page.svelte
+#: src/routes/student/+page.svelte
 msgid "Starten <0/>"
 msgstr "Starten <0/>"
 
@@ -1382,6 +1402,7 @@ msgstr "Zurück zu den Übungsräumen"
 msgid "Live"
 msgstr "Live"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 msgid "Studentenansicht"
 msgstr "Studentenansicht"
@@ -1414,3 +1435,52 @@ msgstr "Keine Antwort"
 #: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Antwort: <0/>"
 msgstr "Antwort: <0/>"
+
+#: src/routes/+layout.svelte
+msgid "Menü"
+msgstr "Menü"
+
+#: src/routes/+layout.svelte
+msgid "<0/> Sprache"
+msgstr "<0/> Sprache"
+
+#: src/lib/components/ui/sheet/sheet-content.svelte
+msgid "Close"
+msgstr "Close"
+
+#: src/lib/components/quiz/editor/editor-tags-input.svelte
+msgid "Tag hinzufügen..."
+msgstr "Tag hinzufügen..."
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "Escape"
+msgstr "Escape"
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowDown"
+msgstr "ArrowDown"
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowUp"
+msgstr "ArrowUp"
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "Backspace"
+msgstr "Backspace"
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "Delete"
+msgstr "Delete"
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowLeft"
+msgstr "ArrowLeft"
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowRight"
+msgstr "ArrowRight"
+
+#. 0: quiz.questions.length
+#: src/routes/student/+page.svelte
+msgid "{0} Fragen"
+msgstr "{0} Fragen"

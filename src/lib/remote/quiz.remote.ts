@@ -142,3 +142,23 @@ export const deleteQuizById = command(z.uuid(), async (quizId: string) => {
 		};
 	}
 });
+
+export const findTagSuggestions = query(async () => {
+	const { locals } = getRequestEvent();
+
+	const user = locals.user;
+
+	if (!user) return [];
+
+	const quizzes = await db.query.quizTable.findMany({
+		where: (quiz, { eq, and, isNull }) =>
+			and(eq(quiz.teacherId, user.id), isNull(quiz.deleted_at)),
+		columns: { tags: true }
+	});
+
+	const tags = quizzes.flatMap((quiz) => quiz.tags);
+	const uniqueTags = [...new Set(tags)];
+	const sortedTags = uniqueTags.sort((a,b) => a.localeCompare(b));
+
+	return sortedTags;
+});

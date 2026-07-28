@@ -128,9 +128,12 @@
 							<td class="py-2 pl-4">{quiz.title}</td>
 							<td class="py-2 hidden sm:table-cell">
 								{#if quiz.tags.length > 0}
-									{#each quiz.tags as tag, i (i)}
+									{#each quiz.tags.slice(0,4) as tag, i (i)}
 										<Badge variant="secondary">{tag}</Badge>
 									{/each}
+									{#if quiz.tags.length > 4}
+										<Badge variant="outline">+{quiz.tags.length - 4}</Badge>
+									{/if}
 								{:else}
 									<p>Keine Tags</p>
 								{/if}
