@@ -125,7 +125,7 @@
 				<tbody>
 					{#each quizzes as quiz (quiz.id)}
 						<tr class="border-b transition-colors duration-200 hover:bg-secondary">
-							<td class="py-2 pl-4">{quiz.title}</td>
+							<td class="py-2 pl-4 break-all">{quiz.title}</td>
 							<td class="py-2 hidden sm:table-cell">
 								{#if quiz.tags.length > 0}
 									{#each quiz.tags.slice(0,4) as tag, i (i)}
