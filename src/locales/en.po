@@ -1552,7 +1552,7 @@ msgstr "All"
 
 #: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
 msgid "Alle Quizinhalte durchsuchen ..."
-msgstr "Search all quiz content ..."
+msgstr "Search all content ..."
 
 #: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
 #: src/lib/components/quiz/your-quizzes-view/quiz-search.svelte
@@ -1572,3 +1572,11 @@ msgstr "Search for questions ..."
 #: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
 msgid "Alles durchsuchen ..."
 msgstr "Search everything ..."
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Keine Quizze gefunden"
+msgstr "No quizzes found"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Es wurden keine Quizze gefunden, die deiner Suche entsprechen."
+msgstr "No quizzes matching your search were found"
