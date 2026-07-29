@@ -2,10 +2,12 @@
 	import { resolve } from '$app/paths';
 	import AnalyticsRoomOverviewTab from '$lib/components/analytics/room/analytics-room-overview-tab.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { exportRoomAnalyticsAsCsv } from '$lib/export/analytics';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import type { AnalyticsRoom } from '$lib/schemas/analytics.schema';
 	import { analyticsSearchParamsSchema } from '$lib/schemas/searchparams/analytics.searchparam.schema';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
+	import DownloadIcon from '@lucide/svelte/icons/download';
 	import { useSearchParams } from 'runed/kit';
 	import AnalyticsRoomQuestionsTab from './analytics-room-questions-tab.svelte';
 	import AnalyticsRoomStudentsTab from './analytics-room-students-tab.svelte';
@@ -17,7 +19,7 @@
 
 	let { analytics }: Props = $props();
 
-	analyticsRoomContext.set(new AnalyticsRoomState(() => analytics));
+	const ctx = analyticsRoomContext.set(new AnalyticsRoomState(() => analytics));
 	const params = useSearchParams(analyticsSearchParamsSchema);
 </script>
 
@@ -31,6 +33,26 @@
 		<h1 class="text-center leading-none font-semibold">
 			{analytics?.quiz.title ?? 'Raum'}
 		</h1>
+
+		<Button
+			class="ml-auto"
+			variant="outline"
+			onclick={() =>
+				exportRoomAnalyticsAsCsv({
+					quizTitle: ctx.quiz.title,
+					createdAt: ctx.room.created_at,
+					roomCode: ctx.room.code,
+					students: ctx.students.map((student) => ({
+						studentId: student.id,
+						studentName: student.name,
+						pointsEarned: student.totalPoints
+					})),
+					maxPoints: ctx.maxPoints
+				})}
+		>
+			<DownloadIcon />
+			Exportieren
+		</Button>
 	</div>
 </div>
 

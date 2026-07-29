@@ -81,6 +81,7 @@ export const analyticsStudentAnswerSchema = analyticsAnswerSchema.omit({
 });
 
 export const analyticsStudentSchema = z.object({
+	id: z.string(),
 	name: z.string(),
 	rooms: z.array(
 		roomSelectSchema.pick({ code: true, created_at: true, id: true }).extend({

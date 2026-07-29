@@ -75,6 +75,7 @@ export const getStudentAnalytics = query(z.string(), async (studentId) => {
 
 	try {
 		return analyticsStudentSchema.parse({
+			id: answers[0].student_id,
 			name: answers[0].student_name,
 			rooms: rooms.map((room) => ({
 				...room,
