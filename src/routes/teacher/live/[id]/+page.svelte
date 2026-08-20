@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import LiveTeacherQuestion from '$lib/components/quiz/live/teacher/live-teacher-question.svelte';
+	import LiveTeacherWaitingRoom from '$lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte';
 	import {
 		liveTeacherContext,
 		LiveTeacherState
 	} from '$lib/components/quiz/live/teacher/live-teacher.state.svelte';
-	import LiveTeacherQuestion from '$lib/components/quiz/live/teacher/live-teacher-question.svelte';
-	import LiveTeacherWaitingRoom from '$lib/components/quiz/live/teacher/live-teacher-waiting-room.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
+
+	import { deleteRoom } from '$live/rooms';
+	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
 
@@ -19,7 +22,20 @@
 	);
 
 	async function onLeaveClick() {
-		goto(resolve('/teacher/live'));
+		closeLive(data.id);
+		goto(resolve('/teacher/quizzes'));
+	}
+
+	async function onAnalysisClick() {
+		closeLive(data.id);
+		goto(resolve(`/teacher/analytics/rooms`));
+	}
+
+	async function closeLive(code: string) {
+		const result = await deleteRoom(code);
+		if (!result) {
+			toast.error('Fehler beim Schließen des Raums');
+		}
 	}
 </script>
 
@@ -59,12 +75,18 @@
 	{:else if live.roomData.state === 'question' || live.roomData.state === 'answer'}
 		<LiveTeacherQuestion />
 	{:else if live.roomData.state === 'finished'}
-		<div class="flex grow flex-col items-center justify-center gap-3 py-20 text-center">
-			<h1 class="text-2xl font-semibold">Quiz beendet</h1>
-			<p class="text-muted-foreground">
-				Die Antworten wurden gespeichert und können in der Analyse ausgewertet werden.
-			</p>
-			<Button onclick={onLeaveClick}>Zurück zur Übersicht</Button>
+		<div class="flex grow flex-col items-center justify-center gap-6 py-16">
+			<div class="flex flex-col items-center gap-3 text-center">
+				<h1 class="text-2xl font-semibold">Quiz beendet</h1>
+				<p class="text-muted-foreground">
+					Die Antworten wurden gespeichert und können in der Analyse ausgewertet werden.
+				</p>
+			</div>
+
+			<div class="flex flex-row gap-2">
+				<Button variant="outline" onclick={onLeaveClick}>Zurück zur Übersicht</Button>
+				<Button onclick={onAnalysisClick}>Zur Analyse</Button>
+			</div>
 		</div>
 	{/if}
 </div>
