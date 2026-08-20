@@ -12,26 +12,13 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
 
-type RemoveNull<T> = T extends null
-	? never
-	: T extends object
-		? { [K in keyof T]: RemoveNull<T[K]> }
-		: T extends (infer U)[]
-			? RemoveNull<U>[]
-			: T;
+export function getInitials(name: string | null | undefined): string {
+	if (!name) return '??';
 
-export const removeNull = <T>(obj: T): RemoveNull<T> => {
-	if (Array.isArray(obj)) {
-		return obj.filter((item) => item !== null).map((item) => removeNull(item)) as RemoveNull<T>;
-	}
-
-	if (obj !== null && typeof obj === 'object') {
-		return Object.fromEntries(
-			Object.entries(obj)
-				.filter(([, value]) => value !== null)
-				.map(([key, value]) => [key, removeNull(value)])
-		) as RemoveNull<T>;
-	}
-
-	return obj as RemoveNull<T>;
-};
+	return name
+		.split(' ')
+		.map((c) => c[0])
+		.join('')
+		.slice(0, 2)
+		.toLocaleUpperCase();
+}

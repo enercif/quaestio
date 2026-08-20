@@ -1,0 +1,50 @@
+import z from 'zod';
+
+export const sequenceTypeEnum = z.enum(['numeric', 'roman', 'alphabetic']);
+
+export const scoringModeEnum = z.enum(['binary', 'partial']);
+export const partialPointsSchema = z.record(z.string(), z.number().min(0));
+
+export const questionResourceSchema = z.object({
+	id: z.uuid(),
+	label: z.string().min(1, 'Der Linktext darf nicht leer sein.'),
+	href: z.url('Der Link muss eine gültige URL sein.')
+});
+
+export const questionBaseSchema = z.object({
+	id: z.uuid(),
+	position: z.number(),
+	timelimit: z.number().min(0, 'Das Zeitlimit muss größer gleich 0 sein.'),
+	points: z
+		.number('Punkte dürfen nicht leer sein.')
+		.min(0, 'Punkte müssen größer oder gleich 0 sein.'),
+	question: z.string().min(1, 'Die Fragenstellung darf nicht leer sein.'),
+	hint: z.string().optional(),
+	resources: z.array(questionResourceSchema).default([])
+});
+
+export const choiceQuestionAnswerBaseSchema = z.object({
+	id: z.uuid(),
+	text: z.string().min(1, 'Die Antwort darf nicht leer sein.')
+});
+
+export const liveChoiceQuestionAnswerSchema = choiceQuestionAnswerBaseSchema.omit({ id: true });
+
+export const choiceQuestionBaseSchema = questionBaseSchema.extend({
+	sequence_type: sequenceTypeEnum,
+	answers: z
+		.array(choiceQuestionAnswerBaseSchema)
+		.min(2, 'Es müssen mindestens zwei Antwortmöglichkeiten vorhanden sein.'),
+	correct: z.record(z.string(), z.string()).refine((correct) => Object.keys(correct).length > 0, {
+		message: 'Es muss mindestens eine korrekte Antwort markiert sein.'
+	})
+});
+
+export function allOrNothingReasons(keys: string[], reasons: Record<string, string>) {
+	return Object.keys(reasons).length > 0 ? keys.every((key) => reasons[key]?.trim()) : true;
+}
+
+export type SequenceType = z.infer<typeof sequenceTypeEnum>;
+export type ScoringMode = z.infer<typeof scoringModeEnum>;
+export type ChoiceQuestionAnswer = z.infer<typeof choiceQuestionAnswerBaseSchema>;
+export type QuestionResource = z.infer<typeof questionResourceSchema>;

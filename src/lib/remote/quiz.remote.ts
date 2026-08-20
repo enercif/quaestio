@@ -1,33 +1,74 @@
-import { command, query } from '$app/server';
+import { command, getRequestEvent, query } from '$app/server';
+import { canEditQuiz } from '$lib/components/quiz/quiz.utils';
 import { quizInsertSchema, quizSelectSchema, quizUpdateSchema } from '$lib/schemas/quiz.schema';
 import { db } from '$lib/server/db';
 import { quizTable } from '$lib/server/db/schema';
-import { removeNull } from '$lib/utils';
-import { eq } from 'drizzle-orm';
+import { eq, isNull } from 'drizzle-orm';
 import z from 'zod';
 
 export const findQuizById = query(z.uuid(), async (quizId: string) => {
+	const { locals } = getRequestEvent();
 	const quiz = await db.query.quizTable.findFirst({
-		where: (quiz, { eq }) => eq(quiz.id, quizId)
+		where: (quiz, { eq, and, isNull }) => and(eq(quiz.id, quizId), isNull(quiz.deleted_at))
 	});
 
-	const cleanedQuiz = removeNull(quiz);
-	return quiz ? quizSelectSchema.parse(cleanedQuiz) : undefined;
+	const isOwner = locals.user?.id === quiz?.teacherId;
+	if (!isOwner && quiz?.visibility !== 'public') return undefined;
+
+	return quiz ? quizSelectSchema.parse(quiz) : undefined;
+});
+
+export const findPracticeQuizzes = query(async () => {
+	const quizzes = await db.query.quizTable.findMany({
+		where: (quiz, { eq, and }) =>
+			and(isNull(quiz.deleted_at), eq(quiz.visibility, 'public'), eq(quiz.practice_room, true))
+	});
+	return quizSelectSchema.array().parse(quizzes);
+});
+
+export const findPracticeQuizById = query(z.uuid(), async (quizId: string) => {
+	const quiz = await db.query.quizTable.findFirst({
+		where: (quiz, { eq, and }) =>
+			and(
+				eq(quiz.id, quizId),
+				isNull(quiz.deleted_at),
+				eq(quiz.visibility, 'public'),
+				eq(quiz.practice_room, true)
+			)
+	});
+	return quiz ? quizSelectSchema.parse(quiz) : undefined;
 });
 
 export const findAllQuizzes = query(async () => {
-	const quizzes = await db.query.quizTable.findMany();
-	const cleanedQuizzes = removeNull(quizzes);
-	return quizSelectSchema.array().parse(cleanedQuizzes);
+	const { locals } = getRequestEvent();
+	if (!locals.user) return [];
+
+	const quizzes = await db.query.quizTable.findMany({
+		where: (quiz, { eq, or, and }) =>
+			and(
+				isNull(quiz.deleted_at),
+				or(eq(quiz.teacherId, locals.user!.id), eq(quiz.visibility, 'public'))
+			)
+	});
+	return quizSelectSchema.array().parse(quizzes);
 });
 
 export const insertQuiz = command(quizInsertSchema, async (quiz) => {
+	const { locals } = getRequestEvent();
+
+	if (!locals.user) {
+		return { success: false, quiz: undefined };
+	}
+
 	try {
-		const [result] = await db.insert(quizTable).values(quiz).returning();
-		const cleanedResult = removeNull(result);
+		const [result] = await db
+			.insert(quizTable)
+			.values({ ...quiz, teacherId: locals.user.id })
+			.returning();
+
 		return {
 			success: true,
-			quiz: quizSelectSchema.parse(cleanedResult)
+			quiz: quizSelectSchema.parse(result)
 		};
 	} catch (error) {
 		console.error('Fehler beim Einfügen des Quiz:', error);
@@ -39,16 +80,29 @@ export const insertQuiz = command(quizInsertSchema, async (quiz) => {
 });
 
 export const updateQuiz = command(quizUpdateSchema, async (quiz) => {
+	const { locals } = getRequestEvent();
+
+	if (!locals.user) {
+		return { success: false, quiz: undefined };
+	}
+
 	try {
+		const quizToUpdate = await db.query.quizTable.findFirst({
+			where: (q, { eq }) => eq(q.id, quiz.id)
+		});
+
+		if (!canEditQuiz(locals.user.id, quizToUpdate)) {
+			return { success: false, quiz: undefined };
+		}
+
 		const [updatedQuiz] = await db
 			.update(quizTable)
 			.set(quiz)
 			.where(eq(quizTable.id, quiz.id))
 			.returning();
-		const cleanedUpdatedQuiz = removeNull(updatedQuiz);
 		return {
 			success: true,
-			quiz: quizSelectSchema.parse(cleanedUpdatedQuiz)
+			quiz: quizSelectSchema.parse(updatedQuiz)
 		};
 	} catch (error) {
 		console.error('Fehler beim Aktualisieren des Quiz:', error);
@@ -60,8 +114,24 @@ export const updateQuiz = command(quizUpdateSchema, async (quiz) => {
 });
 
 export const deleteQuizById = command(z.uuid(), async (quizId: string) => {
+	const { locals } = getRequestEvent();
+	if (!locals.user) {
+		return { success: false };
+	}
+
 	try {
-		await db.delete(quizTable).where(eq(quizTable.id, quizId));
+		const quizToDelete = await db.query.quizTable.findFirst({
+			where: (q, { eq }) => eq(q.id, quizId)
+		});
+
+		if (!canEditQuiz(locals.user.id, quizToDelete)) {
+			return { success: false };
+		}
+
+		await db
+			.update(quizTable)
+			.set({ deleted_at: new Date().toISOString() })
+			.where(eq(quizTable.id, quizId));
 		return {
 			success: true
 		};
@@ -71,4 +141,24 @@ export const deleteQuizById = command(z.uuid(), async (quizId: string) => {
 			success: false
 		};
 	}
+});
+
+export const findTagSuggestions = query(async () => {
+	const { locals } = getRequestEvent();
+
+	const user = locals.user;
+
+	if (!user) return [];
+
+	const quizzes = await db.query.quizTable.findMany({
+		where: (quiz, { eq, and, isNull }) =>
+			and(eq(quiz.teacherId, user.id), isNull(quiz.deleted_at)),
+		columns: { tags: true }
+	});
+
+	const tags = quizzes.flatMap((quiz) => quiz.tags);
+	const uniqueTags = [...new Set(tags)];
+	const sortedTags = uniqueTags.sort((a,b) => a.localeCompare(b));
+
+	return sortedTags;
 });

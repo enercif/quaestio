@@ -1,0 +1,10 @@
+onlyBuiltDependencies:
+  - esbuild
+
+allowBuilds:
+  '@prisma/client': true
+  better-sqlite3: true
+  esbuild: true
+blockExoticSubdeps: false
+patchedDependencies:
+  svelte-realtime: patches/svelte-realtime.patch

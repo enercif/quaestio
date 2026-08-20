@@ -8,6 +8,125 @@
       "when": 1777414436561,
       "tag": "0000_narrow_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778196431286,
+      "tag": "0001_loose_madripoor",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782938501245,
+      "tag": "0002_omniscient_penance",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782946575800,
+      "tag": "0003_melted_midnight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1783191909825,
+      "tag": "0004_wise_alex_wilder",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1783871404348,
+      "tag": "0005_odd_harry_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1783885192812,
+      "tag": "0006_loud_sir_ram",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783942815573,
+      "tag": "0007_soft_imperial_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1784189463584,
+      "tag": "0008_absurd_sugar_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1784246006809,
+      "tag": "0009_grey_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1784505171808,
+      "tag": "0010_magical_callisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1784572213459,
+      "tag": "0011_fine_the_anarchist",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1784576305525,
+      "tag": "0012_whole_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1784576554896,
+      "tag": "0013_petite_peter_quill",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1784750418395,
+      "tag": "0014_opposite_rhino",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1784848318031,
+      "tag": "0015_naive_killraven",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1784849712065,
+      "tag": "0016_late_mac_gargan",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1784911534758,
+      "tag": "0017_past_morgan_stark",
+      "breakpoints": true
     }
   ]
 }

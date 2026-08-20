@@ -1,4 +1,4 @@
-export const placeholders: { prompt: string; answers: string[] }[] = [
+export const questionPlaceholders: { prompt: string; answers: string[] }[] = [
 	{
 		prompt: 'Welches Element hat die Ordnungszahl 6?',
 		answers: [
@@ -116,4 +116,17 @@ export const placeholders: { prompt: string; answers: string[] }[] = [
 			'Gallenblase'
 		]
 	}
+];
+
+export const joinPlaceholders: { name: string; email: string }[] = [
+	{ name: 'Tony Stark', email: 'tony.stark@stark-industries.com' },
+	{ name: 'Bruce Wayne', email: 'bruce.wayne@wayne-enterprises.com' },
+	{ name: 'Peter Parker', email: 'peter.parker@dailybugle.com' },
+	{ name: 'Diana Prince', email: 'diana.prince@themyscira.org' },
+	{ name: 'Clark Kent', email: 'clark.kent@dailyplanet.com' },
+	{ name: 'Natasha Romanoff', email: 'natasha.romanoff@shield.gov' },
+	{ name: 'Barry Allen', email: 'barry.allen@ccpd.gov' },
+	{ name: 'Shuri Udaku', email: 'shuri@wakanda.gov' },
+	{ name: 'Stephen Strange', email: 'stephen.strange@sanctum-sanctorum.org' },
+	{ name: 'Carol Danvers', email: 'carol.danvers@usaf.mil' }
 ];
