@@ -88,18 +88,25 @@ function buildMultipleQuestion(row: CsvQuestionRow, index: number) {
 			.map((answer) => [answer.id, answer.text] as const)
 	);
 
+	const reasons = parseReasons(row.reasons, answers);
+
+	const partial_points = Object.fromEntries(
+		Object.keys(correct).map((answerId) => [answerId, 1])
+	);
+
 	return {
 		id: crypto.randomUUID(),
 		position: index,
 		type: 'multiple',
 		question: row.question,
 		points: parseNumber(row.points, 1),
+		partial_points,
 		timelimit: parseNumber(row.timelimit, 30),
 		hint: row.hint,
 		sequence_type: 'numeric',
 		answers,
 		correct,
-		reasons: parseReasons(row.reasons)
+		reasons
 	};
 }
 
@@ -118,6 +125,13 @@ function buildOpenQuestion(row: CsvQuestionRow, index: number) {
 }
 
 function buildProgrammingQuestion(row: CsvQuestionRow, index: number, format: ImportFormat) {
+
+	const correct = parseList(row.solution);
+
+	const partial_points = Object.fromEntries(
+		correct.map((solution) => [solution, 1])
+	);
+	
 	return {
 		id: crypto.randomUUID(),
 		position: index,
@@ -126,6 +140,7 @@ function buildProgrammingQuestion(row: CsvQuestionRow, index: number, format: Im
 		code: format === 'csv' ? decodeBase64(row.code) : (row.code ?? ''),
 		language: row.language ?? '',
 		points: parseNumber(row.points, 1),
+		partial_points,
 		timelimit: parseNumber(row.timelimit, 30),
 		hint: row.hint,
 		correct: parseList(row.solution),
@@ -150,21 +165,40 @@ function parseList(value?: string): string[] {
 		.filter(Boolean);
 }
 
-function parseReasons(value?: string): Record<string, string> {
+function parseReasons(
+	value?: string,
+	answers?: Array<{
+		id: string;
+		position: number;
+		text: string;
+	}>
+): Record<string, string> {
 	if (!value) return {};
 
-	const entries = value
-		.split('|')
-		.map((entry) => {
-			const separator = entry.indexOf(':');
+	const reasons: Record<string, string> = {};
 
-			if (separator === -1) return undefined;
+	for (const entry of value.split('|')) {
+		const separator = entry.indexOf(':');
+		if (separator === -1) continue;
 
-			return [entry.slice(0, separator).trim(), entry.slice(separator + 1).trim()] as const;
-		})
-		.filter((entry): entry is readonly [string, string] => entry !== undefined);
+		const key = entry.slice(0, separator).trim();
+		const reason = entry.slice(separator + 1).trim();
 
-	return Object.fromEntries(entries);
+		if (!key || !reason) continue;
+		if (answers) {
+			const answerNumber = Number(key);
+			if (!Number.isInteger(answerNumber) || answerNumber < 1) {
+				continue;
+			}
+			const answer = answers[answerNumber - 1];
+			if (answer) {
+				reasons[answer.id] = reason;
+			}
+		} else {
+			reasons[key] = reason;
+		}
+	}
+	return reasons;
 }
 
 function parseNumber(value: string | undefined, fallback: number): number {

@@ -50,9 +50,7 @@ export function buildExportRows(
 					).join('|'),
 					language: '',
 					hint: question.hint ?? '',
-					reasons: Object.entries(question.reasons)
-						.map(([key, value]) => `${key}:${value}`)
-						.join('|'),
+					reasons: buildReasons(question.answers, question.reasons),
 					points: question.points,
 					timelimit: question.timelimit
 				};
@@ -100,4 +98,22 @@ function getCorrectAnswers(
 	return answers
 		.filter((answer) => answer.id in correct)
 		.map((answer) => answer.text);
+}
+
+function buildReasons(
+	answers: { id: string; text: string }[],
+	reasons: Record<string, string>
+): string {
+	return Object.entries(reasons)
+		.map(([answerId, reason]) => {
+			const answerIndex = answers.findIndex(
+				(answer) => answer.id === answerId
+			);
+			if (answerIndex === -1) {
+				return null;
+			}
+			return `${answerIndex + 1}:${reason}`;
+		})
+		.filter((entry): entry is string => entry !== null)
+		.join('|');
 }
