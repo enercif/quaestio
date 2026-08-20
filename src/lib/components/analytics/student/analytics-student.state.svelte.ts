@@ -15,6 +15,7 @@ export class AnalyticsStudentState {
 	}
 
 	readonly name = $derived.by(() => this._analytics().name);
+	readonly id = $derived.by(() => this._analytics().id);
 	readonly rooms = $derived.by(() => {
 		const byId = new SvelteMap<string, AnalyticsStudentStateRoom>();
 

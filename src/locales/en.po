@@ -1414,3 +1414,8 @@ msgstr "No answer"
 #: src/lib/components/analytics/analytics-student-question-row.svelte
 msgid "Antwort: <0/>"
 msgstr "Answer: <0/>"
+
+#: src/lib/components/analytics/room/analytics-room.svelte
+#: src/lib/components/analytics/student/analytics-student.svelte
+msgid "<0/> Exportieren"
+msgstr "<0/> Export"

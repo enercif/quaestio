@@ -2,8 +2,10 @@
 	import { resolve } from '$app/paths';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
+	import { exportStudentAnalyticsAsCsv } from '$lib/export/analytics';
 	import type { AnalyticsStudent } from '$lib/schemas/analytics.schema';
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
+	import DownloadIcon from '@lucide/svelte/icons/download';
 	import AnalyticsStudentRoomRow from './analytics-student-room-row.svelte';
 	import { analyticsStudentContext, AnalyticsStudentState } from './analytics-student.state.svelte';
 
@@ -50,6 +52,28 @@
 		<h1 class="text-center leading-none font-semibold">
 			{ctx.name}
 		</h1>
+
+		<Button
+			class="ml-auto"
+			variant="outline"
+			onclick={() =>
+				exportStudentAnalyticsAsCsv({
+					studentName: ctx.name,
+					studentId: ctx.id,
+					rooms: ctx.rooms.map((room) => ({
+						quizName: room.quiz.title,
+						date: room.created_at,
+						pointsEarned: room.questions.reduce(
+							(sum, question) => sum + question.achievedPoints,
+							0
+						),
+						pointsPossible: room.questions.reduce((sum, question) => sum + question.maxPoints, 0)
+					}))
+				})}
+		>
+			<DownloadIcon />
+			Exportieren
+		</Button>
 	</div>
 </div>
 

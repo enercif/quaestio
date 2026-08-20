@@ -3,29 +3,13 @@ import type { Quiz } from '$lib/schemas/quiz.schema';
 import { buildExportRows } from './builder';
 
 export function exportQuizAsCsv(quiz: Quiz) {
-	const csv = Papa.unparse(
-		buildExportRows(quiz),
-		{
-            header: true
-		}
-	);
-
-	download(
-		csv,
-		`${sanitizeFilename(quiz.title)}.csv`,
-		'text/csv;charset=utf-8;'
-	);
+	downloadCsv(buildExportRows(quiz), `${sanitizeFilename(quiz.title)}.csv`);
 }
 
-function download(
-	content: string,
-	filename: string,
-	type: string
-) {
-	const blob = new Blob(
-		[content],
-		{ type }
-	);
+export function downloadCsv<T extends object>(rows: T[], filename: string) {
+	const csv = Papa.unparse(rows, { header: true });
+	const type = 'text/csv;charset=utf-8;';
+	const blob = new Blob([csv], { type });
 
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');
@@ -35,8 +19,6 @@ function download(
 	URL.revokeObjectURL(url);
 }
 
-function sanitizeFilename(name: string) {
-	return name
-		.replace(/[^a-z0-9-_]/gi, '_')
-		.toLowerCase();
+export function sanitizeFilename(name: string) {
+	return name.replace(/[^a-z0-9-_]/gi, '_').toLowerCase();
 }
