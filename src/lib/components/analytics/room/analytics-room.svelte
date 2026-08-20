@@ -22,7 +22,7 @@
 </script>
 
 <div class="flex w-full items-center justify-center border-b py-2">
-	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-4">
+	<div class="flex w-full max-w-7xl items-center justify-start gap-2 sm:gap-4">
 		<Button variant="ghost" href={resolve('/teacher/analytics/rooms')}>
 			<ArrowLeftIcon />
 			Zurück
@@ -34,7 +34,7 @@
 	</div>
 </div>
 
-<div class="mx-5 mt-10 mb-10 flex w-full max-w-7xl flex-col gap-6">
+<div class="mx-5 mt-5 mb-5 flex w-full max-w-7xl flex-col gap-6 sm:mt-10 sm:mb-10">
 	<Tabs.Root bind:value={params.tab}>
 		<Tabs.List>
 			<Tabs.Trigger value="overview">Übersicht</Tabs.Trigger>

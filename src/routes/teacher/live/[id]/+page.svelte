@@ -23,8 +23,8 @@
 	}
 </script>
 
-<div class="flex w-full items-center justify-center border-b py-2">
-	<div class="mx-5 flex w-full max-w-7xl items-center justify-start gap-4">
+<div class="flex w-full items-center justify-between border-b py-2">
+	<div class="flex w-full max-w-7xl items-center justify-start gap-4 sm:mx-5">
 		<Button variant="ghost" onclick={onLeaveClick}>
 			<ArrowLeftIcon />
 			Zurück
@@ -48,7 +48,7 @@
 	</div>
 </div>
 
-<div class="px-10 mt-6 w-full max-w-7xl">
+<div class="px-4 mt-6 w-full max-w-7xl sm:px-10">
 	{#if !live.roomData}
 		<div class="flex grow flex-col items-center justify-center gap-3 text-muted-foreground">
 			<LoaderCircleIcon class="size-8 animate-spin" />
@@ -59,7 +59,7 @@
 	{:else if live.roomData.state === 'question' || live.roomData.state === 'answer'}
 		<LiveTeacherQuestion />
 	{:else if live.roomData.state === 'finished'}
-		<div class="flex grow flex-col items-center justify-center gap-3 py-20">
+		<div class="flex grow flex-col items-center justify-center gap-3 py-20 text-center">
 			<h1 class="text-2xl font-semibold">Quiz beendet</h1>
 			<p class="text-muted-foreground">
 				Die Antworten wurden gespeichert und können in der Analyse ausgewertet werden.

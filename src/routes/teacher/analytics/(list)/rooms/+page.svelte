@@ -15,7 +15,7 @@
 				<th class="w-2/5 py-2 pl-4 text-left font-semibold">Quiz</th>
 				<th class="py-2 text-left font-semibold">Code</th>
 				<th class="py-2 text-left font-semibold">Studenten</th>
-				<th class="py-2 text-left font-semibold">Erstellt am</th>
+				<th class="py-2 text-left font-semibold hidden sm:table-cell">Erstellt am</th>
 			</tr>
 		</thead>
 		{#if rooms.length > 0}
@@ -29,7 +29,7 @@
 						</td>
 						<td class="py-2 font-mono text-sm">{room.code}</td>
 						<td class="py-2">{room.studentCount}</td>
-						<td class="py-2">
+						<td class="py-2 hidden sm:table-cell">
 							{new Date(room.createdAt).toLocaleString(localePersistedState.current, {
 								dateStyle: 'medium',
 								timeStyle: 'short'

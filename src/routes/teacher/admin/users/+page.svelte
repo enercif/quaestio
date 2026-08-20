@@ -34,7 +34,60 @@
 	</div>
 
 	<div class="rounded-lg border">
-		<table class="size-full">
+		<!-- Mobile  -->
+		<div class="flex flex-col divide-y sm:hidden">
+			{#each users as user (user.id)}
+				<div class="flex flex-col gap-3 p-4">
+					<div class="flex items-start justify-between gap-3">
+						<div class="flex flex-col gap-0.5">
+							<p class="font-medium break-words">{user.name}</p>
+							<p class="text-sm break-words text-muted-foreground">{user.email}</p>
+						</div>
+						<Badge variant={user.status === 'aktiv' ? 'secondary' : 'outline'} class="shrink-0">
+							{user.status}
+						</Badge>
+					</div>
+
+					<div class="flex flex-row items-center justify-start gap-2">
+						<span class="text-sm text-muted-foreground">Rolle</span>
+						{#if user.status === 'aktiv' && user.memberId}
+							{@const memberId = user.memberId}
+							<Select.Root
+								type="single"
+								value={user.role}
+								onValueChange={(value) => onRoleChange(memberId, value as OrgRole)}
+							>
+								<Select.Trigger class="w-32">{roleLabels[user.role]}</Select.Trigger>
+								<Select.Content>
+									<Select.Item value="member">{roleLabels.member}</Select.Item>
+									<Select.Item value="admin">{roleLabels.admin}</Select.Item>
+									<Select.Item value="owner">{roleLabels.owner}</Select.Item>
+								</Select.Content>
+							</Select.Root>
+						{:else}
+							<span class="text-sm font-medium">{roleLabels[user.role]}</span>
+						{/if}
+					</div>
+
+					{#if user.status === 'eingeladen'}
+						<Button
+							variant="outline"
+							size="sm"
+							class="w-full"
+							onclick={() => onCancelInvite(user.id)}
+						>
+							Einladung zurückziehen
+						</Button>
+					{:else if user.role !== 'owner'}
+						<Button variant="outline" size="sm" class="w-full" onclick={() => onDelete(user.id)}>
+							Löschen
+						</Button>
+					{/if}
+				</div>
+			{/each}
+		</div>
+		<!-- Desktop -->
+		<table class="hidden size-full sm:table">
 			<thead>
 				<tr class="border-b text-sm text-secondary-foreground/75">
 					<th class="w-2/5 py-2 pl-4 text-left font-semibold">Name</th>

@@ -22,17 +22,17 @@
 
 <QuizEditorHeader />
 
-<div class="mx-5 mt-6 flex w-full max-w-7xl flex-col gap-10 mb-10">
+<div class="mt-6 flex w-full max-w-7xl flex-col gap-10 mb-10">
 	<Field.Set>
 		<Field.Group>
-			<div class="flex flex-row items-end justify-between">
+			<div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 				<Field.Field aria-invalid={!!state.getQuizError('title')}>
 					<Field.Label for="title">Titel</Field.Label>
 					<Input
 						type="text"
 						bind:value={state.quiz.title}
 						placeholder="Titel des Quiz"
-						class="w-100! font-semibold"
+						class="w-full sm:w-100! font-semibold"
 						aria-invalid={!!state.getQuizError('title')}
 					/>
 					<FieldErrors errors={state.getQuizError('title')} />
@@ -88,7 +88,7 @@
 			</div>
 		</Field.Group>
 
-		<div class="grid grid-cols-4 gap-4">
+		<div class="flex flex-col gap-2 sm:grid sm:grid-cols-4 sm:gap-4">
 			<EditorQuestionList />
 
 			{#if state.selectedQuestion}

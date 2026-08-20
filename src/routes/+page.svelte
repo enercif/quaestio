@@ -37,9 +37,9 @@
 	});
 </script>
 
-<div class="flex size-full flex-col items-center justify-center gap-8">
+<div class="flex size-full px-4 py-6 flex-col items-center justify-center gap-8">
 	{#if page === 1}
-		<div class="w-1/2 max-w-90" in:fly>
+		<div class="w-full max-w-90" in:fly>
 			<Card.Root>
 				<Card.Header class="text-center">
 					<div
@@ -67,7 +67,7 @@
 							placeholder="XXXXXX"
 							maxlength={6}
 							{...roomCodeForm.fields.roomId.as('text')}
-							class="h-15 text-center text-3xl! font-semibold tracking-[0.5rem] uppercase placeholder:text-center"
+							class="h-15 text-center text-3xl! font-semibold tracking-[0.5rem] uppercase placeholder:text-center sm:text-2xl!"
 						/>
 						{#each roomCodeForm.fields.roomId.issues() as issue (issue.message)}
 							<p class="mt-3 text-sm text-destructive">{issue.message}</p>
@@ -96,12 +96,12 @@
 
 		<Button href="/login" variant="link">Anmelden</Button>
 	{:else}
-		<div class="w-1/2 max-w-90" in:fly>
+		<div class="w-full max-w-90" in:fly>
 			{#if codeResult?.success}
 				<Card.Root>
 					<Card.Header class="text-center">
 						<div class="flex flex-col items-start">
-							<Button variant="link" onclick={() => page--}>
+							<Button class="px-0" variant="link" onclick={() => page--}>
 								<ArrowLeft />
 								Zurück
 							</Button>

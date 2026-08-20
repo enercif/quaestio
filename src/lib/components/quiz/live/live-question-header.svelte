@@ -14,7 +14,7 @@
 </script>
 
 <div class="w-full flex flex-col gap-2">
-	<div class="w-full flex flex-row items-center justify-between gap-4">
+	<div class="w-full flex flex-col items-center justify-between gap-4 sm:flex-row">
 		<p>Frage {question.position + 1} von {room.quiz.questions_length}</p>
 
 		<div class="flex flex-row items-center gap-3">
