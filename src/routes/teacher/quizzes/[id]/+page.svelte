@@ -13,6 +13,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import CircleQuestionMark from '@lucide/svelte/icons/circle-question-mark';
 	import type { PageProps } from './$types';
+	import EditorTagsInput from '$lib/components/quiz/editor/editor-tags-input.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -26,17 +27,23 @@
 	<Field.Set>
 		<Field.Group>
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-				<Field.Field aria-invalid={!!state.getQuizError('title')}>
-					<Field.Label for="title">Titel</Field.Label>
-					<Input
-						type="text"
-						bind:value={state.quiz.title}
-						placeholder="Titel des Quiz"
-						class="w-full sm:w-100! font-semibold"
-						aria-invalid={!!state.getQuizError('title')}
+				<div class="flex flex-col gap-4">
+					<Field.Field aria-invalid={!!state.getQuizError('title')}>
+						<Field.Label for="title">Titel</Field.Label>
+						<Input
+							type="text"
+							bind:value={state.quiz.title}
+							placeholder="Titel des Quiz"
+							class="w-full sm:w-100! font-semibold"
+							aria-invalid={!!state.getQuizError('title')}
+						/>
+						<FieldErrors errors={state.getQuizError('title')} />
+					</Field.Field>
+					<EditorTagsInput
+						bind:tags={state.quiz.tags}
+						suggestions={data.suggestions}
 					/>
-					<FieldErrors errors={state.getQuizError('title')} />
-				</Field.Field>
+				</div>
 				<div class="flex flex-row items-end gap-6">
 					<Field.Field class="w-fit">
 						<div class="flex item-center gap-2">

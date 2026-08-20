@@ -15,10 +15,12 @@ msgid "Quaestio"
 msgstr "Quaestio"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
 msgid "<0/> Live"
 msgstr "<0/> Live"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 #: src/routes/teacher/analytics/(list)/+layout.svelte
 msgid "Analyse"
@@ -56,6 +58,7 @@ msgstr "Email"
 
 #: src/lib/components/admin/invite-user-dialog.svelte
 #: src/routes/teacher/admin/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Rolle"
 msgstr "Role"
 
@@ -81,6 +84,7 @@ msgstr "Copy"
 msgid "Per E-Mail senden"
 msgstr "Send by email"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 #: src/routes/+page.svelte
 msgid "Quiz beitreten"
@@ -177,6 +181,7 @@ msgid "Zum Login"
 msgstr "Go to login"
 
 #: src/routes/teacher/live/+page.svelte
+#: src/routes/teacher/live/[id]/+page.svelte
 msgid "Fehler beim Schließen des Raums"
 msgstr "Error closing the room"
 
@@ -294,6 +299,7 @@ msgstr "<0/> New quiz"
 msgid "Deine Quizze"
 msgstr "Your quizzes"
 
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -301,6 +307,8 @@ msgstr "Your quizzes"
 msgid "Titel"
 msgstr "Title"
 
+#: src/lib/components/quiz/editor/editor-tags-input.svelte
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -310,6 +318,7 @@ msgstr "Tags"
 
 #: src/lib/components/quiz/editor/editor-question-list.svelte
 #: src/lib/components/quiz/editor/editor-quiz-summary.svelte
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
@@ -339,6 +348,7 @@ msgstr "<0/> Import quiz"
 msgid "<0/> Quiz erstellen"
 msgstr "<0/> Create quiz"
 
+#: src/routes/student/+page.svelte
 #: src/routes/student/+page.svelte
 #: src/routes/teacher/quizzes/+page.svelte
 msgid "Keine Tags"
@@ -411,6 +421,7 @@ msgid "Keine Frage eingetragen"
 msgstr "No question entered"
 
 #: src/lib/components/quiz/editor/editor-open-question.svelte
+#: src/lib/components/ui/tags-input/tags-input.svelte
 msgid "Enter"
 msgstr "Enter"
 
@@ -430,6 +441,7 @@ msgid "Frage {0} von {1}"
 msgstr "Question {0} of {1}"
 
 #: src/lib/components/quiz/editor/editor-question.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "<0/> Löschen"
 msgstr "<0/> Delete"
@@ -467,13 +479,16 @@ msgid "Einstellungen | {0}"
 msgstr "Settings | {0}"
 
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "Starte Quiz"
 msgstr "Start quiz"
 
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "<0/> Übersicht"
 msgstr "<0/> Overview"
 
+#: src/lib/components/quiz/editor/editor-quiz-header.svelte
 #: src/lib/components/quiz/editor/editor-quiz-header.svelte
 msgid "<0/> Speichern"
 msgstr "<0/> Save"
@@ -501,10 +516,6 @@ msgid "+{0} weitere"
 msgstr "+{0} more"
 
 #: src/routes/student/r/[code]/+page.svelte
-msgid "Das Quiz wurde beendet. Du wirst nun zurück zur Übersicht geleitet."
-msgstr "The quiz has ended. You will now be redirected back to the overview."
-
-#: src/routes/student/r/[code]/+page.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
 msgid "Raum wird geladen…"
 msgstr "Loading room…"
@@ -526,9 +537,11 @@ msgid "Status"
 msgstr "Status"
 
 #: src/routes/teacher/admin/users/+page.svelte
+#: src/routes/teacher/admin/users/+page.svelte
 msgid "Einladung zurückziehen"
 msgstr "Withdraw invitation"
 
+#: src/routes/teacher/admin/users/+page.svelte
 #: src/routes/teacher/admin/users/+page.svelte
 msgid "Löschen"
 msgstr "Delete"
@@ -564,6 +577,7 @@ msgstr "{0} joined"
 msgid "Verlassen"
 msgstr "Leave"
 
+#: src/routes/student/r/[code]/+page.svelte
 #: src/routes/teacher/live/[id]/+page.svelte
 #: src/routes/teacher/quizzes/[id]/preview/+page.svelte
 msgid "Quiz beendet"
@@ -722,6 +736,7 @@ msgid "Logo"
 msgstr "Logo"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 msgid "Quizze"
 msgstr "Quizzes"
 
@@ -754,9 +769,11 @@ msgid "Coding"
 msgstr "Coding"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 msgid "Deutsch"
 msgstr "German"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 msgid "Englisch"
 msgstr "English"
@@ -766,6 +783,7 @@ msgstr "English"
 msgid "{0}={1}; path=/; max-age={2}; samesite=lax"
 msgstr "{0}={1}; path=/; max-age={2}; samesite=lax"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 #: src/routes/teacher/admin/+layout.svelte
 msgid "Admin"
@@ -855,9 +873,11 @@ msgid "Testen"
 msgstr "Test"
 
 #: src/routes/+layout.svelte
+#: src/routes/+layout.svelte
 msgid "<0/> Konto"
 msgstr "<0/> Account"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 msgid "<0/> Abmelden"
 msgstr "<0/> Sign out"
@@ -1359,6 +1379,7 @@ msgid "Übungsräume"
 msgstr "Practice rooms"
 
 #: src/routes/student/+page.svelte
+#: src/routes/student/+page.svelte
 msgid "Starten <0/>"
 msgstr "Start <0/>"
 
@@ -1382,6 +1403,7 @@ msgstr "Back to practice rooms"
 msgid "Live"
 msgstr "Live"
 
+#: src/routes/+layout.svelte
 #: src/routes/+layout.svelte
 msgid "Studentenansicht"
 msgstr "Student view"
@@ -1419,3 +1441,92 @@ msgstr "Answer: <0/>"
 #: src/lib/components/analytics/student/analytics-student.svelte
 msgid "<0/> Exportieren"
 msgstr "<0/> Export"
+
+#: src/routes/+layout.svelte
+msgid "Menü"
+msgstr ""
+
+#: src/routes/+layout.svelte
+msgid "<0/> Sprache"
+msgstr ""
+
+#: src/lib/components/ui/sheet/sheet-content.svelte
+msgid "Close"
+msgstr ""
+
+#: src/lib/components/quiz/editor/editor-tags-input.svelte
+msgid "Tag hinzufügen..."
+msgstr "Add tag ..."
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "Escape"
+msgstr ""
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowDown"
+msgstr ""
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowUp"
+msgstr ""
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "Backspace"
+msgstr ""
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "Delete"
+msgstr ""
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowLeft"
+msgstr ""
+
+#: src/lib/components/ui/tags-input/tags-input.svelte
+msgid "ArrowRight"
+msgstr ""
+
+#. 0: quiz.questions.length
+#: src/routes/student/+page.svelte
+msgid "{0} Fragen"
+msgstr ""
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+msgid "Alles"
+msgstr "All"
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+msgid "Nach Titel suchen ..."
+msgstr "Search for quiz titles ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+msgid "Nach Tags suchen ..."
+msgstr "Search for quiz tags ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+msgid "Nach Fragen suchen ..."
+msgstr "Search for questions ..."
+
+#: src/lib/components/quiz/my-quizzes-view/quiz-search.svelte
+msgid "Alles durchsuchen ..."
+msgstr "Search everything ..."
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Keine Quizze gefunden"
+msgstr "No quizzes found"
+
+#: src/routes/teacher/quizzes/+page.svelte
+msgid "Es wurden keine Quizze gefunden, die deiner Suche entsprechen."
+msgstr "No quizzes matching your search were found"
+
+#: src/routes/student/r/[code]/+page.svelte
+msgid "Deine Antworten wurden gespeichert. Danke fürs Mitmachen!"
+msgstr ""
+
+#: src/routes/student/r/[code]/+page.svelte
+msgid "Zurück zur Startseite"
+msgstr ""
+
+#: src/routes/teacher/live/[id]/+page.svelte
+msgid "Zur Analyse"
+msgstr ""

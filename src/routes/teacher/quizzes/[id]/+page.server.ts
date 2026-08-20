@@ -1,4 +1,4 @@
-import { findQuizById } from '$lib/remote/quiz.remote';
+import { findQuizById, findTagSuggestions } from '$lib/remote/quiz.remote';
 import type { Quiz, QuizInsert } from '$lib/schemas/quiz.schema';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -6,24 +6,33 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;
 
-	if (id === 'new') {
-		return returnInsertQuiz();
-	} else {
-		try {
-			const quiz: Quiz | undefined = await findQuizById(id);
+	try {
+		const suggestions = await findTagSuggestions();
 
-			if (!quiz) {
-				return returnInsertQuiz();
-			} else {
-				return {
-					quiz: quiz as QuizInsert,
-					id: quiz.id
-				};
-			}
-		} catch (error) {
-			console.error('Fehler beim Laden des Quiz:', error);
-			redirect(303, '/teacher/quizzes/new');
+		if (id === 'new') {
+			return {
+				...returnInsertQuiz(),
+				suggestions
+			};
 		}
+
+		const quiz: Quiz | undefined = await findQuizById(id);
+
+		if (!quiz) {
+			return {
+				...returnInsertQuiz(),
+				suggestions
+			};
+		}
+
+		return {
+			quiz: quiz as QuizInsert,
+			id: quiz.id,
+			suggestions
+		};
+	} catch (error) {
+		console.error('Fehler beim Laden des Quiz:', error);
+		redirect(303, '/teacher/quizzes/new');
 	}
 };
 

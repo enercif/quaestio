@@ -17,10 +17,22 @@
 	import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
 	import { exportQuizAsCsv } from '$lib/export/csv';
 	import { exportQuizAsXlsx } from '$lib/export/xlsx';
+	import {
+		createQuizSearch,
+		type SearchType
+	} from '$lib/components/quiz/my-quizzes-view/quiz-search.utils';
+	import QuizSearch from '$lib/components/quiz/my-quizzes-view/quiz-search.svelte';
 	let { data }: PageProps = $props();
 
 	const quizzes = $derived(data.quizzes);
 	let quizImporter = $state<QuizImporter>();
+
+	const quizSearch = $derived.by(() => createQuizSearch(quizzes));
+	let search = $state('');
+	let searchType = $state<SearchType>('default');
+	const filteredQuizzes = $derived.by(() => {
+		return quizSearch.search(search, searchType);
+	});
 </script>
 
 <QuizImporter bind:this={quizImporter} />
@@ -56,7 +68,7 @@
 			</DropdownMenu.Root>
 		</ButtonGroup.Root>
 	</div>
-
+	<QuizSearch bind:value={search} bind:type={searchType} />
 	<div class="rounded-lg border">
 		{#if quizzes.length === 0}
 			<table class="size-full h-fit">
@@ -111,6 +123,18 @@
 					</div>
 				</Empty.Content>
 			</Empty.Root>
+		{:else if filteredQuizzes.length === 0}
+			<Empty.Root>
+				<Empty.Header>
+					<Empty.Media variant="icon">
+						<CircleOffIcon />
+					</Empty.Media>
+					<Empty.Title>Keine Quizze gefunden</Empty.Title>
+					<Empty.Description>
+						Es wurden keine Quizze gefunden, die deiner Suche entsprechen.
+					</Empty.Description>
+				</Empty.Header>
+			</Empty.Root>
 		{:else}
 			<table class="size-full">
 				<thead>
@@ -123,14 +147,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each quizzes as quiz (quiz.id)}
+					{#each filteredQuizzes as quiz (quiz.id)}
 						<tr class="border-b transition-colors duration-200 hover:bg-secondary">
-							<td class="py-2 pl-4">{quiz.title}</td>
+							<td class="py-2 pl-4 break-all">{quiz.title}</td>
 							<td class="py-2 hidden sm:table-cell">
 								{#if quiz.tags.length > 0}
-									{#each quiz.tags as tag, i (i)}
+									{#each quiz.tags.slice(0, 4) as tag, i (i)}
 										<Badge variant="secondary">{tag}</Badge>
 									{/each}
+									{#if quiz.tags.length > 4}
+										<Badge variant="outline">+{quiz.tags.length - 4}</Badge>
+									{/if}
 								{:else}
 									<p>Keine Tags</p>
 								{/if}
