@@ -88,7 +88,11 @@ function buildMultipleQuestion(row: CsvQuestionRow, index: number) {
 			.map((answer) => [answer.id, answer.text] as const)
 	);
 
-	const reasons = parseReasons(row.reasons, answers)
+	const reasons = parseReasons(row.reasons, answers);
+
+	const partial_points = Object.fromEntries(
+		Object.keys(correct).map((answerId) => [answerId, 1])
+	);
 
 	return {
 		id: crypto.randomUUID(),
@@ -96,6 +100,7 @@ function buildMultipleQuestion(row: CsvQuestionRow, index: number) {
 		type: 'multiple',
 		question: row.question,
 		points: parseNumber(row.points, 1),
+		partial_points,
 		timelimit: parseNumber(row.timelimit, 30),
 		hint: row.hint,
 		sequence_type: 'numeric',
@@ -120,6 +125,13 @@ function buildOpenQuestion(row: CsvQuestionRow, index: number) {
 }
 
 function buildProgrammingQuestion(row: CsvQuestionRow, index: number, format: ImportFormat) {
+
+	const correct = parseList(row.solution);
+
+	const partial_points = Object.fromEntries(
+		correct.map((solution) => [solution, 1])
+	);
+	
 	return {
 		id: crypto.randomUUID(),
 		position: index,
@@ -128,6 +140,7 @@ function buildProgrammingQuestion(row: CsvQuestionRow, index: number, format: Im
 		code: format === 'csv' ? decodeBase64(row.code) : (row.code ?? ''),
 		language: row.language ?? '',
 		points: parseNumber(row.points, 1),
+		partial_points,
 		timelimit: parseNumber(row.timelimit, 30),
 		hint: row.hint,
 		correct: parseList(row.solution),
@@ -170,7 +183,7 @@ function parseReasons(
 
 		const key = entry.slice(0, separator).trim();
 		const reason = entry.slice(separator + 1).trim();
-		
+
 		if (!key || !reason) continue;
 		if (answers) {
 			const answerNumber = Number(key);
