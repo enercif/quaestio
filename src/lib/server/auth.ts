@@ -10,7 +10,7 @@ import { getOrgId } from './org';
 
 export const auth = betterAuth({
 	baseURL: env.BETTER_AUTH_URL,
-	secret: env.BETTER_AUTH_SECRET,
+	secret: env.BETTER_AUTH_SECRET ?? crypto.randomUUID(),
 	database: drizzleAdapter(db, { provider: 'pg' }),
 	emailAndPassword: { enabled: true },
 	user: {
